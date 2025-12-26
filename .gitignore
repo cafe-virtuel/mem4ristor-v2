@@ -22,7 +22,8 @@ docs/*.log
 docs/*.out
 docs/*.toc
 docs/*.synctex.gz
-docs/*.pdf
+# docs/*.pdf
+docs/preprint.pdf
 
 # Industrial Bundles (Large files > 100MB)
 mem4ristor_v2_bundle.json

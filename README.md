@@ -1,14 +1,14 @@
-# Mem4ristor v2.0.4.1 (Nuclear Certified)
+# Mem4ristor v2.0.4.1 (Verification Suite)
 Implementation Kit
 
-> **Status**: Attractor Diversity Stabilization Standard (v2.0.4.1)  
+> **Status**: Attractor Diversity Research Prototype (v2.0.4.1)  
 
 
 > **Origin**: Café Virtuel Collaboration  
 > **Concept**: Neuromorphic ethical resistance through constitutional doubt and structural heretics.
 
 ## 🔬 Overview
-Mem4ristor v2.0 is a **hardware-ready cognitive primitive** designed to resist algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to preserve deliberative diversity across scales.
+Mem4ristor v2.0 is a **neuromorphic cognitive primitive** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
 
 This repository provides the "executable specification" for the model described in the accompanying preprint.
 
@@ -16,7 +16,7 @@ This repository provides the "executable specification" for the model described 
 - `docs/preprint.tex`: The scientific specification and hardware mapping.
 - `src/mem4ristor/`: Core packaged logic for the Mem4ristor v2.0 engine (Production/Optimized).
 - `reproduction/`: 
-    - **`reference_impl.py`**: The **Normative Executable Specification** (Ground truth).
+    - **`reference_impl.py`**: The **Core Functional Specification** (Ground truth).
     - `CONFIG_DEFAULT.yaml`: The "Golden Run" parameter set (No-touch reference).
     - `tests_reproduce_paper.py`: Automated benchmark and ablation study suite.
     - `results/`: Directory for reproduction outputs/plots.
@@ -38,9 +38,9 @@ python reproduction/tests_reproduce_paper.py
 ### 3. Expected Results (Golden Signatures v2.0.3)
 A lab-standard reproduction using $N=100$ and default parameters is expected to encounter these empirical targets:
 - **Baseline Diversity (Random IC)**: $H > 1.80$.
-- **Industrial Attractor Stability (Deep Time)**: $H_{avg} > 1.8$ (verified for $>50,000$ iterations).
+- **Steady-State Attractor Stability (Long Term)**: $H_{avg} > 1.8$ (verified for $>50,000$ iterations).
 - **Causally Dominant Mechanism**: Diversification is maintained under IC-Compression ($W \to 0$), whereas ablated control models undergo irreversible collapse.
-- **Multimodal Diversity Score (MDS)**: $H \times (N_{\text{occupied}} / 5) > 0.40$ in standard bias regimes ($I_{stim} > 1.0$).
+- **Multimodal Diversity Score (MDS)**: $H \times (N_{\text{occupied}} / 5) > 0.40$ in tested bias regimes ($I_{stim} > 1.0$).
 - **Active Restoration (Homogeneous IC)**: Starting from $v=0, w=0$, heretic units restore diversity to **$H > 0.60$** within 1500 steps under bias.
 - **Bias Resilience**: Under $I_{stim} = 1.1$, the system maintains **$H(t) \approx 1.90$**.
 - **Causal Isolation**: In the Homogeneous IC regime, ablation of heretics yields $H \equiv 0$.
@@ -61,7 +61,7 @@ The model provides a high-level **mapping for HfO$_2$-based memristive crossbars
 - **Tolerance**: Circuit stability requires $\Delta V_{noise} < 10\%$.
 
 ## 📜 License & Citation
-Mem4ristor v2.0 is released as an **Open Standard** by the Café Virtuel.  
+Mem4ristor v2.0 is released as an **Open Research Project** by the Café Virtuel.  
 *Citation*: "Mem4ristor v2.0: A Doubt-Based Neuromorphic Architecture Resisting Algorithmic Uniformity", Julien Chauvin et al., 2025.
 
 ---

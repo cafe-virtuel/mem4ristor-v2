@@ -2,14 +2,14 @@ import numpy as np
 import os
 import sys
 
-# MEM4RISTOR v2.0.4 | INDUSTRIAL CERTIFICATION SUITE
+# MEM4RISTOR v2.0.4 | INDUSTRIAL VERIFICATION SUITE
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 sys.path.append(os.path.dirname(__file__))
 
 from reference_impl import Mem4ristorV2
 
-def run_certification():
-    print("[INFO] MEMRISTOR v2.0.4 | INDUSTRIAL CERTIFICATION PROTOCOL")
+def run_verification():
+    print("[INFO] MEMRISTOR v2.0.4 | INDUSTRIAL VERIFICATION PROTOCOL")
 
     print("-------------------------------------------------------")
     
@@ -85,12 +85,12 @@ def run_certification():
         
     print("\n-------------------------------------------------------")
     if success:
-        print("[VERDICT] MEM4RISTOR v2.0.4 OFFICIALLY CERTIFIED")
+        print("[VERDICT] MEM4RISTOR v2.0.4 OFFICIALLY VERIFIED")
 
     else:
-        print("[FAIL] VERDICT: CERTIFICATION FAILED")
+        print("[FAIL] VERDICT: VERIFICATION FAILED")
 
         sys.exit(1)
 
 if __name__ == "__main__":
-    run_certification()
+    run_verification()

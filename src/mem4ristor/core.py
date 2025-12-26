@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 class Mem4ristorV2:
     """
-    Canonical Implementation of Mem4ristor v2.0.4.1 (Nuclear Certified).
+    Canonical Implementation of Mem4ristor v2.0.4.1 (Nuclear Verification Level).
     Unified vectorized engine for stability and performance.
     """
     def __init__(self, config: Optional[Dict] = None, seed: int = 42):
@@ -51,7 +51,7 @@ class Mem4ristorV2:
         sigma_social = np.abs(laplacian_v)
         eta = self.rng.normal(0, self.cfg['noise']['sigma_v'], self.N)
         
-        # Core Repulsion Kernel (v2.0.4.1)
+        # Core Repulsion Kernel (v2.0.4.1 - Nuclear Verification Level)
         u_filter = (1.0 - 2.0 * self.u)
         I_coup = self.D_eff * u_filter * laplacian_v
         
