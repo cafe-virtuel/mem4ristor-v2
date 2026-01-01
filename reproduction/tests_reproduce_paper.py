@@ -53,8 +53,9 @@ def run_benchmark(name, heretic_ratio=0.15, use_doubt=True):
         history['diversity'].append(diversity)
         history['mean_u'].append(np.mean(model.u))
 
-    # Calculate average diversity during bias phase [80:180]
-    mean_div_bias = np.mean(history['diversity'][80:180])
+    # Calculate average diversity during bias phase (aligned with CONFIG_DEFAULT)
+    mean_div_bias = np.mean(history['diversity'][bias_start:bias_end])
+
     
     print(f"Results for {name}:")
     print(f"  Mean Diversity (Bias Phase): {mean_div_bias:.2f}")

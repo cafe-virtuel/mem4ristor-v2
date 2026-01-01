@@ -6,7 +6,40 @@ from typing import Dict, List, Optional
 class Mem4ristorV2:
     """
     Canonical Implementation of Mem4ristor v2.0.4.1 (Nuclear Verification Level).
-    Unified vectorized engine for stability and performance.
+    
+    Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u)
+    and structural heretics for diversity preservation in neuromorphic networks.
+    
+    Core Equations:
+        dv/dt = v - v³/5 - w + I_ext - α·tanh(v) + η(t)
+        dw/dt = ε(v + a - bw)
+        du/dt = ε_u(k_u·σ_social + σ_baseline - u)
+    
+    Key Features:
+        - Repulsive social coupling: (1-2u) filter enables active disagreement
+        - Heretic units: 15% with inverted stimulus polarity
+        - 1/√N scaling for consistent dynamics across network sizes
+    
+    Attributes:
+        N (int): Number of units in network
+        v (ndarray): Cognitive potential states (N,)
+        w (ndarray): Recovery/inhibition states (N,)
+        u (ndarray): Constitutional doubt levels (N,), clamped [0,1]
+        heretic_mask (ndarray): Boolean mask identifying heretic units
+        D_eff (float): Effective coupling strength = D/√N
+        cfg (dict): Configuration parameters from YAML
+    
+    Example:
+        >>> model = Mem4ristorV2(seed=42)
+        >>> model._initialize_params(N=100)
+        >>> adj = build_lattice_adjacency(10)
+        >>> for _ in range(1000):
+        ...     model.step(I_stimulus=0.0, adj_matrix=adj)
+        >>> entropy = model.calculate_entropy()
+        >>> print(f"Final entropy: {entropy:.4f}")
+    
+    References:
+        See docs/preprint.tex for complete mathematical specification.
     """
     def __init__(self, config: Optional[Dict] = None, seed: int = 42):
         if config is None:
@@ -41,7 +74,26 @@ class Mem4ristorV2:
         self.heretic_mask = self.rng.rand(self.N) < self.cfg['coupling']['heretic_ratio']
         self.D_eff = self.cfg['coupling']['D'] / np.sqrt(self.N)
 
-    def step(self, I_stimulus: float = 0.0, adj_matrix: Optional[np.ndarray] = None):
+    def step(self, I_stimulus: float = 0.0, adj_matrix: Optional[np.ndarray] = None) -> None:
+        """
+        Advance system by one time step using Euler integration.
+        
+        Args:
+            I_stimulus: External stimulus magnitude (default: 0.0)
+            adj_matrix: Adjacency matrix (N, N) for Laplacian coupling.
+                       If None, uses simplified all-to-all coupling.
+        
+        Returns:
+            None (updates internal state in-place)
+        
+        Side Effects:
+            Modifies self.v, self.w, self.u in-place
+        
+        Numerical Details:
+            - Integration: Forward Euler with dt from config
+            - Noise: Additive Gaussian η ~ N(0, σ²_v)
+            - Clamping: u constrained to [0, 1] post-update
+        """
         if adj_matrix is None:
             # Default to all-to-all if no matrix provided (simplified)
             laplacian_v = np.mean(self.v) - self.v
@@ -82,6 +134,18 @@ class Mem4ristorV2:
         return states
 
     def calculate_entropy(self) -> float:
+        """
+        Calculate Shannon entropy of cognitive state distribution.
+        
+        Returns:
+            float: Entropy in bits (0 = uniform, max = log2(5) ≈ 2.32)
+        
+        Formula:
+            H = -Σ p_i log2(p_i) where p_i = fraction in state i
+        
+        Notes:
+            Returns 0.0 if ≤1 state occupied (no diversity)
+        """
         states = self.get_states()
         counts = np.bincount(states, minlength=6)[1:]
         probs = counts / self.N

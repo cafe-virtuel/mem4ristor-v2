@@ -171,8 +171,8 @@ def run_nuclear_suite():
     plt.ylabel("Value")
     plt.legend()
     plt.grid(alpha=0.3)
-    plt.savefig('nuclear_trace_v204.png')
-    print("\nGraph saved as nuclear_trace_v204.png")
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'results/nuclear_trace_v204.png'))
+    print(f"\nGraph saved to reproduction/results/nuclear_trace_v204.png")
 
 if __name__ == "__main__":
     run_nuclear_suite()

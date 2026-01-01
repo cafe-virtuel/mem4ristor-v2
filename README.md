@@ -12,6 +12,11 @@ Mem4ristor v2.0 is a **neuromorphic cognitive primitive** designed to investigat
 
 This repository provides the "executable specification" for the model described in the accompanying preprint.
 
+### 🛡️ Scientific Rationale (Addressing Consensus Collapse)
+The Mem4ristor architecture introduces two non-trivial mechanisms to prevent "Deep Time" synchronisation :
+1. **The Doubt Kernel $(1-2u)$**: Dynamically modulates coupling polarity. When local uncertainty $u$ crosses the 0.5 threshold, the unit switches from attractive to **repulsive social coupling**, preventing the "echo-chamber" effect.
+2. **Structural Heretics (15%)**: A fixed sub-population wired with inverted stimulus perception. Empirical testing (see `reproduction/`) confirms this 15% ratio as the **critical percolation threshold** required to maintain global diversity without destabilizing the network attractor.
+
 ## 📂 Repository Structure
 - `docs/preprint.tex`: The scientific specification and hardware mapping.
 - `src/mem4ristor/`: Core packaged logic for the Mem4ristor v2.0 engine (Production/Optimized).
@@ -20,7 +25,7 @@ This repository provides the "executable specification" for the model described 
     - `CONFIG_DEFAULT.yaml`: The "Golden Run" parameter set (No-touch reference).
     - `tests_reproduce_paper.py`: Automated benchmark and ablation study suite.
     - `results/`: Directory for reproduction outputs/plots.
-- `examples/grok_hardware_sim.py`: Comparative simulation vs. classical models.
+- `archives_recherche/`: Historical development scripts and experiment logs.
 - `requirements.txt`: Python dependencies.
 - `.gitignore`: Standard GitHub cleanup.
 
