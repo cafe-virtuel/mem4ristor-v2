@@ -139,7 +139,7 @@ To support large-scale neuromorphic simulations, the Mem4ristor v2.3 kernel impl
 The following section describes a \textbf{proposed} architectural mapping to memristive hardware. These specifications are based on SPICE simulations and theoretical derivation; they do not constitute a validated physical implementation in HfO$_2$ material.
 \end{tcolorbox}
 
-To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v2.0 as a modular cognitive primitive.
+To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v2.3 as a modular cognitive primitive.
 
 \begin{tcolorbox}[colback=blue!5,colframe=blue!75,title=Interface Contract: Mem4ristor v2.3]
 \small
@@ -200,7 +200,7 @@ No Heretics & 234 & 1.30 & Medium \\
 \subsection{Canonical Algorithm}
 
 \begin{algorithm}
-\caption{Mem4ristor v2.0 Time-Step Update}
+\caption{Mem4ristor v2.3 Time-Step Update}
 \begin{algorithmic}[1]
 \FOR{each time-step $t$}
     \STATE \COMMENT{1. Calculate Local Social Pressure}
@@ -271,13 +271,13 @@ The system demonstrated sustained stability ($H = 1.99$ bits) over 50,000 steps.
 
 \subsection{Simulation Protocol}
 
-We test Mem4ristor v2.0 across four scenarios: (1) isolated unit, (2) 4$\times$4 network, (3) 10$\times$10 network (critical scale), and (4) 25$\times$25 network (scaling test). Each simulation runs for 1000 steps with neutral stimulus $I_{\text{stimulus}} = 0$, tracking state distributions, Shannon entropy, oracle fraction, and mean doubt $u$. All reported benchmarks use $\Delta t = 0.01$ unless otherwise stated.
+We test Mem4ristor v2.3 across four scenarios: (1) isolated unit, (2) 4$\times$4 network, (3) 10$\times$10 network (critical scale), and (4) 25$\times$25 network (scaling test). Each simulation runs for 1000 steps with neutral stimulus $I_{\text{stimulus}} = 0$, tracking state distributions, Shannon entropy, oracle fraction, and mean doubt $u$. All reported benchmarks use $\Delta t = 0.01$ unless otherwise stated.
 
 \subsection{Diversity Preservation Across Scales}
 
 \begin{table}[h]
 \centering
-\caption{Scaling performance of Mem4ristor v2.0.}
+\caption{Scaling performance of Mem4ristor v2.3.}
 \label{tab:scaling}
 \begin{tabular}{lcccc}
 \toprule
@@ -299,10 +299,10 @@ Distinct states    & 1   & 3     & 4     & 4     \\
 \end{tabular}
 \end{table}
 
-Mem4ristor v2.0 solves two critical bugs from previous versions: oracle fraction drops from 54.5\% to 0\% in isolation, and from 86\% to 0\% in networks. Cognitive diversity is maintained with four out of five states present even at 25$\times$25 scale.
+Mem4ristor v2.3 solves two critical bugs from previous versions: oracle fraction drops from 54.5\% to 0\% in isolation, and from 86\% to 0\% in networks. Cognitive diversity is maintained with four out of five states present even at 25$\times$25 scale.
 
 \subsection{Comparative Benchmarking: Mem4Ristor vs. State-of-the-Art}
-To contextualize the performance of Mem4Ristor v2.0, we benchmarked it against four classical models of collective dynamics: the Kuramoto model, the Voter model, Distributed Averaging (Consensus), and the Mirollo-Strogatz (Firefly) model. Simulations were conducted on $10 \times 10$ networks over $1000$ steps, including a biased stimulus phase ($I_{\text{stim}} = 1.0$).
+To contextualize the performance of Mem4Ristor v2.3, we benchmarked it against four classical models of collective dynamics: the Kuramoto model, the Voter model, Distributed Averaging (Consensus), and the Mirollo-Strogatz (Firefly) model. Simulations were conducted on $10 \times 10$ networks over $1000$ steps, including a biased stimulus phase ($I_{\text{stim}} = 1.0$).
 
 \begin{table}[h]
 \centering
@@ -331,7 +331,7 @@ Ablated (No Heretics) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00}
 \end{figure}
 
 
-The results (Table~\ref{tab:benchmarks}) demonstrate that Mem4Ristor v2.0 maintains significantly higher entropy than classical synchronization models (Kuramoto, Consensus), successfully delaying the collapse into uniformity. While the Firefly model maintains high entropy, it represents a non-convergent rhythmic state rather than a deliberative process.
+The results (Table~\ref{tab:benchmarks}) demonstrate that Mem4Ristor v2.3 maintains significantly higher entropy than classical synchronization models (Kuramoto, Consensus), successfully delaying the collapse into uniformity. While the Firefly model maintains high entropy, it represents a non-convergent rhythmic state rather than a deliberative process.
 
 \subsection{Robustness Analysis (v2.3)}
 
@@ -365,7 +365,7 @@ To evaluate the real-world applicability of Mem4ristor v2.3, we conducted a retr
     \label{fig:ccc_validation}
 \end{figure}
 
-The model was tested on three representative scenarios from the CCC:
+The model was qualitatively evaluated on three representative scenarios from the CCC:
 \begin{itemize}
     \item \textbf{Case A: Obligation d'affichage Carbone} (98\% consensus). The model stabilized at $H \approx 0.61$, preserving a residual "Skeptic" signal despite the overwhelming stimulus.
     \item \textbf{Case B: Limitation 110 km/h sur autoroute} (60\% OUI / 40\% NON). Mem4ristor maintained high entropy ($H \approx 2.01$), successfully protecting the deliberative diversity against premature convergence.
@@ -386,17 +386,17 @@ From a condensed matter physics perspective, the Mem4ristor model implements \te
 
 \begin{table}[h]
 \centering
-\caption{Hardware Bill of Materials (BOM) and Tolerance Specs.}
+\caption{Proposed Hardware Mapping (Conceptual) and Tolerance Specs.}
 \label{tab:bom}
-\begin{tabular}{llcl}
+\begin{tabular}{llll}
 \toprule
-\textbf{Component} & \textbf{Implementation} & \textbf{Resolution} & \textbf{Criticality} \\
+\textbf{Component} & \textbf{Implementation} & \textbf{Resolution} & \textbf{Status} \\
 \midrule
-Synapse ($w$) & HfO$_2$ Memristor & 4-bit (16 levels) & \textbf{High} (Stochasticity) \\
-State-V ($v$) & Capacitor/OpAmp & 8-bit equivalent & Medium (Range-bound) \\
-I/O Control & 8-bit DAC/ADC & 8-bit & \textbf{Critical} (Signal/Noise) \\
-Process Var. & Lithography/Implant & $\pm 5\%$ variation & \textbf{Desired} (Feature) \\
-Clock freq. & Controller & $>10$ MHz & Low (System Stability) \\
+Synapse ($w$) & HfO$_2$ Memristor & 4-bit (16 levels) & \textbf{Conceptual} \\
+State-V ($v$) & Capacitor/OpAmp & 8-bit equivalent & \textbf{Proposed} \\
+I/O Control & 8-bit DAC/ADC & 8-bit & \textbf{Inferred} \\
+Process Var. & Lithography/Implant & $\pm 5\%$ variation & \textbf{Requirement} \\
+Clock freq. & Controller & $>10$ MHz & \textbf{Estimated} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -405,11 +405,11 @@ Process-induced device variability ($\sigma \approx 8$--15\%) naturally injects 
 
 \subsection{From Ethical Constraints to Physical Implementation}
 
-The constitutional doubt variable $u$ and the perceptual heterogeneity of heretic units bridge ethical design and physical implementation. The v2.0.2 redesign demonstrates a critical shift: diversity is not maintained by "arguing better" (social resistance), but by "seeing differently" (perceptual inversion). Stimulus polarity inversion is not a parameter trick but a structural heterogeneity analogous to sensory inversion or asymmetric information channels in real deliberative systems. By ensuring $u > 0$ even in isolation and deploying heretics with inverted polarity, we ensure that no field can ever perfectly synchronize the network. This philosophical stance, encoded as a constitutional invariant, provides a formal safeguard against the erasure of the "Oracle" state.
+The constitutional doubt variable $u$ and the perceptual heterogeneity of heretic units bridge ethical design and physical implementation. The evolution towards v2.3 demonstrates a critical shift: diversity is not maintained by ``arguing better'' (social resistance), but by ``seeing differently'' (perceptual inversion). Stimulus polarity inversion is not a parameter trick but a structural heterogeneity analogous to sensory inversion or asymmetric information channels in real deliberative systems. By ensuring $u > 0$ even in isolation and deploying heretics with inverted polarity, we ensure that no field can ever perfectly synchronize the network. This philosophical stance, encoded as a constitutional invariant, provides a formal safeguard against the erasure of the ``Oracle'' state.
 
 \subsection{Towards Real-World Deliberation Pilots}
 
-We propose a retrospective deliberation pilot applying Mem4ristor v2.0 to real civic decisions (e.g., participatory budgeting or citizens' assemblies). The protocol maps:
+We propose a retrospective deliberation pilot applying Mem4ristor v2.3 to real civic decisions (e.g., participatory budgeting or citizens' assemblies). The protocol maps:
 \begin{itemize}
 \item Participants $\to$ network units with initial state distributions;
 \item Arguments and information waves $\to$ time-varying stimuli $I_{\text{stimulus}}(t)$;
