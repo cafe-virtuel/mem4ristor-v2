@@ -1,14 +1,14 @@
 # Mem4ristor v2.3 (Formal Research Release)
-Implementation Kit
+Implementation Kit (Computational Model)
 
 > **Status**: Attractor Diversity Research Prototype (**v2.3**)  
 > **Origin**: [Café Virtuel](https://www.cafevirtuel.org) Collaboration  
 > **Concept**: Neuromorphic cognitive resistance through **constitutional doubt** and **structural heretics**.
 
 ## 🔬 Overview
-Mem4ristor v2.3 is a **neuromorphic cognitive primitive** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
+Mem4ristor v2.3 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
 
-This repository provides the "executable specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.pdf).
+This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.pdf).
 
 ### 🛡️ Scientific Rationale (Addressing Consensus Collapse)
 The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" synchronization:
@@ -17,7 +17,7 @@ The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" s
 3. **Formal Robustness**: The "Constitutional Doubt" mechanism acts as a cognitive buffer, allowing the network to resist forced consensus through phase inversion.
 
 ## 📂 Repository Structure
-- `src/mem4ristor/`: Cœur algorithmique (Moteur v2.3).
+- `src/mem4ristor/`: Cœur algorithmique (Moteur v2.3 - Simulation).
 - `docs/`: Preprint LaTeX, figures et manuscrit PDF.
 - `experiments/`: 
     - `protocol/`: Script principal de démonstration scientifique (`run_protocol_v23.py`).
@@ -44,15 +44,24 @@ python experiments/protocol/run_protocol_v23.py
 - **Universal Robustness**: Stable diversity on Small-World and Random networks.
 - **Active Resurrection**: Immediate symmetry breaking from consensus ($H=0 \to H>1.5$).
 
-## 🔌 Hardware Mapping (Architectural BOM)
-The model provides a high-level **phenomenological mapping** for memristive crossbars:
+## 🔌 Architectural Mapping (Conceptual)
+The model provides a high-level **conceptual mapping** for potential memristive implementations:
 - **Recovery variable ($w$)**: Analogous to memristor conductance.
 - **Doubt ($u$)**: Modeled as local accumulation/dissipation processes.
 - **Physics**: Interpreted as **Frustrated Synchronization**.
 
-## 📜 License & Citation
-Mem4ristor v2.3 is released as an **Open Research Project** by the Café Virtuel.  
-*Citation*: "Mem4ristor v2.3: A Doubt-Based Neuromorphic Architecture Resisting Algorithmic Uniformity", Julien Chauvin et al., 2026.
+---
+
+## ❓ FAQ (Sincerity Disclosure)
+
+**Is this a real neuromorphic hardware design?**  
+No. This is a **Python simulation** of a phenomenological model. The hardware mappings and SPICE mentions are conceptual explorations of how this logic *could* be implemented in HfO2 crossbars.
+
+**Who wrote this?**  
+This project is developed through the **Café Virtuel** methodology, involving a human researcher (The Barman) and a collaborative ensemble of Large Language Models (LLMs). Every line of code and every claim is traceable in the [Café Virtuel repository](https://github.com/Jusyl236/Cafe-Virtuel).
+
+**Is the "Law of 15%" a physical law?**  
+It is an **empirical observation** within our computational framework. We observed a transition from consensus to diversity specifically at this ratio. It is a property of the model's dynamics under the tested configurations.
 
 ---
 **Café Virtuel** - *From intuition to formal specification.*

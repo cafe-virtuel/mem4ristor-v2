@@ -16,7 +16,7 @@
 
 \geometry{margin=2.5cm}
 
-\title{Mem4ristor: Attractor Diversity Stabilization in Neuromorphic Networks via Nonlinear Repulsive Coupling (v2.3)}
+\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v2.3)}
 
 \author{
     \textbf{Julien Chauvin} \\
@@ -50,11 +50,11 @@ The Mem4ristor framework emerges from the Caf\'e Virtuel philosophy: can we desi
 
 We characterize the model's robustness across scale and pressure, identifying a significant diversity loss in degraded networks. While this work relies on extensive multi-agent collaborative research rather than traditional human peer-review, it provides a functional specification for diversity-preserving cognitive architectures.
 
-\section{Model \& Methods}
+\section{Computational Model \& Methods}
 
-\subsection{Extended FitzHugh--Nagumo Dynamics}
+\subsection{Neuromorphic-Inspired Dynamics}
 
-Mem4ristor v2.0 extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$, creating a three-dimensional cognitive oscillator:
+Mem4ristor v2.3 is a \textbf{phenomenological simulation} that extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$:
 \begin{align}
 \frac{dv}{dt} &= v - \frac{v^3}{5} - w + I_{\text{ext}} - \alpha \tanh(v) + \eta_v(t), \label{eq:dv} \\
 \frac{dw}{dt} &= \varepsilon(v + a - bw), \label{eq:dw} \\
@@ -133,7 +133,11 @@ Standard simulations use:
 \subsection{Local Scaling \& Stencil Optimization}
 To support large-scale neuromorphic simulations, the Mem4ristor v2.3 kernel implements a \textbf{Formal Discrete Laplacian Operator}. Unlike classical $O(N^2)$ adjacency matrices, the optimized implementation uses $O(N)$ sparse methods or stencils, ensuring that conformist pressure is computed locally and rigorously.
 
-\section{Implementation Recipe (Drop-in Component)}
+\section{Conceptual Architectural Mapping}
+
+\begin{tcolorbox}[colback=red!5,colframe=red!75,title=Disclaimer: Conceptual Mapping]
+The following section describes a \textbf{proposed} architectural mapping to memristive hardware. These specifications are based on SPICE simulations and theoretical derivation; they do not constitute a validated physical implementation in HfO$_2$ material.
+\end{tcolorbox}
 
 To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v2.0 as a modular cognitive primitive.
 
@@ -436,6 +440,14 @@ While Mem4ristor v2.3 demonstrates robust empirical performance across multiple 
 \textbf{Numerical integration.} The reference implementation uses Euler integration ($\Delta t = 0.1$), which provides $O(\Delta t)$ accuracy. Higher-order methods (e.g., Runge-Kutta 4) would improve precision but have not been systematically compared.
 
 \textbf{Hardware mapping.} The memristive crossbar implementation (Section 4.1) is architectural speculation rather than validated engineering. No SPICE simulations, physical prototypes, or fabrication protocols exist. Actual hardware implementation would require significant additional work.
+
+\subsection{Limitations and Sincerity Disclosure}
+This work explicitly acknowledges the following limitations:
+\begin{itemize}
+    \item \textbf{Computational Nature:} These results are derived from Python simulations. Real-world HfO$_2$ device variability may significantly alter the observed dynamics.
+    \item \textbf{Methodology:} The ``Café Virtuel'' framework uses LLMs for collaborative research. While every result is reproducible via the provided code, authorship is shared between human intuition and agentic execution.
+    \item \textbf{15\% Threshold:} This value is an empirical observation within the model's parameter space and not a universal law of nature.
+\end{itemize}
 
 \textbf{Real-world data.} While the model has been retrospectively validated on qualitative scenarios from the CCC (Section 3.4), it has not been tested on raw, high-resolution voting records or longitudinal behavioral datasets. 
 
