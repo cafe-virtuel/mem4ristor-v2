@@ -1,6 +1,6 @@
 # Contributing to Mem4ristor v2.2 (Technical Transfer Notice)
 
-Welcome, Researcher. You are looking at a **Cognitive Neuromorphic Primitive** designed to resist algorithmic uniformization. This project has evolved from an intuitive "Café Virtuel" collaboration into a verified industrial-ready specification.
+Welcome, Researcher. You are looking at a **Cognitive Neuromorphic-Inspired Simulation** designed to resist algorithmic uniformization. This project has evolved from an intuitive "Café Virtuel" collaboration into a verified research-ready specification.
 
 ## 🎯 Current Project Status (v2.2)
 - **Functional Ground Truth**: Validated through the `reproduction/` suite.

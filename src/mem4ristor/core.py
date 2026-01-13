@@ -8,7 +8,7 @@ class Mem4ristorV2:
     Canonical Implementation of Mem4ristor v2.3 (Final Research Release).
     
     Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u)
-    and structural heretics for diversity preservation in neuromorphic networks.
+    and structural heretics for diversity preservation in neuromorphic-inspired computational models.
     
     Core Equations:
         dv/dt = v - v³/5 - w + I_ext - α·tanh(v) + η(t)
