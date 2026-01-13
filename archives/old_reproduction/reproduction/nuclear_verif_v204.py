@@ -97,7 +97,7 @@ class NuclearProbe(Mem4ristorV2):
         self.u = np.clip(self.u, 0, 1)
 
 def run_nuclear_suite():
-    print("[INFO] NUCLEAR VERIFICATION SUITE v2.0.4")
+    print("[INFO] NUCLEAR VERIFICATION SUITE v2.2.0")
 
     print("-----------------------------------")
     
@@ -171,8 +171,10 @@ def run_nuclear_suite():
     plt.ylabel("Value")
     plt.legend()
     plt.grid(alpha=0.3)
-    plt.savefig(os.path.join(os.path.dirname(__file__), 'results/nuclear_trace_v204.png'))
-    print(f"\nGraph saved to reproduction/results/nuclear_trace_v204.png")
+    save_path = os.path.join(os.path.dirname(__file__), '../results/plots/nuclear_trace_v2.2.0.png')
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path)
+    print(f"\nGraph saved to results/plots/nuclear_trace_v2.2.0.png")
 
 if __name__ == "__main__":
     run_nuclear_suite()

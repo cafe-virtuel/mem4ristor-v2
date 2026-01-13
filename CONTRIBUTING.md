@@ -1,8 +1,8 @@
-# Contributing to Mem4ristor v2.0 (Technical Transfer Notice)
+# Contributing to Mem4ristor v2.2 (Technical Transfer Notice)
 
 Welcome, Researcher. You are looking at a **Cognitive Neuromorphic Primitive** designed to resist algorithmic uniformization. This project has evolved from an intuitive "Café Virtuel" collaboration into a verified industrial-ready specification.
 
-## 🎯 Current Project Status (v2.0.4.1)
+## 🎯 Current Project Status (v2.2)
 - **Functional Ground Truth**: Validated through the `reproduction/` suite.
 - **Physical Mapping**: Grounded in HfO$_2$ RRAM physical constants (SET $\approx 1.2V$, RESET $\approx -1.3V$).
 - **Certification**: Passed "Nuclear Stress Tests" with 100% minority resilience under extreme stimulus bias.
