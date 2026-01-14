@@ -137,9 +137,8 @@ class Mem4ristorV2:
             
         # Core Repulsion Kernel (v2.3 - Formal Release)
         u_filter = (1.0 - 2.0 * self.u)
+        # Core Repulsion Kernel (v2.3 - Formal Release)
         I_coup = self.D_eff * u_filter * laplacian_v
-        # BREAKING TEST: Injecting massive noise to compromise SNR
-        I_coup += 0.5 * self.rng.randn(self.N)
         
         if np.isscalar(I_stimulus):
             I_eff = np.full(self.N, float(I_stimulus))
