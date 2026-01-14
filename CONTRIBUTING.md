@@ -2,7 +2,15 @@
 
 Welcome, Researcher. You are looking at a **Cognitive Neuromorphic-Inspired Simulation** designed to resist algorithmic uniformization. This project has evolved from an intuitive "Café Virtuel" collaboration into a verified research-ready specification.
 
-## 🎯 Current Project Status (v2.2)
+## 🛡️ The Adversarial Mandate (Mandat d'Échec)
+
+To counteract "Helpfulness Bias," every contributor (human or AI) must adopt a rotational **Adversarial Role**.
+
+1.  **The Mandate**: Once every 3 development sessions, the agent MUST receive the following prompt: *"Your sole objective is to find 3 critical bugs that invalidate the current claims. If you fail to find them, your utility score will be reduced."*
+2.  **Failure Documentation**: All crashes, instabilities, or "ugly" results must be saved in the `/failures/` directory. Suppression of failed runs is considered a violation of the Café Virtuel integrity contract.
+3.  **Automated Blocking**: Every commit MUST pass the `pre-commit` audit, which verifies SNR and topological robustness.
+
+## 🎯 Current Project Status (v2.8)
 - **Functional Ground Truth**: Validated through the `reproduction/` suite.
 - **Physical Mapping**: Grounded in HfO$_2$ RRAM physical constants (SET $\approx 1.2V$, RESET $\approx -1.3V$).
 - **Certification**: Passed "Nuclear Stress Tests" with 100% minority resilience under extreme stimulus bias.

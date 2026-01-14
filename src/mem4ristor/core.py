@@ -54,7 +54,7 @@ class Mem4ristorV2:
             except:
                 # Fallback to hardcoded defaults if YAML mission
                 self.cfg = {
-                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
+                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.05},
                 'coupling': {'D': 0.5, 'heretic_ratio': 0.15}, # SNR Hardened
                 'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
                 'noise': {'sigma_v': 0.02} # SNR Hardened
@@ -81,7 +81,7 @@ class Mem4ristorV2:
         self.u = np.full(self.N, self.cfg['doubt']['sigma_baseline'])
         
         # Anti-Clustering Placement (Kimi v2.6 P1)
-        if self.cfg['coupling'].get('uniform_placement', True):
+        if self.cfg['coupling'].get('uniform_placement', True) and self.cfg['coupling']['heretic_ratio'] > 0:
             # Stratified placement: 1 heretic per block of size 1/ratio
             step = int(1.0 / self.cfg['coupling']['heretic_ratio'])
             heretic_ids = []
@@ -219,15 +219,17 @@ class Mem4ristorV2:
         states[v > 1.5] = 5
         return states
 
-    def calculate_entropy(self) -> float:
+    def calculate_entropy(self, bins=5) -> float:
         """
-        Calculate Shannon entropy of cognitive state distribution.
+        Calculate Shannon entropy of the state distribution.
+        v2.7.1 Fixed: Broadened range (-5, 5) to account for sharpened attractors.
         """
-        states = self.get_states()
-        counts = np.bincount(states, minlength=6)[1:]
-        probs = counts / self.N
+        v = self.v
+        counts, _ = np.histogram(v, bins=bins, range=(-5.0, 5.0))
+        total = np.sum(counts)
+        if total == 0: return 0.0
+        probs = counts / total
         probs = probs[probs > 0]
-        if len(probs) <= 1: return 0.0
         return -np.sum(probs * np.log2(probs))
 
 class Mem4Network:
