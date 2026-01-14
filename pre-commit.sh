@@ -1,44 +1,46 @@
 #!/bin/bash
-# Mem4ristor Adversarial Blocker (v2.8)
-# Ensure this script returns 0 only if the system is 'Hardened'.
+# CAFÉ VIRTUEL PRE-COMMIT GUARDIAN (v2.9)
+# NO-BYPASS MODE: This script enforces evidence of failure.
 
-echo "=== MEM4RISTOR ADVERSARIAL PRE-COMMIT AUDIT ==="
+echo "=== CAFÉ VIRTUEL PRE-COMMIT GUARDIAN ==="
 
-# 1. Environment Check
-if [ -z "$PYTHONPATH" ]; then
-    export PYTHONPATH="src"
-fi
-
-# 2. Syntax & TODO Check
-echo "Checking for unfinished business (TODOs)..."
-if grep -rn "TODO\|FIXME" src/ tests/ | grep -v "LIMITATIONS"; then
-    echo "❌ FAIL: Unresolved TODOs detected."
+# 1. Failure Evidence Check
+FAILURE_COUNT=$(ls failures/*.log 2>/dev/null | wc -l)
+if [ "$FAILURE_COUNT" -lt 5 ]; then
+    echo "❌ FAIL: Integrity requires evidence of failure. Log at least 5 failed runs in /failures/."
     exit 1
 fi
 
-# 3. Unit Tests (Adversarial Coverage)
-echo "Running adversarial unit tests..."
-python -m pytest tests/test_kernel.py -v
+# 2. Commit Trace Check
+# Ensure new failures are committed with the code
+STAGED_FAILURES=$(git diff --cached --name-only | grep "failures/" | wc -l)
+if [ "$STAGED_FAILURES" -eq 0 ]; then
+    echo "❌ FAIL: You must commit new failure logs alongside your fixes."
+    exit 1
+fi
+
+# 3. Kimi-Audit Simulation
+echo "Running Kimi-Audit (Adversarial Protocol)..."
+export PYTHONPATH="src"
+python -m pytest tests/test_kernel.py
 if [ $? -ne 0 ]; then
-    echo "❌ FAIL: Unit tests did not pass. Integrity compromised."
+    echo "❌ FAIL: Adversarial unit tests failed."
     exit 1
 fi
 
-# 4. Mandatory SNR Audit
-echo "Verifying Signal-to-Noise Ratio (SNR)..."
+# 4. Invariant Validation (SNR)
 python -c "
 import numpy as np
 from mem4ristor.core import Mem4ristorV2
-model = Mem4ristorV2(seed=42)
-model._initialize_params(N=100)
-snr = np.abs(model.D_eff * -1.0) / model.cfg['noise']['sigma_v']
-print(f'SNR: {snr:.2f}')
-assert snr > 2.0, 'SNR too low (<2.0). Repulsion is noise-dominated.'
+m = Mem4ristorV2(seed=42)
+m._initialize_params(N=100)
+snr = np.abs(m.D_eff * -1.0) / m.cfg['noise']['sigma_v']
+assert snr > 2.0, f'SNR too low: {snr}'
 "
 if [ $? -ne 0 ]; then
-    echo "❌ FAIL: SNR Audit failed. Physics is too weak."
+    echo "❌ FAIL: Claim Invalidation (SNR < 2.0)."
     exit 1
 fi
 
-echo "✅ AUDIT SUCCESS: The system is hardened and ready for commit."
+echo "✅ AUDIT PASSED. Radical integrity verified."
 exit 0

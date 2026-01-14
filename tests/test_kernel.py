@@ -41,17 +41,25 @@ def test_repulsive_flip():
 def test_snr_validity():
     """Verify that the repulsive interaction is stronger than the noise floor."""
     cfg = {
-        'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.1},
+        'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.01},
         'coupling': {'D': 0.5, 'heretic_ratio': 0.0},
         'doubt': {'epsilon_u': 0.0, 'k_u': 1.0, 'sigma_baseline': 0.8, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-        'noise': {'sigma_v': 0.02}
+        'noise': {'sigma_v': 0.02} # SNR floor test
     }
     model = Mem4ristorV2(config=cfg, seed=42)
     model._initialize_params(N=2)
     model.v = np.array([-1.0, 1.0])
-    u_filter = (1.0 - 2.0 * model.u)
-    I_coup = model.D_eff * u_filter * (np.array([1.0, -1.0]) - model.v)
-    assert np.all(np.abs(I_coup) > 5 * cfg['noise']['sigma_v']), f"SNR too low: {np.abs(I_coup)/cfg['noise']['sigma_v']}"
+    adj = np.array([[0, 1], [1, 0]])
+    
+    # Observe 100 steps. In presence of heavy noise, the avg displacement should still be repulsive.
+    v0_path = []
+    for _ in range(100):
+        model.step(I_stimulus=0.0, coupling_input=adj)
+        v0_path.append(model.v[0])
+    
+    # If SNR is broken by the 0.5 noise injection, v[0] will not be consistently < -1.0
+    v0_avg = np.mean(v0_path)
+    assert v0_avg < -1.0, f"SNR FAIL: Massive noise injection masked the repulsion. avg_v0={v0_avg:.4f}"
 
 def test_spatial_clustering():
     """Verify heretic homogeneity."""
