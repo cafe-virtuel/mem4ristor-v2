@@ -17,9 +17,11 @@ def test_heretic_inversion():
     
     v_pre = model.v.copy()
     model.step(I_stimulus=1.0)
-    # With heretic, I_eff = -1.0. dv = (v - v^3/4 - w - 1.0)
-    # v should decrease more than if I_eff was +1.0
-    pass
+    # With heretic, I_eff = -1.0. dv should be negative (stimulus pushes down)
+    # v should decrease because I_eff is inverted for heretics
+    dv = model.v - v_pre
+    # Check that all units moved in the negative direction (with some tolerance for FHN dynamics)
+    assert np.mean(dv) < 0, f"Heretics should invert stimulus. Mean dv={np.mean(dv):.4f}"
 
 def test_repulsive_flip():
     """Verify that coupling becomes repulsive when doubt u > 0.5."""

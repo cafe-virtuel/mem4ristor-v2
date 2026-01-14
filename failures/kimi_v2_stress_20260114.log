@@ -1,0 +1,32 @@
+# KIMI v2.0 Stress Test Failure Log
+# Date: 2026-01-14T22:10:00+01:00
+# Auditor: Kimi (Antigravity)
+
+## FAILURES FOUND (Pre-Fix)
+
+### FAIL-015: NaN Propagation in Coupling Matrix
+- Test: test_nan_in_coupling_matrix
+- Result: AssertionError: NaN dans adj a contaminé v
+- Root Cause: No NaN guard in step() laplacian calculation
+- Fix Applied: np.nan_to_num(laplacian_v, nan=0.0) at line 131
+
+### FAIL-016: Overflow with Extreme Stimulus
+- Test: test_extreme_stimulus_overflow
+- Result: AssertionError: Overflow détecté: v contient inf/nan
+- Root Cause: I_stimulus=1e10 causes v explosion
+- Fix Applied: np.clip(I_eff, -100.0, 100.0) at line 156
+
+### FAIL-017: No Recovery from Extreme Initial Conditions
+- Test: test_extreme_initial_conditions
+- Result: AssertionError: Le système n'a pas convergé: max(v)=nan
+- Root Cause: v initialized at 1e10 diverges to nan
+- Fix Applied: np.clip(self.v, -100.0, 100.0) at line 172
+
+## POST-FIX VERIFICATION
+- All 16 stress tests PASSED after guards added
+- Full suite: 23 passed, 2 xfailed
+
+## GUARDS ADDED TO core.py
+1. GUARD 1 (line 130-132): NaN detection in coupling
+2. GUARD 2 (line 156): Stimulus clamping ±100
+3. GUARD 3 (line 172-174): State v/w clamping ±100

@@ -1,5 +1,5 @@
 import os
-# MKL Determinism Fix (Kimi v2.6 P2)
+# MKL Determinism Fix (v2.9.1)
 os.environ['NUMPY_MKL_CBWR'] = 'COMPATIBLE'
 import numpy as np
 import yaml
@@ -8,13 +8,13 @@ from scipy.integrate import solve_ivp
 
 class Mem4ristorV2:
     """
-    Canonical Implementation of Mem4ristor v2.3 (Final Research Release).
+    Canonical Implementation of Mem4ristor v2.9.1 (Kimi Hardened Release).
     
     Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u)
     and structural heretics for diversity preservation in neuromorphic-inspired computational models.
     
     Core Equations:
-        dv/dt = v - v³/5 - w + I_ext - α·tanh(v) + η(t)
+        dv/dt = v - v³/4 - w + I_ext - α·tanh(v) + η(t)
         dw/dt = ε(v + a - bw)
         du/dt = ε_u(k_u·σ_social + σ_baseline - u)
     
@@ -51,8 +51,8 @@ class Mem4ristorV2:
                 cfg_path = os.path.join(os.path.dirname(__file__), "../../reproduction/CONFIG_DEFAULT.yaml")
                 with open(cfg_path, 'r') as f:
                     self.cfg = yaml.safe_load(f)
-            except:
-                # Fallback to hardcoded defaults if YAML mission
+            except (FileNotFoundError, yaml.YAMLError):
+                # Fallback to hardcoded defaults if YAML missing or invalid
                 self.cfg = {
                 'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.05},
                 'coupling': {'D': 0.5, 'heretic_ratio': 0.15}, # SNR Hardened
@@ -80,20 +80,28 @@ class Mem4ristorV2:
             
         self.u = np.full(self.N, self.cfg['doubt']['sigma_baseline'])
         
-        # Anti-Clustering Placement (Kimi v2.6 P1)
-        if self.cfg['coupling'].get('uniform_placement', True) and self.cfg['coupling']['heretic_ratio'] > 0:
+        # Anti-Clustering Placement (Kimi v2.9.1 - Fixed heretic_ratio=0 crash)
+        heretic_ratio = self.cfg['coupling'].get('heretic_ratio', 0.15)
+        
+        if heretic_ratio <= 0:
+            # No heretics - ablation configuration
+            self.heretic_mask = np.zeros(self.N, dtype=bool)
+        elif self.cfg['coupling'].get('uniform_placement', True):
             # Stratified placement: 1 heretic per block of size 1/ratio
-            step = int(1.0 / self.cfg['coupling']['heretic_ratio'])
+            step = int(1.0 / heretic_ratio)
+            if step < 1:
+                step = 1
             heretic_ids = []
             for i in range(0, self.N, step):
-                if len(heretic_ids) < int(self.N * self.cfg['coupling']['heretic_ratio']):
+                if len(heretic_ids) < int(self.N * heretic_ratio):
                     # Pick one random index in this block
                     block_end = min(i + step, self.N)
                     heretic_ids.append(self.rng.randint(i, block_end))
             self.heretic_mask = np.zeros(self.N, dtype=bool)
             self.heretic_mask[heretic_ids] = True
         else:
-            self.heretic_mask = self.rng.rand(self.N) < self.cfg['coupling']['heretic_ratio']
+            # Random placement fallback
+            self.heretic_mask = self.rng.rand(self.N) < heretic_ratio
             
         self.D_eff = self.cfg['coupling']['D'] / np.sqrt(self.N)
 
@@ -118,6 +126,10 @@ class Mem4ristorV2:
         else:
             # Direct Laplacian vector passed (from stencil or pre-computed matrix L)
             laplacian_v = coupling_input
+        
+        # GUARD 1: NaN detection in coupling (v2.9.1 Kimi fix)
+        if np.any(np.isnan(laplacian_v)):
+            laplacian_v = np.nan_to_num(laplacian_v, nan=0.0)
             
         sigma_social = np.abs(laplacian_v)
         
@@ -135,9 +147,8 @@ class Mem4ristorV2:
             rtn_jumps = (self.rng.rand(self.N) < p_flip).astype(float) * rtn_amp * self.rng.choice([-1, 1], size=self.N)
             eta += rtn_jumps
             
-        # Core Repulsion Kernel (v2.3 - Formal Release)
+        # Core Repulsion Kernel (v2.9.1)
         u_filter = (1.0 - 2.0 * self.u)
-        # Core Repulsion Kernel (v2.3 - Formal Release)
         I_coup = self.D_eff * u_filter * laplacian_v
         
         if np.isscalar(I_stimulus):
@@ -146,6 +157,9 @@ class Mem4ristorV2:
             I_eff = np.array(I_stimulus).flatten()
             if I_eff.size != self.N:
                 raise ValueError(f"Stimulus vector size {I_eff.size} must match network size {self.N}")
+        
+        # GUARD 2: Clamp stimulus to prevent overflow (v2.9.1 Kimi fix)
+        I_eff = np.clip(I_eff, -100.0, 100.0)
         
         # Apply heretic inversion
         I_eff[self.heretic_mask] *= -1.0
@@ -161,11 +175,15 @@ class Mem4ristorV2:
         self.v += dv * self.dt
         self.w += dw * self.dt
         self.u += du * self.dt
+        
+        # GUARD 3: Clamp v and w to prevent runaway divergence (v2.9.1 Kimi fix)
+        self.v = np.clip(self.v, -100.0, 100.0)
+        self.w = np.clip(self.w, -100.0, 100.0)
         self.u = np.clip(self.u, self.cfg['doubt']['u_clamp'][0], self.cfg['doubt']['u_clamp'][1])
 
     def solve_rk45(self, t_span, I_stimulus=0.0, adj_matrix=None):
         """
-        High-precision integration using RK45 for long-term stability (Kimi v2.6 P0).
+        High-precision integration using RK45 for long-term stability (v2.9.1).
         """
         def combined_dynamics(t, y):
             # Split state

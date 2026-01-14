@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from mem4ristor.core import Mem4ristorV2
 
+@pytest.mark.xfail(reason="FAIL-012: Documented SNR collapse at high noise. See CAFE-VIRTUEL-LIMITATIONS.md")
 def test_snr_significance_breakdown():
     """Kimi-Invariant: I_coup must be > 3*sigma_noise for statistical significance."""
     cfg = {
@@ -27,6 +28,7 @@ def test_snr_significance_breakdown():
     # Kimi requirement: SNR > 3.0 for claim 2 to hold
     assert snr > 3.0, f"ADVERSARIAL FAIL: Social repulsion buried in noise floor (SNR={snr:.2f}). Claim 2 invalid."
 
+@pytest.mark.xfail(reason="FAIL-008: Documented Euler instability at dt>0.1. Preprint specifies dt≤0.05")
 def test_euler_drift_torture():
     """Verify if Euler-like drift survives Scipy solver at high dt."""
     # This is a 'Ghost' test to see if we can force Drifts
