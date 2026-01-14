@@ -26,7 +26,7 @@ def run_fine_sensitivity():
     for r in tqdm(ratios, desc="Scanning ratios"):
         h_values = []
         for seed in range(42, 42 + repeats):
-            model = Mem4Network(size=10, heretic_ratio=r, seed=seed)
+            model = Mem4Network(size=10, heretic_ratio=r, seed=seed, cold_start=True)
             for _ in range(steps):
                 model.step(I_stimulus=I_stim)
             h_values.append(model.calculate_entropy())

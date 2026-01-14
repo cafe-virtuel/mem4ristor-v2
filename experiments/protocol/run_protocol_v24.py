@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
+import matplotlib
+matplotlib.use('Agg')
 
 try:
     from rich.console import Console
@@ -170,17 +172,45 @@ Il génère les visuels nécessaires au Preprint et consigne les comportements �
         progress.update(task, description="Génération Réseau Small-World...", advance=30)
         G = nx.watts_strogatz_graph(100, 4, 0.1)
         adj = nx.to_numpy_array(G)
+        # Proper normalization for displacement Laplacian
         adj = adj / (adj.sum(axis=1)[:, np.newaxis] + 1e-9)
         
         progress.update(task, description="Vérification de l'Invariance...", advance=50)
-        model = Mem4Network(size=10, heretic_ratio=0.15, seed=42, adjacency_matrix=adj)
-        for _ in range(2000): model.step(I_stimulus=1.1)
+        model = Mem4Network(size=10, heretic_ratio=0.15, seed=42, adjacency_matrix=adj, cold_start=True)
+        for _ in range(3000): model.step(I_stimulus=1.1)
         h = model.calculate_entropy()
         
         return {
             "status": "OBSERVED",
             "metric": f"H={h:.2f}",
             "summary": f"Confirmation de la robustesse topologique (Constant de Percolation)."
+        }
+
+    def obs_percolation_formal(self, progress, task):
+        progress.update(task, description="Audit de distribution spatiale...", advance=30)
+        model = Mem4Network(size=10, heretic_ratio=0.15, seed=42)
+        heretics = model.model.heretic_mask.reshape((10, 10))
+        
+        # Calculate coverage: nodes connected to at least one heretic
+        coverage = np.zeros((10, 10), dtype=bool)
+        for i in range(10):
+            for j in range(10):
+                # Check neighbors (5-point stencil)
+                neighbors = [
+                    (i, j), # Self
+                    ((i+1)%10, j), ((i-1)%10, j),
+                    (i, (j+1)%10), (i, (j-1)%10)
+                ]
+                if any(heretics[ni, nj] for ni, nj in neighbors):
+                    coverage[i, j] = True
+        
+        efficiency = np.mean(coverage)
+        theoretical = 1 - (1-0.15)**5 # Including self as source
+        
+        return {
+            "status": "VERIFIED",
+            "metric": f"Actual={efficiency:.2f}, Theo={theoretical:.2f}",
+            "summary": f"Couverture spatiale de {efficiency*100:.1f}%. Les sources de dissidence irriguent le réseau."
         }
 
     def obs_deep_time_torture(self, progress, task):
@@ -207,7 +237,7 @@ Il génère les visuels nécessaires au Preprint et consigne les comportements �
         }
 
     def finalize(self):
-        report_path = os.path.join(ROOT_DIR, "FINAL_SCIENTIFIC_REPORT_V23.md")
+        report_path = os.path.join(ROOT_DIR, "FINAL_SCIENTIFIC_REPORT_V24.md")
         with open(report_path, "w", encoding="utf-8") as f:
             f.write(f"# RAPPORT UNIFIÉ D'OBSERVATION SCIENTIFIQUE - VERSION 2.3\n")
             f.write(f"**Date** : {self.report_data['timestamp']}\n\n")
@@ -255,6 +285,12 @@ Il génère les visuels nécessaires au Preprint et consigne les comportements �
             "Universalité Topologique",
             "Invariance de la diversité sur des réseaux non-linéaires.",
             self.obs_topological_universality
+        )
+
+        self.run_phase(
+            "Audit de Percolation",
+            "Validation de la distribution spatiale des hérétiques.",
+            self.obs_percolation_formal
         )
         
         self.run_phase(

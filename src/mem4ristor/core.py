@@ -51,11 +51,11 @@ class Mem4ristorV2:
             except:
                 # Fallback to hardcoded defaults if YAML mission
                 self.cfg = {
-                    'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.1},
-                    'coupling': {'D': 0.15, 'heretic_ratio': 0.15},
-                    'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-                    'noise': {'sigma_v': 0.05}
-                }
+                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
+                'coupling': {'D': 0.15, 'heretic_ratio': 0.15},
+                'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
+                'noise': {'sigma_v': 0.05}
+            }
         else:
             self.cfg = config
 
@@ -66,10 +66,15 @@ class Mem4ristorV2:
         self.N = 100 # Default
         self._initialize_params()
 
-    def _initialize_params(self, N=100):
+    def _initialize_params(self, N=100, cold_start=False):
         self.N = N
-        self.v = self.rng.uniform(-1.5, 1.5, self.N)
-        self.w = self.rng.uniform(0.0, 1.0, self.N)
+        if cold_start:
+            self.v = np.zeros(self.N)
+            self.w = np.zeros(self.N)
+        else:
+            self.v = self.rng.uniform(-1.5, 1.5, self.N)
+            self.w = self.rng.uniform(0.0, 1.0, self.N)
+            
         self.u = np.full(self.N, self.cfg['doubt']['sigma_baseline'])
         self.heretic_mask = self.rng.rand(self.N) < self.cfg['coupling']['heretic_ratio']
         self.D_eff = self.cfg['coupling']['D'] / np.sqrt(self.N)
@@ -162,7 +167,7 @@ class Mem4ristorV2:
 
 class Mem4Network:
     """High-level API for Mem4ristorV2 with formal Laplacian operators."""
-    def __init__(self, size: int = 10, heretic_ratio: float = 0.15, seed: int = 42, adjacency_matrix: Optional[np.ndarray] = None):
+    def __init__(self, size: int = 10, heretic_ratio: float = 0.15, seed: int = 42, adjacency_matrix: Optional[np.ndarray] = None, cold_start: bool = False):
         if seed is not None:
             np.random.seed(seed)
             
@@ -184,7 +189,7 @@ class Mem4Network:
             
         self.model = Mem4ristorV2(seed=seed)
         self.model.cfg['coupling']['heretic_ratio'] = heretic_ratio
-        self.model._initialize_params(self.N)
+        self.model._initialize_params(self.N, cold_start=cold_start)
 
     def get_spectral_gap(self) -> float:
         """
