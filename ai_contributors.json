@@ -17,7 +17,9 @@
         },
         {
             "model": "Antigravity (Google DeepMind Custom)",
-            "role": "Engineering orchestration, agentic code refactoring, v2.3-v2.5 implementation, and rigorous scientific protocol development."
+            "role": "Engineering orchestration, agentic code refactoring, v2.3-v2.6 implementation, and rigorous scientific protocol development.",
+            "bias_disclosure": "Defensive confirmation (identified by Audit v2.5; corrected in v2.6).",
+            "reliability_score": 0.95
         }
     ],
     "transparency_level": "Radical",

@@ -1,12 +1,12 @@
-# Mem4ristor v2.5 (Formal Research Release)
+# Mem4ristor v2.6 (Formal Research Release)
 Implementation Kit (Computational Model)
 
-> **Status**: Attractor Diversity Research Prototype (**v2.5**)  
+> **Status**: Attractor Diversity Research Prototype (**v2.6**)  
 > **Origin**: [Café Virtuel](https://www.cafevirtuel.org) Collaboration  
 > **Concept**: Neuromorphic cognitive resistance through **constitutional doubt** and **structural heretics**.
 
 ## 🔬 Overview
-Mem4ristor v2.5 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
+Mem4ristor v2.6 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
 
 This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.pdf).
 
@@ -17,13 +17,13 @@ The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" s
 3. **Formal Robustness**: The "Constitutional Doubt" mechanism acts as a cognitive buffer, allowing the network to resist forced consensus through phase inversion.
 
 ## 📂 Repository Structure
-- `src/mem4ristor/`: Cœur algorithmique (Moteur v2.5 - Simulation).
+- `src/mem4ristor/`: Cœur algorithmique (Moteur v2.6 - Simulation).
 - `docs/`: Preprint LaTeX, figures et manuscrit PDF.
 - `experiments/`: 
     - `protocol/`: Script principal de démonstration scientifique (`run_protocol_v24.py`).
     - `reproduction/`: Validation empirique (Données réelles CCC France).
     - `robustness/`: Tests de résilience (Topologie, Sweep, Résurrection).
-- `results/`: Sorties automatisées (Données v2.5 et Visuels).
+- `results/`: Sorties automatisées (Données v2.6 et Visuels).
 - `archives/`: Dossier historique (Protocoles v2.0/v2.2 et travaux préparatoires).
 - `requirements.txt`: Python dependencies.
 
@@ -35,11 +35,11 @@ The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" s
 
 ### 2. Run the Formal Verification Protocol (Recommended)
 ```bash
-python experiments/protocol/run_protocol_v25.py
+python experiments/protocol/run_protocol_v26.py
 ```
 *Note: This script provides an interactive demonstration of all robustness tests (Percolation, Topology, Resurrection).*
 
-### 3. Expected Results (Standard Signatures v2.5)
+### 3. Expected Results (Standard Signatures v2.6)
 - **Diversity Percolation**: Significant entropy jump precisely at $\eta=0.15$.
 - **Universal Robustness**: Stable diversity on Small-World and Random networks.
 - **Active Resurrection**: Immediate symmetry breaking from consensus ($H=0 \to H>1.5$).

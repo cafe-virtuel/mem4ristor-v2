@@ -1,7 +1,10 @@
+import os
+# MKL Determinism Fix (Kimi v2.6 P2)
+os.environ['NUMPY_MKL_CBWR'] = 'COMPATIBLE'
 import numpy as np
 import yaml
-import os
 from typing import Dict, List, Optional
+from scipy.integrate import solve_ivp
 
 class Mem4ristorV2:
     """
@@ -52,9 +55,9 @@ class Mem4ristorV2:
                 # Fallback to hardcoded defaults if YAML mission
                 self.cfg = {
                 'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
-                'coupling': {'D': 0.15, 'heretic_ratio': 0.15},
+                'coupling': {'D': 0.5, 'heretic_ratio': 0.15}, # SNR Hardened
                 'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-                'noise': {'sigma_v': 0.05}
+                'noise': {'sigma_v': 0.02} # SNR Hardened
             }
         else:
             self.cfg = config
@@ -76,7 +79,22 @@ class Mem4ristorV2:
             self.w = self.rng.uniform(0.0, 1.0, self.N)
             
         self.u = np.full(self.N, self.cfg['doubt']['sigma_baseline'])
-        self.heretic_mask = self.rng.rand(self.N) < self.cfg['coupling']['heretic_ratio']
+        
+        # Anti-Clustering Placement (Kimi v2.6 P1)
+        if self.cfg['coupling'].get('uniform_placement', True):
+            # Stratified placement: 1 heretic per block of size 1/ratio
+            step = int(1.0 / self.cfg['coupling']['heretic_ratio'])
+            heretic_ids = []
+            for i in range(0, self.N, step):
+                if len(heretic_ids) < int(self.N * self.cfg['coupling']['heretic_ratio']):
+                    # Pick one random index in this block
+                    block_end = min(i + step, self.N)
+                    heretic_ids.append(self.rng.randint(i, block_end))
+            self.heretic_mask = np.zeros(self.N, dtype=bool)
+            self.heretic_mask[heretic_ids] = True
+        else:
+            self.heretic_mask = self.rng.rand(self.N) < self.cfg['coupling']['heretic_ratio']
+            
         self.D_eff = self.cfg['coupling']['D'] / np.sqrt(self.N)
 
     def step(self, I_stimulus: float = 0.0, coupling_input: Optional[np.ndarray] = None) -> None:
@@ -143,6 +161,53 @@ class Mem4ristorV2:
         self.w += dw * self.dt
         self.u += du * self.dt
         self.u = np.clip(self.u, self.cfg['doubt']['u_clamp'][0], self.cfg['doubt']['u_clamp'][1])
+
+    def solve_rk45(self, t_span, I_stimulus=0.0, adj_matrix=None):
+        """
+        High-precision integration using RK45 for long-term stability (Kimi v2.6 P0).
+        """
+        def combined_dynamics(t, y):
+            # Split state
+            N = self.N
+            v = y[:N]
+            w = y[N:2*N]
+            u = y[2*N:]
+            
+            # Laplacian
+            if adj_matrix is None:
+                laplacian_v = np.zeros(N)
+            else:
+                laplacian_v = adj_matrix @ v - v
+                
+            sigma_social = np.abs(laplacian_v)
+            
+            # Doubt & Stimulus
+            u_filter = (1.0 - 2.0 * u)
+            I_eff = np.full(N, float(I_stimulus))
+            I_eff[self.heretic_mask] *= -1.0
+            I_ext = I_eff + self.D_eff * u_filter * laplacian_v
+            
+            # Noise (Additive white noise is tricky in IVP, we use a fixed seed per step or just mean behavior)
+            # For H stability tests, we often look at deterministic attractor or low-noise limit
+            eta = self.rng.normal(0, self.cfg['noise'].get('sigma_v', 0.02), N)
+            
+            dv = v - (v**3)/self.cfg['dynamics']['v_cubic_divisor'] - w + I_ext - \
+                 self.cfg['dynamics']['alpha'] * np.tanh(v) + eta
+            dw = self.cfg['dynamics']['epsilon'] * (v + self.cfg['dynamics']['a'] - self.cfg['dynamics']['b'] * w)
+            du = (self.cfg['doubt']['epsilon_u'] * (self.cfg['doubt']['k_u'] * sigma_social + \
+                                                   self.cfg['doubt']['sigma_baseline'] - u)) / self.cfg['doubt']['tau_u']
+            
+            return np.concatenate([dv, dw, du])
+
+        y0 = np.concatenate([self.v, self.w, self.u])
+        sol = solve_ivp(combined_dynamics, t_span, y0, method='RK45', rtol=1e-6)
+        
+        # Update state to last point
+        y_final = sol.y[:, -1]
+        self.v = y_final[:self.N]
+        self.w = y_final[self.N:2*self.N]
+        self.u = np.clip(y_final[2*self.N:], self.cfg['doubt']['u_clamp'][0], self.cfg['doubt']['u_clamp'][1])
+        return sol
 
     def get_states(self) -> np.ndarray:
         states = np.zeros(self.N, dtype=int)

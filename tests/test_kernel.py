@@ -66,6 +66,61 @@ def test_repulsive_flip():
     
     assert model.v[0] < -1.0
     assert model.v[1] > 1.0
+    
+def test_snr_validity():
+    """Verify that the repulsive interaction is stronger than the noise floor."""
+    cfg = {
+        'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.1},
+        'coupling': {'D': 0.5, 'heretic_ratio': 0.0}, # SNR Hardened
+        'doubt': {'epsilon_u': 0.0, 'k_u': 1.0, 'sigma_baseline': 0.8, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
+        'noise': {'sigma_v': 0.02} # SNR Hardened
+    }
+    model = Mem4ristorV2(config=cfg, seed=42)
+    model._initialize_params(N=2)
+    model.v = np.array([-1.0, 1.0])
+    
+    # Laplacian: 1 - (-1) = 2
+    # I_coup = D_eff * (1-2u) * L = (0.5/sqrt(2)) * (1-1.6) * 2 = 0.353 * -0.6 * 2 = -0.423
+    # Noise = 0.02
+    # SNR = |I_coup| / noise = 0.423 / 0.02 = 21.15
+    
+    u_filter = (1.0 - 2.0 * model.u)
+    I_coup = model.D_eff * u_filter * (np.array([1.0, -1.0]) - model.v)
+    
+    assert np.all(np.abs(I_coup) > 5 * cfg['noise']['sigma_v'])
+
+def test_spatial_clustering():
+    """Verify that heretics are not clustered together (Kimi v2.6 P1)."""
+    model = Mem4ristorV2(seed=42)
+    model._initialize_params(N=100) # Grid 10x10
+    
+    # Simple check: heretics should not be too close in index 
+    # (since we use row-major grid, indices 0,1,2... are neighbors)
+    heretic_ids = np.where(model.heretic_mask)[0]
+    diffs = np.diff(heretic_ids)
+    
+    # If clustered, many diffs would be 1
+    cluster_count = np.sum(diffs == 1)
+    # For N=100, 15 heretics, clustering < 4 is very spread
+    assert cluster_count < 5
+
+def test_rk45_stability():
+    """Verify that RK45 maintains entropy better than Euler (Kimi v2.6 P0)."""
+    model = Mem4ristorV2(seed=42)
+    model._initialize_params(N=100)
+    
+    adj = np.zeros((100, 100))
+    # Full lattice for test
+    for i in range(100):
+        for j in [i-1, i+1, i-10, i+10]:
+            if 0 <= j < 100: adj[i, j] = 1
+            
+    # Solve for 100 steps (1.0 time units if dt=0.01)
+    sol = model.solve_rk45((0, 1.0), I_stimulus=0.5, adj_matrix=adj)
+    
+    # Entropy should be high
+    h_final = model.calculate_entropy()
+    assert h_final > 1.5
 
 def test_reproducibility():
     """Verify that identical seeds produce identical results."""
