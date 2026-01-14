@@ -1,0 +1,25 @@
+{
+    "project": "Mem4ristor v2.5",
+    "methodology": "Café Virtuel",
+    "human_orchestrator": "Julien Chauvin (The Barman)",
+    "ai_contributors": [
+        {
+            "model": "Claude 3.5 Sonnet (Anthropic)",
+            "role": "Initial conceptualization, LaTeX drafting, and initial core logic v2.0."
+        },
+        {
+            "model": "Grok-2 (xAI)",
+            "role": "Adversarial testing, heretic ratio hypothesis (15%), and philosophy of doubt."
+        },
+        {
+            "model": "Gemini 1.5 Pro (Google)",
+            "role": "Code refinement, sensitivity analysis sweep, and large-scale data visualization."
+        },
+        {
+            "model": "Antigravity (Google DeepMind Custom)",
+            "role": "Engineering orchestration, agentic code refactoring, v2.3-v2.5 implementation, and rigorous scientific protocol development."
+        }
+    ],
+    "transparency_level": "Radical",
+    "provenance_tracking": "Full transcript available in Café Virtuel repository."
+}
