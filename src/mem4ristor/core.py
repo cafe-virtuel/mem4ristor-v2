@@ -8,13 +8,13 @@ from scipy.integrate import solve_ivp
 
 class Mem4ristorV2:
     """
-    Canonical Implementation of Mem4ristor v2.9.1 (Kimi Hardened Release).
+    Canonical Implementation of Mem4ristor v2.9.2 (Edison Integrity Fix).
     
     Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u)
     and structural heretics for diversity preservation in neuromorphic-inspired computational models.
     
     Core Equations:
-        dv/dt = v - v³/4 - w + I_ext - α·tanh(v) + η(t)
+        dv/dt = v - v³/5 - w + I_ext - α·tanh(v) + η(t)
         dw/dt = ε(v + a - bw)
         du/dt = ε_u(k_u·σ_social + σ_baseline - u)
     
@@ -54,10 +54,10 @@ class Mem4ristorV2:
             except (FileNotFoundError, yaml.YAMLError):
                 # Fallback to hardcoded defaults if YAML missing or invalid
                 self.cfg = {
-                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.05},
-                'coupling': {'D': 0.5, 'heretic_ratio': 0.15}, # SNR Hardened
+                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
+                'coupling': {'D': 0.15, 'heretic_ratio': 0.15}, # SNR Hardened
                 'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-                'noise': {'sigma_v': 0.02} # SNR Hardened
+                'noise': {'sigma_v': 0.05} # SNR Hardened
             }
         else:
             self.cfg = config

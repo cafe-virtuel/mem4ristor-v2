@@ -7,6 +7,7 @@
 | Hardware mapping | ❌ SPECULATION | None | No SPICE model exists | NO (unfalsifiable) |
 | Long-term stability | ❌ FALSE | dt=0.05 | H drift > 5% @ 5000 steps | YES (see failures/) |
 | Cross-platform parity | ✅ FIXED | Yes | MKL Non-determinism | YES (v2.6 fix) |
+| H ≈ 1.94 Attractor | ❌ FALSE | No | Max H found ≈ 1.56 | YES (see failure #15) |
 
 **Rule**: Any claim marked ❌ MUST be qualified as "Phenomenological" or "Speculative" in the preprint.
 
@@ -29,13 +30,18 @@ The Euler integration method becomes unstable when $dt > 0.1$. At $dt = 0.5$, en
 - **Proof**: `test_euler_drift_torture` in `test_adversarial.py`.
 - **Mitigation**: Preprint specifies $dt \le 0.05$ for standard use.
 
+### [FAIL-015] Attractor Diversity Gap (H ≈ 1.94 Claim)
+The preprint claims an attractor diversity of $H \approx 1.94$. Empirical audits with both code defaults and preprint parameters failed to reproduce this, achieving a maximum $H \approx 1.56$. Cold start protocols consistently collapsed to $H=0$.
+- **Proof**: Edison Audit 2026-01-14.
+- **Status**: OPEN. Claim must be revised or exact conditions documented.
+
 ---
 
-## v2.9.1 Fixes (Kimi Hardened Release)
+## v2.9.2 Fixes (Edison Integrity Fix)
 
 | Bug | Status | Fix |
 |:----|:-------|:----|
+| Parameter Discrepancy | ✅ FIXED | `core.py` defaults aligned with preprint (D=0.15, etc.) |
 | `ZeroDivisionError` when `heretic_ratio=0.0` | ✅ FIXED | Guard clause in `_initialize_params` |
-| Version string inconsistency | ✅ FIXED | Unified to v2.9.1 |
+| Version string inconsistency | ✅ FIXED | Unified to v2.9.2 |
 | Adversarial test failures blocking CI | ✅ FIXED | Marked as `xfail` with documentation links |
-

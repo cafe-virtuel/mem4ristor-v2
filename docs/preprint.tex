@@ -36,13 +36,13 @@
 \maketitle
 
 \begin{abstract}
-When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v2.6}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism as a dynamic phase-inverter and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}). Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.94$). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. Historically, this work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
+When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v2.6}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism as a dynamic phase-inverter and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. Historically, this work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
 \end{abstract}
 
 \section{Introduction}
 
 Consider a citizens' assembly where 80\% of participants initially favor option A. Without structural safeguards, classical coupled-oscillator or consensus models predict rapid synchronization to A within minutes, erasing nuanced perspectives and locking in a potentially fragile decision~\cite{olfati2007,strogatz2000}. % v2.0.2 Scientific Narrative Update
-Mem4ristor v2.6 addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v2.6, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($1-2u$) and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.94$) surviving external pressure.
+Mem4ristor v2.6 addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v2.6, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($1-2u$) and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$) surviving external pressure.
 
 Algorithmic decision systems increasingly risk uniformizing collective intelligence, converging prematurely to consensus without preserving minority perspectives. Classical models like Kuramoto oscillators or distributed consensus algorithms intrinsically drive toward synchronization, losing cognitive diversity essential for robust deliberation. This ``oracle collapse'' problem manifests in both artificial networks and social systems, where majority pressure extinguishes dissenting views.
 
@@ -186,7 +186,7 @@ The Mem4ristor v2.6 implementation is strictly governed by a set of \textbf{Inva
 \toprule
 \textbf{Configuration} & \textbf{Collapse Step} & \textbf{Max Entropy} & \textbf{Minority Vitality} \\
 \midrule
-\textbf{Full Model (v2.6)} & \textbf{Stable} & \textbf{1.94} & \textbf{High} \\
+\textbf{Full Model (v2.6)} & \textbf{Stable} & \textbf{1.56} & \textbf{High} \\
 
 None (u=0, no heretics) & 226 & 1.10 & Low \\
 No Doubt (u=0) & 231 & 1.25 & Medium \\
@@ -311,9 +311,9 @@ To contextualize the performance of Mem4Ristor v2.6, we benchmarked it against f
 \toprule
 \textbf{Model Config} & \textbf{Initial Condition} & \textbf{Terminal $H$} & \textbf{std($v$)} & \textbf{Result} \\
 \midrule
-Full Model (v2.6) & Random (Controlled) & 1.94 & 0.52 & \textbf{PASS} \\
+Full Model (v2.6) & Random (Controlled) & 1.56 & 0.52 & \textbf{PASS} \\
 Ablated (No Heretics) & Random (None) & 0.00 & 0.00 & \textbf{COLLAPSE} \\
-Full Model (v2.6) & \textbf{Homogeneous (0)} & \textbf{0.22} & \textbf{1.15} & \textbf{PASS (Robust)} \\
+Full Model (v2.6) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00} & \textbf{COLLAPSE (Noise Required)} \\
 Ablated (No Heretics) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00} & \textbf{COLLAPSE} \\
 
 \bottomrule
@@ -349,7 +349,7 @@ This mechanism shatters the "Consensus Well" by ensuring that dissidents push ba
 \subsection{Validation: Active Diversity Restoration (v2.6)}
 The revision to v2.6 addresses the "Initial Condition Paradox" identified during audit. In earlier versions, high terminal entropy was maintained even after heretic ablation due to randomized starting states. v2.6 maintains the \textbf{Cold Start Protocol}: all units are initialized to a singular point ($v=0, w=0, H=0$). 
 
-Under this protocol, the necessity of the heretic mechanism becomes mathematically absolute. While normal units succumb to the symmetry of the field, heretic units introduce localized stimulus-driven divergence that propagates entropy throughout the network. In v2.6, the system restores diversity to $H \approx 0.61$ from a zero-entropy start, whereas an ablated system remains permanently locked in consensus ($H \equiv 0$). This confirms the heretic mechanism not just as a maintenance tool, but as an \textbf{active restorer} of deliberative health.
+Under this protocol, the necessity of the heretic mechanism becomes mathematically absolute. While normal units succumb to the symmetry of the field, heretic units introduce localized stimulus-driven divergence that propagates entropy throughout the network. In v2.6, the system requires minimal noise to break symmetry; zero-noise leads to stasis ($H=0$). With noise, the system restores diversity to $H \approx 0.61$, whereas an ablated system remains permanently locked in consensus ($H \equiv 0$). This confirms the heretic mechanism not just as a maintenance tool, but as an \textbf{active restorer} of deliberative health.
 
 
 \section{Empirical Validation: The CCC France Pilot}
