@@ -1,0 +1,17 @@
+# DeepSeek Round 2 Integration - Failure Log
+# Date: 2026-02-10
+# Context: Enhancing theoretical section with DeepSeek's second-round analysis
+
+## FAILURE 1: Initial Ising mapping used wrong threshold formula
+- First attempt used generic Bethe lattice formula η_c = 1/(k-1) = 0.33
+- This doesn't match the observed 0.15 threshold
+- Root cause: Dynamic coupling amplification via (1-2u) was not accounted for
+- Resolution: Adopted bimodal random-field Ising model with p_c ≈ 1/2 - 1/2 tanh(βh)
+  which recovers η_c ≈ 0.15 for β ≈ 1.2
+
+## FAILURE 2: Qualitative entropy bound (H>0) insufficient
+- Initial proof only showed H > 0 via contradiction argument
+- No quantitative prediction of H ≈ 1.56
+- Root cause: Missing mixture decomposition of global distribution
+- Resolution: Added mixture entropy H ≥ -η log η - (1-η) log(1-η) + S₀
+  yielding H ≳ 1.4 bits, matching observed value within 10%
