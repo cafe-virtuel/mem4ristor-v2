@@ -1,12 +1,13 @@
-# Mem4ristor v2.6 (Formal Research Release)
+# Mem4ristor v2.9.3 (Antigravity Hardened Core)
 Implementation Kit (Computational Model)
 
-> **Status**: Attractor Diversity Research Prototype (**v2.6**)  
+> **Status**: Attractor Diversity Research Prototype (**v2.9.3**)  
 > **Origin**: [Café Virtuel](https://www.cafevirtuel.org) Collaboration  
+> **Author**: Julien Chauvin ([ORCID: 0009-0006-9285-2308](https://orcid.org/0009-0006-9285-2308))  
 > **Concept**: Neuromorphic cognitive resistance through **constitutional doubt** and **structural heretics**.
 
 ## 🔬 Overview
-Mem4ristor v2.6 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
+Mem4ristor v2.9.3 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
 
 This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.pdf).
 
@@ -20,11 +21,13 @@ The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" s
 - `src/mem4ristor/`: Cœur algorithmique (Moteur v2.6 - Simulation).
 - `docs/`: Preprint LaTeX, figures et manuscrit PDF.
 - `experiments/`: 
-    - `protocol/`: Script principal de démonstration scientifique (`run_protocol_v24.py`).
-    - `reproduction/`: Validation empirique (Données réelles CCC France).
-    - `robustness/`: Tests de résilience (Topologie, Sweep, Résurrection).
-- `results/`: Sorties automatisées (Données v2.6 et Visuels).
-- `archives/`: Dossier historique (Protocoles v2.0/v2.2 et travaux préparatoires).
+    - `protocol/`: Script principal de démonstration scientifique (`run_protocol_v26.py`).
+    - `benchmark_kuramoto.py`: Comparative benchmark vs Standard/Frustrated Kuramoto.
+    - `phase_diagram.py`: Phase diagram H(heretic_ratio, D) heatmap.
+    - `lyapunov_numerical.py`: Numerical Lyapunov candidate verification.
+    - `robustness/`: Tests de résilience (Topologie, Scale-Free, Sweep, Résurrection).
+    - `spice/`: ngspice behavioral simulation netlist.
+- `results/`: Sorties automatisées (Benchmarks, Phase Diagram, Figures).
 - `requirements.txt`: Python dependencies.
 
 ## 🚀 Quick Start (Verify in 5 minutes)

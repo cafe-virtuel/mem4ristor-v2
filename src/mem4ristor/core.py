@@ -118,6 +118,15 @@ class Mem4ristorV2:
         Returns:
             None (updates internal state in-place)
         """
+        # GUARD 0: NaN detection on state variables (v2.9.3 Antigravity fix)
+        # Prevents NaN propagation from corrupted state to entire network via coupling
+        if np.any(np.isnan(self.v)):
+            self.v = np.nan_to_num(self.v, nan=0.0)
+        if np.any(np.isnan(self.w)):
+            self.w = np.nan_to_num(self.w, nan=0.0)
+        if np.any(np.isnan(self.u)):
+            self.u = np.nan_to_num(self.u, nan=0.5)  # Default to maximum uncertainty
+        
         if coupling_input is None:
             laplacian_v = np.zeros(self.N)
         elif coupling_input.ndim == 2:
@@ -238,13 +247,25 @@ class Mem4ristorV2:
         states[v > 1.5] = 5
         return states
 
-    def calculate_entropy(self, bins=5) -> float:
+    def calculate_entropy(self, bins=5, use_cognitive_bins=True) -> float:
         """
-        Calculate Shannon entropy of the state distribution.
-        v2.7.1 Fixed: Broadened range (-5, 5) to account for sharpened attractors.
+        Shannon entropy of the activation state distribution.
+        Used as the primary metric for cognitive diversity.
+        
+        Args:
+            bins: Number of bins for histogram (used if use_cognitive_bins=False)
+            use_cognitive_bins: If True, uses state thresholds aligned with get_states()
+                               for scientifically consistent entropy measurement.
         """
         v = self.v
-        counts, _ = np.histogram(v, bins=bins, range=(-5.0, 5.0))
+        if use_cognitive_bins:
+            # Aligned with get_states() thresholds: [-inf, -1.5, -0.8, 0.8, 1.5, +inf]
+            # This ensures entropy measures the same cognitive states as Table 1 in preprint
+            bin_edges = [-np.inf, -1.5, -0.8, 0.8, 1.5, np.inf]
+            counts, _ = np.histogram(v, bins=bin_edges)
+        else:
+            # Legacy uniform binning (kept for backward compatibility with tests)
+            counts, _ = np.histogram(v, bins=bins, range=(-5.0, 5.0))
         total = np.sum(counts)
         if total == 0: return 0.0
         probs = counts / total
@@ -253,9 +274,24 @@ class Mem4ristorV2:
 
 class Mem4Network:
     """High-level API for Mem4ristorV2 with formal Laplacian operators."""
-    def __init__(self, size: int = 10, heretic_ratio: float = 0.15, seed: int = 42, adjacency_matrix: Optional[np.ndarray] = None, cold_start: bool = False):
-        if seed is not None:
-            np.random.seed(seed)
+    def __init__(self, size: int = 10, heretic_ratio: float = 0.15, seed: int = 42,
+                 adjacency_matrix: Optional[np.ndarray] = None, cold_start: bool = False,
+                 boundary: str = 'periodic'):
+        """
+        Args:
+            size: Grid side length (total units = size * size)
+            heretic_ratio: Fraction of heretic units [0, 1]
+            seed: Random seed for reproducibility
+            adjacency_matrix: Optional explicit adjacency matrix (overrides stencil)
+            cold_start: If True, initialize all units to identical state
+            boundary: Boundary condition for stencil Laplacian:
+                      'periodic' (toroidal wrap, default) or 'neumann' (zero-flux)
+        """
+        # v2.9.3 fix: Use local RNG instead of global np.random.seed
+        # Global seed mutation caused non-deterministic behavior when
+        # multiple Mem4Network instances were created in the same session
+        self.rng = np.random.RandomState(seed)
+        self.boundary = boundary
             
         self.adjacency_matrix = adjacency_matrix
         if adjacency_matrix is not None:
@@ -297,20 +333,33 @@ class Mem4Network:
         """
         Standard Discrete 2D Laplacian using 5-point stencil.
         L[i,j] = v[i+1,j] + v[i-1,j] + v[i,j+1] + v[i,j-1] - 4*v[i,j]
-        Boundary conditions: Constant (Dirichlet-like) for stability.
+        
+        Boundary conditions (v2.9.3 Antigravity fix):
+          - 'periodic': Toroidal wrap (default). All units have exactly 4 neighbors.
+            Eliminates the border artifact where 36% of units had zero coupling.
+            Physically equivalent to an infinite tiling of the lattice.
+          - 'neumann': Zero-flux (dv/dn = 0). Border neighbors are reflected copies.
+            Physically equivalent to an insulating boundary.
         """
-        v_grid = v.reshape((self.size, self.size))
-        output = np.zeros_like(v_grid)
+        s = self.size
+        v_grid = v.reshape((s, s))
         
-        # Kernel weights: center = -4, neighbors = 1
-        # Internal points (4 neighbors)
-        output[1:-1, 1:-1] = (v_grid[0:-2, 1:-1] + v_grid[2:, 1:-1] + 
-                             v_grid[1:-1, 0:-2] + v_grid[1:-1, 2:] - 
-                             4 * v_grid[1:-1, 1:-1])
+        if self.boundary == 'periodic':
+            # Periodic (toroidal) boundary conditions
+            # np.roll handles the wrap-around: index -1 wraps to last, index s wraps to 0
+            output = (np.roll(v_grid, 1, axis=0) + np.roll(v_grid, -1, axis=0) +
+                      np.roll(v_grid, 1, axis=1) + np.roll(v_grid, -1, axis=1) -
+                      4 * v_grid)
+        elif self.boundary == 'neumann':
+            # Neumann (zero-flux) boundary conditions
+            # Pad with reflected values (mirror at edges)
+            padded = np.pad(v_grid, 1, mode='edge')
+            output = (padded[0:-2, 1:-1] + padded[2:, 1:-1] +
+                      padded[1:-1, 0:-2] + padded[1:-1, 2:] -
+                      4 * v_grid)
+        else:
+            raise ValueError(f"Unknown boundary condition '{self.boundary}'. Use 'periodic' or 'neumann'.")
         
-        # Borders (simplified constant BC: neighbors outside are assumed same as border)
-        # Note: A truly formal approach specifies exactly what happens at edges.
-        # This is a standard finite difference approximation.
         return output.flatten()
 
     def step(self, I_stimulus: float = 0.0):
@@ -329,7 +378,7 @@ class Mem4Network:
     @property
     def v(self): return self.model.v
     
-    def calculate_entropy(self): return self.model.calculate_entropy()
+    def calculate_entropy(self, **kwargs): return self.model.calculate_entropy(**kwargs)
     
     def get_state_distribution(self):
         states = self.model.get_states()

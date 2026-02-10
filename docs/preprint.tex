@@ -249,10 +249,6 @@ The methodology operates through discrete \emph{sessions}, each with explicit re
 
 Complete session transcripts, intermediate code versions, and contribution attribution are maintained in a separate public repository~\cite{bommasani2021}.
 
-\section{Development Methodology \& AI Tooling Statement}
-
-This work was developed using the \textbf{Café Virtuel framework}, a human-orchestrated collaborative research environment involving multiple large language model (LLM) agents. We adopt a policy of \textbf{Radical Transparency} regarding AI involvement to ensure methodological clarity.
-
 \subsection{Statement on AI Tooling}
 The model's development followed a multi-stage process where agents (Claude, GPT, Gemini, Antigravity) were used for code generation, mathematical formalization, and exploratory benchmarking. All final parameters and scientific claims were reviewed and decided upon by the human author (\textit{the orchestrator}).
 
@@ -264,7 +260,7 @@ To analyze the model's limits, Mem4ristor v2.2 underwent an \textbf{AI-Assisted 
 Edison Analysis identified a \textbf{Zero Initialization Bug} in early versions, where $v=0, w=0$ prompted a consensus collapse ($H=0$). Correcting this led to v2.0.4.
 
 \textbf{Quantitative Characterization (v2.2):}
-The system demonstrated sustained stability ($H = 1.99$ bits) over 50,000 steps. These runs characterize the system's resilience to ``Deep Time'' synchronization, yielding a \textbf{resilience factor of $5.75\times$} relative to ablated control models.
+The system demonstrated sustained stability ($H \approx 1.56$ bits) over 50,000 steps. These runs characterize the system's resilience to ``Deep Time'' synchronization, yielding a \textbf{resilience factor of $5.75\times$} relative to ablated control models. Note: early reports of $H \approx 1.99$ were based on a wider binning range; the corrected value of $H \approx 1.56$ uses cognitive-state-aligned bins consistent with Table~\ref{tab:ablations}.
 
 \section{Results}
 
@@ -376,9 +372,6 @@ These results confirm that the Mem4ristor architecture, through its constitution
 \section{Discussion}
 
 To bridge theory and physical implementation, we provide a phenomenological mapping onto memristive crossbars. Using parameters inspired by RRAM literature, we formalize $w$ as an analogue to oxygen-vacancy-driven conductance. 
-
-\subsection{Conclusion: A Normative Framework for Cognitive Diversity}
-The Mem4ristor v2.6 framework establishes a mathematically rigorous and topologically universal method for preserving deliberative diversity. By integrating formal Laplacian operators and a protocol-driven verification suite, we provide an executable specification for the next generation of resilient neuromorphic-inspired computational models.
 
 \subsection{Physical Interpretation: Frustrated Synchronization}
 From a condensed matter physics perspective, the Mem4ristor model implements \textbf{Frustrated Synchronization}. In magnetic systems, frustration prevents the alignment of spins, leading to complex ground states (spin glasses). In our deliberative model, the heretic ratio and the doubt-driven repulsive coupling act as a "calculated frustration," preventing the "Heat Death" of cognitive uniformity and maintaining the system in a permanent state of high-entropy deliberation.

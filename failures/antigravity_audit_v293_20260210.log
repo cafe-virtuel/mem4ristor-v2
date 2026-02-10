@@ -1,0 +1,39 @@
+# Antigravity Audit v2.9.3 — Failure Evidence Log
+# Date: 2026-02-10
+# Auditor: Antigravity (Gemini 2.5 Pro)
+# Context: Full audit of Mem4ristor codebase
+
+## FAILURE 1: NaN Propagation via Coupling
+- State variables (v, w, u) could become NaN and propagate through network
+- Root cause: No guards on state variables before coupling computation
+- Impact: Complete network corruption in long simulations
+- Fix: NaN guards added to v, w, u at start of step()
+
+## FAILURE 2: Dead-Border Artifact (36%)
+- Stencil Laplacian used zero-padding, creating dead borders
+- Root cause: Missing boundary condition handling
+- Impact: Border elements disconnected from network (36% of 10x10 grid)
+- Fix: Periodic (toroidal) and Neumann boundary conditions implemented
+
+## FAILURE 3: Entropy Misalignment
+- calculate_entropy() used uniform bins [-5, 5]
+- get_states() used cognitive bins [-1.5, -0.8, 0.8, 1.5]
+- Impact: Entropy metric measured different states than reported
+- Fix: Aligned entropy bins with cognitive state thresholds
+
+## FAILURE 4: Global RNG Pollution
+- Mem4Network used np.random.seed() (global state)
+- Impact: Non-deterministic behavior with multiple instances
+- Fix: Replaced with local np.random.RandomState(seed)
+
+## FAILURE 5: Preprint H-Value Overclaim
+- Claimed H = 1.99 bits (theoretical maximum for 5 bins = 2.32)
+- Actual measured: H ≈ 1.56 bits
+- Impact: Overstated diversity performance by 28%
+- Fix: Corrected to H ≈ 1.56 with qualification
+
+## FAILURE 6: Lyapunov Candidate Rejection
+- Quadratic candidate V = 1/2 v^2 + ... violated dV/dt <= 0 in 53% of steps
+- Root cause: System is limit cycle, not fixed-point attractor
+- Impact: Cannot claim formal stability via standard Lyapunov
+- Documented honestly as negative result
