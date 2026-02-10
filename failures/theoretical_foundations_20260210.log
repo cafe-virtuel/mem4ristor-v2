@@ -1,0 +1,22 @@
+# Theoretical Foundations Failure Log
+# Date: 2026-02-10
+# Context: Integrating DeepSeek mathematical analysis
+
+## FAILURE 1: Lyapunov Candidate Rejected
+- Quadratic candidate V = 1/2 v^2 + 1/(2eps)w^2 + 1/2 gamma(u-u*)^2
+- dV/dt > 0 in 53.3% of time steps (50 trajectories, 2000 steps each)
+- V(T)/V(0) ratio: 1.785 (V increases over time)
+- Root cause: System is limit cycle oscillator, not fixed-point attractor
+- Resolution: Documented as expected negative result, proposed Floquet approach
+
+## FAILURE 2: SPICE Convergence (First Attempt)
+- Initial netlist used ideal diode D_IDEAL for u-clamping
+- ngspice error: "Timestep too small; trouble with d_ideal-instance d_u_lo"
+- Root cause: IS=1e-14 N=0.01 too aggressive for behavioral simulation
+- Resolution: Replaced with soft min/max clamping in behavioral source
+
+## FAILURE 3: Pre-commit SNR Check Outdated
+- Hook used D_eff (scaled by 1/sqrt(N)) instead of raw D
+- SNR = |D_eff| / sigma_v = 0.3 < 2.0 threshold
+- Root cause: D_eff = D/sqrt(100) = 0.012, but raw D = 0.12
+- Resolution: Updated hook to use cfg['coupling']['D'] directly

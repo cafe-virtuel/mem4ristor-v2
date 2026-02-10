@@ -9,7 +9,7 @@ Implementation Kit (Computational Model)
 ## 🔬 Overview
 Mem4ristor v2.9.3 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
 
-This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.pdf).
+This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.tex).
 
 ### 🛡️ Scientific Rationale (Addressing Consensus Collapse)
 The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" synchronization:

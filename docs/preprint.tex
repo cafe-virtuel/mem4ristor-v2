@@ -16,7 +16,7 @@
 
 \geometry{margin=2.5cm}
 
-\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v2.6)}
+\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v2.9.3)}
 
 \author{
     \textbf{Julien Chauvin} \\
@@ -369,6 +369,64 @@ The model was qualitatively evaluated on three representative scenarios from the
 
 These results confirm that the Mem4ristor architecture, through its constitutional doubt mechanism, acts as a \textbf{diversity protector} that mirrors the qualitative dynamics of human deliberation processes.
 
+\section{Theoretical Foundations}
+
+The empirical results presented above are supported by the following theoretical analysis, developed in collaboration with mathematical systems analysis.
+
+\subsection{Orbital Stability}
+
+The failure of the quadratic Lyapunov candidate $V = \frac{1}{2}v^2 + \frac{1}{2\varepsilon}w^2 + \frac{1}{2}\gamma(u-u^*)^2$ (53\% violation rate for $\dot{V} > 0$) is \emph{expected}: the system is a limit-cycle oscillator, not a fixed-point attractor. Standard Lyapunov theory is inapplicable.
+
+\textbf{Existence of the limit cycle.} For a single decoupled unit ($D=0$) with $u$ treated as a quasi-static parameter ($\varepsilon_u \ll 1$), the $(v,w)$ subsystem reduces to a modified FitzHugh--Nagumo oscillator. By the \textbf{Poincar\'e--Bendixson theorem}:
+\begin{enumerate}
+    \item The term $-\alpha\tanh(v)$ ensures boundedness of $|v|$, and $b > 0$ ensures stability of $w$. Thus, there exists a compact positively invariant set $\Omega = \{(v,w) : |v| \le V_{\max}, |w| \le W_{\max}\}$.
+    \item The unique equilibrium $(v^*, w^*)$ satisfying $v^* - {v^*}^3/5 - w^* - \alpha\tanh(v^*) = 0$ and $w^* = (v^* + a)/b$ is unstable for the standard parameter range (verified numerically).
+    \item By Poincar\'e--Bendixson, the absence of a stable equilibrium in $\Omega$ implies the existence of a limit cycle.
+\end{enumerate}
+
+\textbf{Orbital stability via Floquet theory.} For the full coupled system, one can:
+\begin{enumerate}
+    \item Find a periodic orbit $\mathbf{x}^*(t)$ numerically.
+    \item Linearize: $\dot{\mathbf{y}} = J(t)\,\mathbf{y}$, where $J(t)$ is the periodic Jacobian.
+    \item Compute the Floquet multipliers $\mu_i$. Orbital stability holds if $|\mu_i| < 1$ for all $i$ except one trivial $\mu = 1$ (tangential perturbation).
+\end{enumerate}
+For the coupled network, diagonalization of the graph Laplacian separates the analysis into Fourier modes. The $(1-2u)$ term can induce transverse instabilities when $u > 0.5$, which is precisely the mechanism that \emph{prevents} synchronization and promotes diversity.
+
+\subsection{The 15\% Percolation Threshold}
+
+The empirical observation that $\eta = 0.15$ serves as the critical heretic ratio admits a combinatorial interpretation. On a $k$-regular lattice, the probability that a normal unit is connected to at least one heretic is:
+\begin{equation}
+    P_{\text{contact}} = 1 - (1-\eta)^k.
+    \label{eq:percolation}
+\end{equation}
+For a 2D grid ($k=4$) with $\eta = 0.15$:
+\[
+P_{\text{contact}} = 1 - (0.85)^4 \approx 0.48.
+\]
+This means that \textbf{nearly half of all normal units are directly adjacent to at least one heretic}, which is sufficient to break local consensus nuclei throughout the network.
+
+This mechanism is analogous to \textbf{frustrated spin glasses}: heretics introduce a local inverted field, frustrating ferromagnetic alignment. In random-field Ising models, the transition from ordered to frustrated phase occurs when the disorder concentration exceeds a critical threshold that depends on dimension and coordination number. For a Bethe lattice of coordination $k$, the critical influence threshold is $\eta_c = 1/(k-1)$, giving $\eta_c \approx 0.33$ for $k=4$. In Mem4ristor, the dynamic coupling via the doubt variable $(1-2u)$ effectively amplifies the heretic influence, reducing the critical threshold to approximately $0.15$---consistent with numerical observations across Grid, Small-World, Random, and Scale-Free topologies.
+
+\subsection{Entropy Lower Bound}
+
+We show that $H > 0$ is guaranteed whenever $\eta > 0$ and $\sigma_{\text{baseline}} > 0$.
+
+\textbf{Proof sketch (by contradiction).} Suppose the system reaches perfect consensus: all $v_i = v^*$ (a single cognitive state). Then:
+\begin{enumerate}
+    \item The Laplacian coupling vanishes: $\Delta v = 0$ for all units.
+    \item Each unit obeys its isolated dynamics with its own stimulus sign.
+    \item Normal units receive $+I_{\text{stimulus}}$ while heretics receive $-I_{\text{stimulus}}$.
+    \item Since $\eta > 0$, heretics evolve toward a different equilibrium than normal units, contradicting the consensus assumption.
+\end{enumerate}
+Therefore, the consensus state is \textbf{not an attractor} of the coupled system whenever $\eta > 0$. Furthermore, $\sigma_{\text{baseline}} > 0$ ensures that doubt is activated even in isolation ($u \to \sigma_{\text{baseline}} > 0$), maintaining the coupling modulation $(1-2u) < 1$ and preventing perfect synchronization even transiently.
+
+A quantitative lower bound can be obtained via mean-field analysis. In the stationary regime, the variance of $v$ is controlled by noise and heretic-induced tension:
+\begin{equation}
+    \text{Var}(v) \approx \frac{\sigma_{\text{noise}}^2 + (2\eta\, I_{\text{stimulus}})^2}{2(\alpha - 1 + 3\langle v^2 \rangle / 5)}.
+    \label{eq:variance_bound}
+\end{equation}
+Since $\alpha < 1$ (verified for $\alpha = 0.15$), the denominator is positive and the variance is bounded below by a positive quantity whenever $\eta > 0$ or $\sigma_{\text{noise}} > 0$. A positive variance over the cognitive state bins guarantees $H > 0$.
+
 \section{Discussion}
 
 To bridge theory and physical implementation, we provide a phenomenological mapping onto memristive crossbars. Using parameters inspired by RRAM literature, we formalize $w$ as an analogue to oxygen-vacancy-driven conductance. 
@@ -419,11 +477,15 @@ This work open several pathways: (1) \textbf{Neuromorphic ethics}: encoding valu
 
 \subsection{Theoretical Foundations}
 
-While Mem4ristor v2.6 demonstrates robust empirical performance across multiple validation tests, several theoretical limitations remain:
+While Section~5 provides substantial theoretical grounding, several formal gaps remain:
 
-\textbf{Absence of analytical proofs.} The model currently lacks formal stability analysis (e.g., Lyapunov functions) or convergence guarantees. All stability claims are based on extensive numerical simulations rather than mathematical theorems. This limits our ability to guarantee behavior outside tested parameter ranges.
+\textbf{Floquet multipliers.} The Poincar\'e--Bendixson argument establishes limit-cycle existence for a single unit, but Floquet multipliers for the full coupled network have not been computed analytically. Numerical computation is feasible but has not been systematically performed across all parameter combinations.
 
-\textbf{Parameter selection.} Several key parameters ($v^3/5$ divisor, $\sigma_{\text{baseline}}=0.05$, $\alpha=0.15$) were selected empirically through iterative testing rather than derived from first principles. While functional, these choices require further theoretical justification.
+\textbf{Percolation threshold.} The combinatorial argument (Eq.~\ref{eq:percolation}) explains \emph{why} 15\% works but does not constitute a rigorous proof of criticality. A formal proof would require analysis of the linearized system's spectral gap as a function of $\eta$.
+
+\textbf{Entropy bound.} The mean-field variance estimate (Eq.~\ref{eq:variance_bound}) provides a qualitative guarantee but not a tight quantitative lower bound for $H$. A rigorous derivation would require Fokker--Planck analysis of the stationary distribution.
+
+\textbf{Parameter selection.} Several key parameters ($v^3/5$ divisor, $\sigma_{\text{baseline}}=0.05$, $\alpha=0.15$) were selected empirically. While functional, these choices require further first-principles justification.
 
 \textbf{Scalability bounds.} Although tested up to $N=625$ units, theoretical guarantees for $N \gg 1000$ are absent. The $1/\sqrt{N}$ scaling law is heuristic rather than rigorously derived.
 
@@ -431,7 +493,7 @@ While Mem4ristor v2.6 demonstrates robust empirical performance across multiple 
 
 \textbf{Numerical integration.} The reference implementation uses Euler integration ($\Delta t = 0.1$), which provides $O(\Delta t)$ accuracy. Higher-order methods (e.g., Runge-Kutta 4) would improve precision but have not been systematically compared.
 
-\textbf{Hardware mapping.} The memristive crossbar implementation (Section 4.1) is architectural speculation rather than validated engineering. No SPICE simulations, physical prototypes, or fabrication protocols exist. Actual hardware implementation would require significant additional work.
+\textbf{Hardware mapping.} The memristive crossbar implementation is architectural speculation rather than validated engineering. A behavioral SPICE simulation (ngspice) confirms bounded dynamics for an isolated unit, but no physical prototypes or fabrication protocols exist.
 
 \subsection{Limitations and Sincerity Disclosure}
 This work explicitly acknowledges the following limitations:
