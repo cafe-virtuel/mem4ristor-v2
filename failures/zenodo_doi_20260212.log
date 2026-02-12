@@ -1,0 +1,24 @@
+# Failure Log: HAL Rejection & Zenodo Pivot
+# Date: 2026-02-12
+# Author: Julien Chauvin (Independent Researcher)
+
+## Issue 1: HAL Submission Rejected (hal-05506167v1)
+- HAL moderator rejected the deposit
+- Reason: No doctoral degree, no institutional affiliation, no prior publications
+- HAL policy requires at least a doctoral student affiliated with a recognized institution
+- The scientific content was NOT evaluated — only administrative credentials
+
+## Resolution: Zenodo DOI Published
+- Pivoted to Zenodo (CERN) — no gatekeeping on academic status
+- DOI: 10.5281/zenodo.18620597
+- URL: https://zenodo.org/records/18620597
+- Published: 2026-02-12, immediate availability
+
+## Issue 2: README and CITATION.cff missing DOI
+- Repository lacked any reference to the published preprint DOI
+- Fix: Added Zenodo DOI badge to README.md, updated CITATION.cff with DOI field
+
+## Lesson Learned
+- HAL is NOT open to independent researchers without institutional backing
+- Zenodo (CERN) is the correct platform for non-affiliated researchers
+- Always have a backup publication channel

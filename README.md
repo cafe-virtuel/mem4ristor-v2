@@ -1,7 +1,10 @@
 # Mem4ristor v2.9.3 (Antigravity Hardened Core)
 Implementation Kit (Computational Model)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18620597.svg)](https://doi.org/10.5281/zenodo.18620597)
+
 > **Status**: Attractor Diversity Research Prototype (**v2.9.3**)  
+> **Preprint**: [DOI: 10.5281/zenodo.18620597](https://doi.org/10.5281/zenodo.18620597) (Zenodo, Feb 2026)  
 > **Origin**: [Café Virtuel](https://www.cafevirtuel.org) Collaboration  
 > **Author**: Julien Chauvin ([ORCID: 0009-0006-9285-2308](https://orcid.org/0009-0006-9285-2308))  
 > **Concept**: Neuromorphic cognitive resistance through **constitutional doubt** and **structural heretics**.
