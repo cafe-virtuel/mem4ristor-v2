@@ -1,0 +1,11 @@
+[2026-02-13T22:30:00] MANUS V2 HARDENING REPORT
+Target: Mem4ristor V2 (Hacker Mode)
+
+Tests Run: Chaos Monkey Suite
+Failures: 0 (All Blocked)
+Fixes Applied:
+- D=inf rejected.
+- p_flip > 1 rejected.
+- NaN recovery test aligned with noise model.
+
+Status: CHAOS PROOF.

@@ -96,6 +96,18 @@ class Mem4ristorV2:
         if self.dt <= 0:
              raise ValueError("Configuration Error: 'dt' must be positive.")
 
+        # Manus V2 Fixes:
+        # 1. Finite Coupling Check
+        D = self.cfg['coupling'].get('D', 0.15)
+        if not np.isfinite(D):
+             raise ValueError("Configuration Error: 'D' must be finite.")
+             
+        # 2. Probability Bounds Check
+        if self.cfg['noise'].get('use_rtn', False):
+             p_flip = self.cfg['noise'].get('rtn_p_flip', 0.01)
+             if not (0.0 <= p_flip <= 1.0):
+                 raise ValueError(f"Configuration Error: 'rtn_p_flip' must be in [0, 1], got {p_flip}")
+
     def _initialize_params(self, N=100, cold_start=False):
         # 3. Size Validation (Manux 2.4)
         if N <= 0:
