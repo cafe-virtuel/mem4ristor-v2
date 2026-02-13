@@ -108,6 +108,11 @@ class Mem4ristorV2:
              if not (0.0 <= p_flip <= 1.0):
                  raise ValueError(f"Configuration Error: 'rtn_p_flip' must be in [0, 1], got {p_flip}")
 
+        # Hacker V3 Fix: Heretic Ratio Bounds
+        heretic_ratio = self.cfg['coupling'].get('heretic_ratio', 0.15)
+        if not (0.0 <= heretic_ratio <= 1.0):
+             raise ValueError(f"Configuration Error: 'heretic_ratio' must be in [0, 1], got {heretic_ratio}")
+
     def _initialize_params(self, N=100, cold_start=False):
         # 3. Size Validation (Manux 2.4 + DoS Fix)
         if N <= 0:
@@ -189,9 +194,9 @@ class Mem4ristorV2:
             # Direct Laplacian vector passed (from stencil or pre-computed matrix L)
             laplacian_v = coupling_input
         
-        # GUARD 1: NaN detection in coupling
-        if np.any(np.isnan(laplacian_v)):
-            laplacian_v = np.nan_to_num(laplacian_v, nan=0.0)
+        # GUARD 1: NaN/Inf detection in coupling (Hacker V3 fix)
+        if np.any(np.isnan(laplacian_v)) or np.any(np.isinf(laplacian_v)):
+            laplacian_v = np.nan_to_num(laplacian_v, nan=0.0, posinf=1.0, neginf=-1.0)
             
         sigma_social = np.abs(laplacian_v)
         
@@ -259,6 +264,10 @@ class Mem4ristorV2:
         """
         High-precision integration using RK45 for long-term stability (v2.9.1).
         """
+        # GUARD: Solver Shape Mismatch (Hacker V3 fix)
+        if adj_matrix is not None and adj_matrix.shape != (self.N, self.N):
+             raise ValueError(f"Shape mismatch: adj_matrix must be ({self.N}, {self.N}), got {adj_matrix.shape}")
+
         def combined_dynamics(t, y):
             # Split state
             N = self.N

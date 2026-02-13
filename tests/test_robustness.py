@@ -212,12 +212,10 @@ def test_heretic_ratio_above_one():
         'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
         'noise': {'sigma_v': 0.02}
     }
-    model = Mem4ristorV2(config=cfg, seed=42)
-    model._initialize_params(N=100)
-    
-    # Tous les nœuds devraient être hérétiques
-    heretic_count = model.heretic_mask.sum()
-    assert heretic_count <= 100, f"Plus d'hérétiques que de nœuds: {heretic_count}"
+    # v2.9.4 Security Hardening: Invalid ratios must be rejected
+    with pytest.raises(ValueError, match="heretic_ratio"):
+        model = Mem4ristorV2(config=cfg, seed=42)
+        model._initialize_params(N=100)
 
 
 def test_heretic_ratio_negative():
@@ -228,11 +226,10 @@ def test_heretic_ratio_negative():
         'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
         'noise': {'sigma_v': 0.02}
     }
-    model = Mem4ristorV2(config=cfg, seed=42)
-    model._initialize_params(N=100)
-    
-    heretic_count = model.heretic_mask.sum()
-    assert heretic_count == 0, f"Hérétiques avec ratio négatif: {heretic_count}"
+    # v2.9.4 Security Hardening: Invalid ratios must be rejected
+    with pytest.raises(ValueError, match="heretic_ratio"):
+        model = Mem4ristorV2(config=cfg, seed=42)
+        model._initialize_params(N=100)
 
 
 # =============================================================================
