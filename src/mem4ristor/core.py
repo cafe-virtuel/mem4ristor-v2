@@ -109,9 +109,11 @@ class Mem4ristorV2:
                  raise ValueError(f"Configuration Error: 'rtn_p_flip' must be in [0, 1], got {p_flip}")
 
     def _initialize_params(self, N=100, cold_start=False):
-        # 3. Size Validation (Manux 2.4)
+        # 3. Size Validation (Manux 2.4 + DoS Fix)
         if N <= 0:
             raise ValueError(f"Network size N must be positive, got {N}.")
+        if N > 10_000_000:
+            raise ValueError(f"Network size N={N} exceeds maximum allowed (10M) to prevent DoS.")
             
         self.N = N
         if cold_start:
