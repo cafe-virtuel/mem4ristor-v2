@@ -13,31 +13,31 @@
 
 ## Detailed Failure Inventory
 
-### [FAIL-012] SNR Collapse at u > 0.5
+### [LIMIT-01] SNR Collapse at u > 0.5
 When $u$ approaches 0.5, the signal $|(1-2u) \cdot D_{eff} \cdot L|$ approaches zero. If the noise floor $\sigma$ is fixed, there is a "Dead Zone" where Repulsive Social Coupling is purely noise-driven.
 - **Proof**: Run `self_audit_v27.py` with noise=0.05.
 
-### [FAIL-013] Topological Strangulation
+### [LIMIT-02] Topological Strangulation
 In Scale-Free networks, conformist hubs can isolate heretics. If heretics are on the periphery, their phase-inversion signal is absorbed by high-degree conformists before reaching the whole network.
 - **Proof**: `Attack 1` in `self_audit_v27.py`.
 
-### [FAIL-014] RK45 Step-Size Artifacts
+### [LIMIT-03] RK45 Step-Size Artifacts
 Even with RK45, extremely large networks ($N > 2500$) exhibit memory leaks or step-size collapse in `solve_ivp` if $I_{stimulus}$ is high-frequency.
 - **Status**: Documented in `failures/stability_failure_N2500.log`.
 
-### [FAIL-008] Euler Instability at High dt
+### [LIMIT-04] Euler Instability at High dt
 The Euler integration method becomes unstable when $dt > 0.1$. At $dt = 0.5$, entropy collapses to near-zero within 200 steps.
 - **Proof**: `test_euler_drift_torture` in `test_adversarial.py`.
 - **Mitigation**: Preprint specifies $dt \le 0.05$ for standard use.
 
-### [FAIL-015] Attractor Diversity Gap (H ≈ 1.94 Claim)
+### [LIMIT-05] Attractor Diversity Gap (H ≈ 1.94 Claim)
 The preprint claims an attractor diversity of $H \approx 1.94$. Empirical audits with both code defaults and preprint parameters failed to reproduce this, achieving a maximum $H \approx 1.56$. Cold start protocols consistently collapsed to $H=0$.
-- **Proof**: Edison Audit 2026-01-14.
+- **Proof**: Internal Audit 2026-01-14.
 - **Status**: OPEN. Claim must be revised or exact conditions documented.
 
 ---
 
-## v2.9.2 Fixes (Edison Integrity Fix)
+## v2.9.2 Fixes (Stability and Integrity Fix)
 
 | Bug | Status | Fix |
 |:----|:-------|:----|

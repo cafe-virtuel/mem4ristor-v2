@@ -8,7 +8,7 @@ from scipy.integrate import solve_ivp
 
 class Mem4ristorV2:
     """
-    Canonical Implementation of Mem4ristor v2.9.2 (Edison Integrity Fix).
+    Canonical Implementation of Mem4ristor v2.9.3.
     
     Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u)
     and structural heretics for diversity preservation in neuromorphic-inspired computational models.
@@ -37,7 +37,7 @@ class Mem4ristorV2:
         >>> model._initialize_params(N=100)
         >>> adj = build_lattice_adjacency(10)
         >>> for _ in range(1000):
-        ...     model.step(I_stimulus=0.0, adj_matrix=adj)
+        ...     model.step(I_stimulus=0.0, coupling_input=adj)
         >>> entropy = model.calculate_entropy()
         >>> print(f"Final entropy: {entropy:.4f}")
     
@@ -48,16 +48,17 @@ class Mem4ristorV2:
         if config is None:
             # Try to load default config
             try:
-                cfg_path = os.path.join(os.path.dirname(__file__), "../../reproduction/CONFIG_DEFAULT.yaml")
+                # Load config.yaml from the same directory as this file
+                cfg_path = os.path.join(os.path.dirname(__file__), "config.yaml")
                 with open(cfg_path, 'r') as f:
                     self.cfg = yaml.safe_load(f)
             except (FileNotFoundError, yaml.YAMLError):
                 # Fallback to hardcoded defaults if YAML missing or invalid
                 self.cfg = {
                 'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
-                'coupling': {'D': 0.15, 'heretic_ratio': 0.15}, # SNR Hardened
+                'coupling': {'D': 0.15, 'heretic_ratio': 0.15, 'uniform_placement': True}, 
                 'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-                'noise': {'sigma_v': 0.05} # SNR Hardened
+                'noise': {'sigma_v': 0.05}
             }
         else:
             self.cfg = config
@@ -80,7 +81,7 @@ class Mem4ristorV2:
             
         self.u = np.full(self.N, self.cfg['doubt']['sigma_baseline'])
         
-        # Anti-Clustering Placement (Kimi v2.9.1 - Fixed heretic_ratio=0 crash)
+        # Anti-Clustering Placement
         heretic_ratio = self.cfg['coupling'].get('heretic_ratio', 0.15)
         
         if heretic_ratio <= 0:
@@ -118,7 +119,7 @@ class Mem4ristorV2:
         Returns:
             None (updates internal state in-place)
         """
-        # GUARD 0: NaN detection on state variables (v2.9.3 Antigravity fix)
+        # GUARD 0: NaN detection on state variables
         # Prevents NaN propagation from corrupted state to entire network via coupling
         if np.any(np.isnan(self.v)):
             self.v = np.nan_to_num(self.v, nan=0.0)
@@ -136,7 +137,7 @@ class Mem4ristorV2:
             # Direct Laplacian vector passed (from stencil or pre-computed matrix L)
             laplacian_v = coupling_input
         
-        # GUARD 1: NaN detection in coupling (v2.9.1 Kimi fix)
+        # GUARD 1: NaN detection in coupling
         if np.any(np.isnan(laplacian_v)):
             laplacian_v = np.nan_to_num(laplacian_v, nan=0.0)
             
@@ -167,7 +168,7 @@ class Mem4ristorV2:
             if I_eff.size != self.N:
                 raise ValueError(f"Stimulus vector size {I_eff.size} must match network size {self.N}")
         
-        # GUARD 2: Clamp stimulus to prevent overflow (v2.9.1 Kimi fix)
+        # GUARD 2: Clamp stimulus to prevent overflow
         I_eff = np.clip(I_eff, -100.0, 100.0)
         
         # Apply heretic inversion
@@ -185,7 +186,7 @@ class Mem4ristorV2:
         self.w += dw * self.dt
         self.u += du * self.dt
         
-        # GUARD 3: Clamp v and w to prevent runaway divergence (v2.9.1 Kimi fix)
+        # GUARD 3: Clamp v and w to prevent runaway divergence
         self.v = np.clip(self.v, -100.0, 100.0)
         self.w = np.clip(self.w, -100.0, 100.0)
         self.u = np.clip(self.u, self.cfg['doubt']['u_clamp'][0], self.cfg['doubt']['u_clamp'][1])

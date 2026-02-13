@@ -4,10 +4,10 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Chemin vers Ngspice (Relatif pour portabilité)
-# On remonte de 3 niveaux depuis experiments/ (mem4ristor-v2 -> Repos -> ROOT)
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-NGSPICE_PATH = os.path.join(BASE_DIR, "ngspice-45.2_64", "Spice64", "bin", "ngspice.exe")
+# Path configuration
+# Ensure we are running from the project root or adjust paths relative to this script
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 NETLIST_FILE = "experiments/mem4ristor_test.sp"
 OUTPUT_FILE = "results/spice_output.txt"
 
@@ -15,25 +15,29 @@ def run_spice():
     if not os.path.exists(os.path.dirname(OUTPUT_FILE)):
         os.makedirs(os.path.dirname(OUTPUT_FILE))
 
-    print(f"--- 1. Lancement de Ngspice ---")
-    cmd = [NGSPICE_PATH, "-b", NETLIST_FILE]
+    print(f"--- 1. Running Ngspice ---")
+    
+    # Check for ngspice in PATH or environment variable
+    ngspice_exe = os.environ.get("NGSPICE_PATH", "ngspice")
+    
+    cmd = [ngspice_exe, "-b", NETLIST_FILE]
     
     try:
-        # Essai avec le chemin absolu
-        if os.path.exists(NGSPICE_PATH):
-            print(f"Utilisation de l'executable : {NGSPICE_PATH}")
-            subprocess.run(cmd, check=True)
-        else:
-            # Fallback sur PATH
-            print("Executable non trouve au chemin absolu, essai via PATH...")
-            subprocess.run(["ngspice", "-b", NETLIST_FILE], check=True)
-            
-        print("Simulation terminee.")
+        print(f"Executing: {' '.join(cmd)}")
+        subprocess.run(cmd, check=True)
+        print("Simulation completed.")
+        return True
+    except FileNotFoundError:
+        print("CRITICAL ERROR: Ngspice executable not found.")
+        print("Please ensure 'ngspice' is in your PATH or set NGSPICE_PATH environment variable.")
+        return False
+    except subprocess.CalledProcessError as e:
+        print(f"CRITICAL ERROR: Ngspice execution failed with return code {e.returncode}.")
+        return False
     except Exception as e:
-        print(f"ERREUR CRITIQUE: Impossible de lancer Ngspice. {e}")
+        print(f"CRITICAL ERROR: Unexpected error launching Ngspice. {e}")
         return False
 
-    return True
 
 def analyze_results():
     print(f"\n--- 2. Analyse des resultats ({OUTPUT_FILE}) ---")

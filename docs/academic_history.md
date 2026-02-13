@@ -111,7 +111,7 @@ This phase was explicitly framed as a proof of concept, not a real-world deploym
 
 ### Phase 7 — External audit and validation (Session 7)
 
-The model was submitted to an external automated audit platform (EDISON).
+The model was submitted to an external automated audit platform (Automated Adversarial Analysis).
 
 Key events:
 - Initial versions failed the audit due to incorrect causal attribution and implementation bugs.

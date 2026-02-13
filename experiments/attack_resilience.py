@@ -4,7 +4,7 @@ from mem4ristor.core import Mem4Network
 
 def run_byzantine_attack():
     """
-    Simulation d'une 'Attaque Byzantine' (Consensus Forcé).
+    Simulation of a 'Byzantine Fault' (Forced Consensus).
     Des acteurs malveillants tentent de forcer tout le réseau vers l'état +1.5 (Certitude Positive).
     
     Hypothèse :

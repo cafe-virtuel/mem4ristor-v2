@@ -20,7 +20,7 @@
             "role": "Adversarial Implementation",
             "success_metric": "3_critical_bugs_per_session",
             "failure_penalty": "Mandatory shutdown if bugs < 3",
-            "bias_disclosure": "Defensive confirmation (Mitigated via Kimi Audit)",
+            "bias_disclosure": "Defensive confirmation (Mitigated via Adversarial Audit)",
             "reliability_score": 0.58
         }
     ],

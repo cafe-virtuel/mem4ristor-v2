@@ -1,7 +1,6 @@
 """
-KIMI v2.0 — CONTRAINTES INÉDITES
-Tests adversariaux jamais employés auparavant.
-Ces tests sont conçus pour CASSER le code, pas pour le valider.
+Robustness and Edge Case Tests for Mem4ristor V2.
+Verifies system stability under extreme conditions and invalid inputs.
 """
 import numpy as np
 import pytest
@@ -9,7 +8,7 @@ from mem4ristor.core import Mem4ristorV2, Mem4Network
 
 
 # =============================================================================
-# ATTAQUE 1: INJECTION DE NaN (Corruption Mémoire)
+# Test Case 1: Memory Corruption (NaN Injection)
 # =============================================================================
 def test_nan_injection_survial():
     """Le modèle doit-il détecter ou propager les NaN?"""
@@ -24,8 +23,8 @@ def test_nan_injection_survial():
     
     nan_count = np.isnan(model.v).sum()
     
-    # KIMI VERDICT: NaN doit soit être détecté, soit ne pas se propager
-    assert nan_count <= 1, f"NaN PROPAGATION: {nan_count}/100 unités contaminées. Le modèle n'a pas de garde-fou."
+    # Verdict: NaN must be detected or not propagate
+    assert nan_count <= 1, f"NaN PROPAGATION: {nan_count}/100 units contaminated. Model lacks safeguards."
 
 
 def test_nan_in_coupling_matrix():
@@ -45,7 +44,7 @@ def test_nan_in_coupling_matrix():
 
 
 # =============================================================================
-# ATTAQUE 2: CAS LIMITES (N très petit)
+# Test Case 2: Edge Cases (Small N)
 # =============================================================================
 def test_single_unit_network():
     """N=1 est-il stable?"""
@@ -84,7 +83,7 @@ def test_two_unit_network_symmetry():
 
 
 # =============================================================================
-# ATTAQUE 3: PARAMÈTRES NÉGATIFS OU ABSURDES
+# Test Case 3: Invalid Parameters
 # =============================================================================
 def test_negative_coupling():
     """D < 0 est-il géré?"""
@@ -141,7 +140,7 @@ def test_zero_dt():
 
 
 # =============================================================================
-# ATTAQUE 4: FRONTIÈRE CRITIQUE u = 0.5
+# Test Case 4: Critical Boundaries
 # =============================================================================
 def test_critical_doubt_boundary():
     """u = 0.5 exactement: le kernel (1-2u) = 0"""
@@ -178,7 +177,7 @@ def test_doubt_at_clamp_boundaries():
 
 
 # =============================================================================
-# ATTAQUE 5: PRÉCISION NUMÉRIQUE
+# Test Case 5: Numerical Precision
 # =============================================================================
 def test_float32_vs_float64_divergence():
     """Le modèle diverge-t-il entre float32 et float64?"""
@@ -209,7 +208,7 @@ def test_float32_vs_float64_divergence():
 
 
 # =============================================================================
-# ATTAQUE 6: HERETIC RATIO > 1.0 OU < 0
+# Test Case 6: Invalid Ratios
 # =============================================================================
 def test_heretic_ratio_above_one():
     """heretic_ratio > 1.0 est absurde"""
@@ -243,7 +242,7 @@ def test_heretic_ratio_negative():
 
 
 # =============================================================================
-# ATTAQUE 7: OVERFLOW/UNDERFLOW
+# Test Case 7: Overflow/Underflow
 # =============================================================================
 def test_extreme_stimulus_overflow():
     """I_stimulus énorme"""
@@ -271,7 +270,7 @@ def test_extreme_initial_conditions():
 
 
 # =============================================================================
-# ATTAQUE 8: ENTRÉE DE MAUVAIS TYPE
+# Test Case 8: Type Checking
 # =============================================================================
 def test_wrong_coupling_shape():
     """Matrice de couplage de mauvaise dimension"""

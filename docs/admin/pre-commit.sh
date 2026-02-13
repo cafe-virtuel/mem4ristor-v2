@@ -19,8 +19,8 @@ if [ "$STAGED_FAILURES" -eq 0 ]; then
     exit 1
 fi
 
-# 3. Kimi-Audit Simulation
-echo "Running Kimi-Audit (Adversarial Protocol)..."
+# 3. Adversarial Audit Simulation
+echo "Running Adversarial Audit (Protocol)..."
 export PYTHONPATH="src"
 python -m pytest tests/test_kernel.py
 if [ $? -ne 0 ]; then

@@ -8,7 +8,7 @@ import matplotlib
 matplotlib.use('Agg')
 import networkx as nx
 
-# MKL Determinism Fix (Kimi v2.6 P2)
+# MKL Determinism Fix
 os.environ['NUMPY_MKL_CBWR'] = 'COMPATIBLE'
 
 try:
@@ -43,13 +43,13 @@ class ScientificProtocolV26:
     def run_all(self):
         console.print("[bold red]LANCEMENT DU PROTOCOLE SCIENTIFIQUE V2.6 (HARDENED CORE)[/bold red]")
         
-        # 1. SNR Audit (Kimi P0)
+        # 1. SNR Audit
         self.audit_snr()
         
-        # 2. Anti-Clustering Audit (Kimi P1)
+        # 2. Anti-Clustering Audit
         self.audit_clustering()
         
-        # 3. RK45 Long-Term Stability (Kimi P0)
+        # 3. RK45 Long-Term Stability
         self.audit_stability_rk45()
 
         self.finalize()

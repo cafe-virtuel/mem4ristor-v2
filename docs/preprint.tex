@@ -244,7 +244,8 @@ The methodology operates through discrete \emph{sessions}, each with explicit re
     \item \textbf{Pluralité réelle}: Each AI system contributes from its distinct training corpus, architectural biases, and reasoning patterns. No system simulates or substitutes for others.
     \item \textbf{Human orchestration}: All scientific claims, parameter choices, and publication decisions are made by the human researcher. AI contributions are advisory and generative, not directive.
     \item \textbf{Documented failures}: Rejected intermediate versions (e.g., v2.0.1/2) are preserved rather than erased, maintaining complete developmental traceability.
-    \item \textbf{External validation}: Critical evaluation by non-collaborative external systems (EDISON platform) ensures rigor beyond self-assessment.
+    \item \textbf{External validation}: Critical evaluation by non-collaborative external systems (Automated Adversarial Analysis) ensures rigor beyond self-assessment.
+    \item \textbf{External validation}: Critical evaluation by non-collaborative external systems (Automated Adversarial Analysis) ensures rigor beyond self-assessment.
 \end{itemize}
 
 Complete session transcripts, intermediate code versions, and contribution attribution are maintained in a separate public repository~\cite{bommasani2021}.
@@ -252,12 +253,12 @@ Complete session transcripts, intermediate code versions, and contribution attri
 \subsection{Statement on AI Tooling}
 The model's development followed a multi-stage process where agents (Claude, GPT, Gemini, Antigravity) were used for code generation, mathematical formalization, and exploratory benchmarking. All final parameters and scientific claims were reviewed and decided upon by the human author (\textit{the orchestrator}).
 
-\subsection{Robustness Analysis via Edison Analysis}
+\subsection{Robustness Analysis via Automated Adversarial Analysis}
 
-To analyze the model's limits, Mem4ristor v2.2 underwent an \textbf{AI-Assisted Robustness Sweep} using the \textbf{Edison Analysis} platform (December 2025). This process is not a substitute for human peer-review but an internal adversarial characterization designed to identify failure modes.
+To analyze the model's limits, Mem4ristor v2.2 underwent an \textbf{AI-Assisted Robustness Sweep} using an automated analysis platform (December 2025). This process is not a substitute for human peer-review but an internal adversarial characterization designed to identify failure modes.
 
 \textbf{Failure Recovery (v2.0.1/2):}
-Edison Analysis identified a \textbf{Zero Initialization Bug} in early versions, where $v=0, w=0$ prompted a consensus collapse ($H=0$). Correcting this led to v2.0.4.
+Automated Adversarial Analysis identified an \textbf{Initialization Bug} in early versions, where $v=0, w=0$ prompted a consensus collapse ($H=0$). Correcting this led to v2.0.4.
 
 \textbf{Quantitative Characterization (v2.2):}
 The system demonstrated sustained stability ($H \approx 1.56$ bits) over 50,000 steps. These runs characterize the system's resilience to ``Deep Time'' synchronization, yielding a \textbf{resilience factor of $5.75\times$} relative to ablated control models. Note: early reports of $H \approx 1.99$ were based on a wider binning range; the corrected value of $H \approx 1.56$ uses cognitive-state-aligned bins consistent with Table~\ref{tab:ablations}.

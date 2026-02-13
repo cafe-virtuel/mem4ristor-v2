@@ -32,4 +32,4 @@ echo "Verifying LIMITATIONS.md alignment with results..."
 grep -E "❌|⚠️" CAFE-VIRTUEL-LIMITATIONS.md
 
 echo "=== AUDIT PREPARATION COMPLETE ==="
-echo "INSTRUCTIONS: Copy-paste KIMI_REDTEAM_PROMPT.md into a NEW, PREVIOUS-LESS AI agent."
+echo "INSTRUCTIONS: Use a blank-slate AI agent for the audit."

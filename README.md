@@ -1,73 +1,103 @@
-# Mem4ristor v2.9.3 (Antigravity Hardened Core)
-Implementation Kit (Computational Model)
+# Mem4ristor V2: Neuromorphic Cognitive Architecture
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18620597.svg)](https://doi.org/10.5281/zenodo.18620597)
+[![Tests](https://github.com/Jusyl236/mem4ristor-v2/actions/workflows/test.yml/badge.svg)](https://github.com/Jusyl236/mem4ristor-v2/actions/workflows/test.yml)
 
-> **Status**: Attractor Diversity Research Prototype (**v2.9.3**)  
-> **Preprint**: [DOI: 10.5281/zenodo.18620597](https://doi.org/10.5281/zenodo.18620597) (Zenodo, Feb 2026)  
-> **Origin**: [Café Virtuel](https://www.cafevirtuel.org) Collaboration  
-> **Author**: Julien Chauvin ([ORCID: 0009-0006-9285-2308](https://orcid.org/0009-0006-9285-2308))  
-> **Concept**: Neuromorphic cognitive resistance through **constitutional doubt** and **structural heretics**.
+**Mem4ristor V2** is a computational implementation of extended FitzHugh-Nagumo dynamics designed to investigate emergent critical states in neuromorphic networks. This research code focuses on the role of "Constitutional Doubt" ($u$) and "Structural Heretics" in preventing consensus collapse in scale-free and lattice networks.
 
-## 🔬 Overview
-Mem4ristor v2.9.3 is a **neuromorphic-inspired computational model** designed to investigate algorithmic uniformization (consensus collapse). Unlike classical oscillators, it integrates a dynamic doubt variable ($u$) and structural heretics to maintain deliberative diversity in simulated environments.
+> **Status**: v2.9.3 (Stable Research Release)
 
-This repository provides the "computational specification" for the phenomenological model described in the [accompanying preprint](docs/preprint.tex).
+## 🔬 Key Scientific Features
 
-### 🛡️ Scientific Rationale (Addressing Consensus Collapse)
-The Mem4ristor architecture introduces three mechanisms to prevent "Deep Time" synchronization:
-1. **The Doubt Kernel $(1-2u)$**: Dynamically modulates coupling polarity. When local uncertainty $u$ crosses the 0.5 threshold, the unit switches from attractive to **repulsive social coupling**.
-2. **Structural Heretics (15%)**: A fixed sub-population wired with inverted stimulus perception. This 15% ratio serves as a critical threshold for maintaining global diversity under bias.
-3. **Formal Robustness**: The "Constitutional Doubt" mechanism acts as a cognitive buffer, allowing the network to resist forced consensus through phase inversion.
+*   **Constitutional Doubt ($u$):** A dynamic state variable that modulates coupling polarity based on local uncertainty, enabling repulsive social coupling when doubt is high.
+*   **Structural Heretics:** A subset of nodes with inverted stimulus perception, critical for maintaining global diversity (Empirically validated at ~15%).
+*   **Scale-Invariant Dynamics:** Normalized coupling strength ($D_{eff} = D/\sqrt{N}$) ensures consistent behavior across network sizes ($N=10$ to $N=2500$).
+
+## 🚀 Installation
+
+This project is structured as a standard Python package.
+
+```bash
+git clone https://github.com/Jusyl236/mem4ristor-v2.git
+cd mem4ristor-v2
+pip install -e .
+```
+
+*Note: The `-e` flag installs in editable mode, allowing you to modify source code without reinstalling.*
+
+## 💻 Usage
+
+### Quick Start (Python API)
+
+```python
+from mem4ristor.core import Mem4Network
+
+# Initialize a network (N=100, 15% Heretics)
+net = Mem4Network(size=10, heretic_ratio=0.15, seed=42)
+
+# Run simulation for 1000 steps
+for step in range(1000):
+    net.step(I_stimulus=0.5)
+
+# Calculate final entropy (measure of diversity)
+print(f"Final System Entropy: {net.calculate_entropy():.4f}")
+```
+
+### Running Benchmarks
+
+To verify the stochastic variability and stability of the system, run the included Monte Carlo benchmark:
+
+```bash
+python experiments/benchmark_variability.py
+```
+
+*Expected output: Entropy $H \approx 1.45 \pm 0.10$ indicating a critical regime.*
+
+## ⚙️ Configuration
+
+The model is highly configurable via `src/mem4ristor/config.yaml`. You can adjust:
+
+*   **Dynamics:** `a`, `b`, `epsilon` (FHN parameters)
+*   **Coupling:** `D` (Strength), `heretic_ratio`
+*   **Doubt:** `epsilon_u`, `u_clamp`
+*   **Noise:** `sigma_v`
+
+## 🧪 Testing
+
+The repository includes a comprehensive test suite using `pytest`.
+
+```bash
+# Run all tests
+pytest
+
+# Run only robustness tests
+pytest tests/test_robustness.py
+```
 
 ## 📂 Repository Structure
-- `src/mem4ristor/`: Cœur algorithmique (Moteur v2.6 - Simulation).
-- `docs/`: Preprint LaTeX, figures et manuscrit PDF.
-- `experiments/`: 
-    - `protocol/`: Script principal de démonstration scientifique (`run_protocol_v26.py`).
-    - `benchmark_kuramoto.py`: Comparative benchmark vs Standard/Frustrated Kuramoto.
-    - `phase_diagram.py`: Phase diagram H(heretic_ratio, D) heatmap.
-    - `lyapunov_numerical.py`: Numerical Lyapunov candidate verification.
-    - `robustness/`: Tests de résilience (Topologie, Scale-Free, Sweep, Résurrection).
-    - `spice/`: ngspice behavioral simulation netlist.
-- `results/`: Sorties automatisées (Benchmarks, Phase Diagram, Figures).
-- `requirements.txt`: Python dependencies.
 
-## 🚀 Quick Start (Verify in 5 minutes)
+*   `src/mem4ristor/`: Core package source code.
+*   `tests/`: Unit and robustness tests.
+*   `experiments/`: Benchmark scripts and SPICE netlists.
+*   `docs/`: Scientific documentation and preprint.
 
-### 1. Requirements
-- Python 3.8+
-- `pip install -r requirements.txt`
+## 📜 Citation
 
-### 2. Run the Formal Verification Protocol (Recommended)
-```bash
-python experiments/protocol/run_protocol_v26.py
+If you use this code in your research, please cite the associated dataset/preprint:
+
+```bibtex
+@software{mem4ristor_v2,
+  author       = {Julien Chauvin},
+  title        = {Mem4ristor V2: Neuromorphic Cognitive Architecture},
+  year         = {2026},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.18620597},
+  url          = {https://doi.org/10.5281/zenodo.18620597}
+}
 ```
-*Note: This script provides an interactive demonstration of all robustness tests (Percolation, Topology, Resurrection).*
 
-### 3. Expected Results (Standard Signatures v2.6)
-- **Diversity Percolation**: Significant entropy jump precisely at $\eta=0.15$.
-- **Universal Robustness**: Stable diversity on Small-World and Random networks.
-- **Active Resurrection**: Immediate symmetry breaking from consensus ($H=0 \to H>1.5$).
+## 📄 License
 
-## 🔌 Architectural Mapping (Conceptual)
-The model provides a high-level **conceptual mapping** for potential memristive implementations:
-- **Recovery variable ($w$)**: Analogous to memristor conductance.
-- **Doubt ($u$)**: Modeled as local accumulation/dissipation processes.
-- **Physics**: Interpreted as **Frustrated Synchronization**.
-
----
-
-## ❓ FAQ (Sincerity Disclosure)
-
-**Is this a real neuromorphic hardware design?**  
-No. This is a **Python simulation** of a phenomenological model. The hardware mappings and SPICE mentions are conceptual explorations of how this logic *could* be implemented in HfO2 crossbars.
-
-**Who wrote this?**  
-This project is developed through the **Café Virtuel** methodology, involving a human researcher (The Barman) and a collaborative ensemble of Large Language Models (LLMs). Every line of code and every claim is traceable in the [Café Virtuel repository](https://github.com/Jusyl236/Cafe-Virtuel).
-
-**Is the "Law of 15%" a physical law?**  
-It is an **empirical observation** within our computational framework. We observed a transition from consensus to diversity specifically at this ratio. It is a property of the model's dynamics under the tested configurations.
-
----
-**Café Virtuel** - *From intuition to formal specification.*
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

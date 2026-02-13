@@ -2,9 +2,9 @@ import numpy as np
 import pytest
 from mem4ristor.core import Mem4ristorV2
 
-@pytest.mark.xfail(reason="FAIL-012: Documented SNR collapse at high noise. See CAFE-VIRTUEL-LIMITATIONS.md")
+@pytest.mark.xfail(reason="Known theoretical limitation: SNR collapse at high noise regimes.")
 def test_snr_significance_breakdown():
-    """Kimi-Invariant: I_coup must be > 3*sigma_noise for statistical significance."""
+    """Verify signal integrity against noise floor."""
     cfg = {
         'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.05},
         'coupling': {'D': 0.5, 'heretic_ratio': 0.0},
@@ -25,13 +25,13 @@ def test_snr_significance_breakdown():
     snr = signal_strength / noise_floor
     print(f"Adversarial SNR: {snr:.4f}")
     
-    # Kimi requirement: SNR > 3.0 for claim 2 to hold
-    assert snr > 3.0, f"ADVERSARIAL FAIL: Social repulsion buried in noise floor (SNR={snr:.2f}). Claim 2 invalid."
+    # Requirement: SNR > 3.0 for signal readability
+    assert snr > 3.0, f"Signal-to-Noise Ratio too low (SNR={snr:.2f}). Repulsion signal buried in noise."
 
-@pytest.mark.xfail(reason="FAIL-008: Documented Euler instability at dt>0.1. Preprint specifies dt≤0.05")
+@pytest.mark.xfail(reason="Known numerical instability at dt > 0.1. Recommended dt <= 0.05.")
 def test_euler_drift_torture():
-    """Verify if Euler-like drift survives Scipy solver at high dt."""
-    # This is a 'Ghost' test to see if we can force Drifts
+    """Verify Euler integration stability at high time steps."""
+    # Stress test for numerical drift
     cfg = {
         'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.5}, # High DT
         'coupling': {'D': 0.5, 'heretic_ratio': 0.5},
