@@ -81,9 +81,16 @@ class Mem4ristorV2:
         """Recursive merge of dictionaries to prevent missing keys."""
         result = base.copy()
         for key, value in update.items():
-            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-                result[key] = self._deep_merge(result[key], value)
+            if key in result:
+                # GUARD: Type Confusion (Round 2 Fix)
+                if isinstance(result[key], dict):
+                    if not isinstance(value, dict):
+                         raise TypeError(f"Config key '{key}' expects dict, got {type(value).__name__}")
+                    result[key] = self._deep_merge(result[key], value)
+                else:
+                    result[key] = value
             else:
+                # New keys are allowed (no type enforcement needed yet as they don't overwrite schema)
                 result[key] = value
         return result
 
@@ -271,6 +278,10 @@ class Mem4ristorV2:
         # GUARD: Time Span Validation (Guerrilla V4 fix)
         if t_span[1] <= t_span[0]:
              raise ValueError(f"Invalid time span {t_span}: End time must be greater than start time.")
+        
+        # GUARD: Negative Time (Round 2 Fix, Physics Break)
+        if t_span[0] < 0 or t_span[1] < 0:
+             raise ValueError(f"Invalid time span {t_span}: Time must be non-negative.")
 
         def combined_dynamics(t, y):
             # Split state

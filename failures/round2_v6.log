@@ -1,0 +1,8 @@
+[2026-02-14T00:05:00] ROUND 2 SECURITY REPORT (V6)
+Target: Mem4ristor V2 Core
+
+Attacks Attempted:
+1. Negative Time Physics Break (Target 1): BLOCKED. (Added t >= 0 check in solve_rk45).
+2. Deep Merge Type Confusion (Target 2): BLOCKED. (Added explicit type check in _deep_merge).
+
+Status: HARDENED AGAINST ROUND 2 VULNERABILITIES.
