@@ -120,23 +120,17 @@ def test_negative_noise():
 
 
 def test_zero_dt():
-    """dt=0 devrait bloquer ou lever une erreur"""
+    """dt=0 doit lever une ValueError (Fix Antigravity 2.4)."""
     cfg = {
         'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 4.0, 'dt': 0.0},  # ZÉRO
         'coupling': {'D': 0.5, 'heretic_ratio': 0.15},
         'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
         'noise': {'sigma_v': 0.02}
     }
-    model = Mem4ristorV2(config=cfg, seed=42)
-    model._initialize_params(N=10)
     
-    v_before = model.v.copy()
-    model.step()
-    v_after = model.v
-    
-    # Avec dt=0, rien ne devrait changer (sauf le bruit)
-    # En réalité, le bruit est toujours là, donc on vérifie juste la stabilité
-    assert np.all(np.isfinite(v_after)), "dt=0 a causé une divergence"
+    # Doit échouer grace à _validate_config
+    with pytest.raises(ValueError, match="must be positive"):
+        model = Mem4ristorV2(config=cfg, seed=42)
 
 
 # =============================================================================

@@ -45,32 +45,62 @@ class Mem4ristorV2:
         See docs/preprint.tex for complete mathematical specification.
     """
     def __init__(self, config: Optional[Dict] = None, seed: int = 42):
+        # Default Configuration
+        default_cfg = {
+            'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
+            'coupling': {'D': 0.15, 'heretic_ratio': 0.15, 'uniform_placement': True}, 
+            'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
+            'noise': {'sigma_v': 0.05, 'use_rtn': False, 'rtn_amplitude': 0.1, 'rtn_p_flip': 0.01}
+        }
+        
+        # 1. Config Hardening: Deep Merge
+        # Try to load config.yaml if no config provided, else use provided config
         if config is None:
-            # Try to load default config
             try:
-                # Load config.yaml from the same directory as this file
                 cfg_path = os.path.join(os.path.dirname(__file__), "config.yaml")
                 with open(cfg_path, 'r') as f:
-                    self.cfg = yaml.safe_load(f)
+                    file_cfg = yaml.safe_load(f)
+                    self.cfg = self._deep_merge(default_cfg, file_cfg)
             except (FileNotFoundError, yaml.YAMLError):
-                # Fallback to hardcoded defaults if YAML missing or invalid
-                self.cfg = {
-                'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05},
-                'coupling': {'D': 0.15, 'heretic_ratio': 0.15, 'uniform_placement': True}, 
-                'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
-                'noise': {'sigma_v': 0.05}
-            }
+                self.cfg = default_cfg
         else:
-            self.cfg = config
+            # Merge user config OVER defaults (User preferences take precedence)
+            self.cfg = self._deep_merge(default_cfg, config)
 
         self.rng = np.random.RandomState(seed)
         self.dt = self.cfg['dynamics']['dt']
+        
+        # 2. Parameter Validation (DivX 2.3)
+        self._validate_config()
         
         # Dimensions are defined at model level or implicitly by state
         self.N = 100 # Default
         self._initialize_params()
 
+    def _deep_merge(self, base: Dict, update: Dict) -> Dict:
+        """Recursive merge of dictionaries to prevent missing keys."""
+        result = base.copy()
+        for key, value in update.items():
+            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                result[key] = self._deep_merge(result[key], value)
+            else:
+                result[key] = value
+        return result
+
+    def _validate_config(self):
+        """Ensure critical parameters are safe (Manux 2.3 Fixes)."""
+        if self.cfg['dynamics']['v_cubic_divisor'] <= 1e-9:
+             raise ValueError("Configuration Error: 'v_cubic_divisor' must be > 0 to prevent division by zero.")
+        if self.cfg['doubt']['tau_u'] <= 1e-9:
+             raise ValueError("Configuration Error: 'tau_u' must be > 0.")
+        if self.dt <= 0:
+             raise ValueError("Configuration Error: 'dt' must be positive.")
+
     def _initialize_params(self, N=100, cold_start=False):
+        # 3. Size Validation (Manux 2.4)
+        if N <= 0:
+            raise ValueError(f"Network size N must be positive, got {N}.")
+            
         self.N = N
         if cold_start:
             self.v = np.zeros(self.N)
@@ -128,6 +158,14 @@ class Mem4ristorV2:
         if np.any(np.isnan(self.u)):
             self.u = np.nan_to_num(self.u, nan=0.5)  # Default to maximum uncertainty
         
+        # GUARD: Coupling Input Sanitization (Vicious Atomizer Fix)
+        if coupling_input is not None:
+            try:
+                # Force conversion to float array first
+                coupling_input = np.array(coupling_input, dtype=float)
+            except (ValueError, TypeError, AttributeError):
+                 raise ValueError(f"Invalid coupling input: {coupling_input}. Must be numeric.")
+
         if coupling_input is None:
             laplacian_v = np.zeros(self.N)
         elif coupling_input.ndim == 2:
@@ -161,13 +199,25 @@ class Mem4ristorV2:
         u_filter = (1.0 - 2.0 * self.u)
         I_coup = self.D_eff * u_filter * laplacian_v
         
-        if np.isscalar(I_stimulus):
-            I_eff = np.full(self.N, float(I_stimulus))
-        else:
-            I_eff = np.array(I_stimulus).flatten()
-            if I_eff.size != self.N:
-                raise ValueError(f"Stimulus vector size {I_eff.size} must match network size {self.N}")
+        # 4. Input Sanitization (Vicious Atomizer Fix)
+        try:
+            # Force conversion to float array first
+            # this explicitly catches strings/dicts/objects that cannot be floats
+            stim_arr = np.array(I_stimulus, dtype=float)
+            
+            if stim_arr.ndim == 0:
+                 I_eff = np.full(self.N, float(stim_arr))
+            else:
+                 I_eff = stim_arr.flatten()
+                 if I_eff.size != self.N:
+                     raise ValueError(f"Stimulus vector size {I_eff.size} must match network size {self.N}")
+        except (ValueError, TypeError, AttributeError):
+             raise ValueError(f"Invalid stimulus input: {I_stimulus}. Must be numeric.")
         
+        # IMPORTANT: Hard Stop for NaN injection
+        if np.any(np.isnan(I_eff)):
+             I_eff = np.nan_to_num(I_eff, nan=0.0)
+
         # GUARD 2: Clamp stimulus to prevent overflow
         I_eff = np.clip(I_eff, -100.0, 100.0)
         
@@ -258,6 +308,16 @@ class Mem4ristorV2:
             use_cognitive_bins: If True, uses state thresholds aligned with get_states()
                                for scientifically consistent entropy measurement.
         """
+        # GUARD: Entropy Calculation Hardening
+        try:
+            if not use_cognitive_bins:
+                 # Ensure bins is a valid integer
+                 bins = int(bins)
+                 if bins <= 0: raise ValueError
+        except (ValueError, TypeError):
+             # Fallback to default
+             bins = 5
+             
         v = self.v
         if use_cognitive_bins:
             # Aligned with get_states() thresholds: [-inf, -1.5, -0.8, 0.8, 1.5, +inf]
