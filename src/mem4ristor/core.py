@@ -341,6 +341,9 @@ class Mem4ristorV2:
                  # Ensure bins is a valid integer
                  bins = int(bins)
                  if bins <= 0: raise ValueError
+                 # GUARD: Entropy DoS (Alien Fix) - Cap bins to prevent memory explosion
+                 if bins > 1_000_000:
+                     bins = 1_000_000
         except (ValueError, TypeError):
              # Fallback to default
              bins = 5

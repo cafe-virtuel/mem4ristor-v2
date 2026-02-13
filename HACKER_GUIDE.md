@@ -19,6 +19,7 @@ Vous gagnez si vous réussissez l'une des actions suivantes via du code Python s
 *   **NaN & Inf Filtering** : Les entrées `NaN` et `Inf` (stimulus ET couplage) sont filtrées ou clampées.
 *   **Solver Safety** : `solve_rk45` valide la forme de `adj_matrix` et la cohérence de `t_span`.
 *   **Linalg Sanitization** : `Mem4Network` rejette les matrices d'adjacence contenant `NaN` ou `Inf`.
+*   **Entropy Safety** : `calculate_entropy` borne le nombre de `bins` à 1,000,000 pour éviter l'épuisement mémoire.
 *   **Config Validation** : `_validate_config` vérifie `D=inf`, `dt<=0`, `p_flip>1`, `heretic_ratio` [0,1].
 *   **DoS Guard** : `N > 10,000,000` est rejeté à l'initialisation.
 *   **Deep Merge** : Les configurations partielles sont complétées par défaut (pas de `KeyError`).
