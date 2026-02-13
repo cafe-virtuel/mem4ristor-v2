@@ -268,6 +268,10 @@ class Mem4ristorV2:
         if adj_matrix is not None and adj_matrix.shape != (self.N, self.N):
              raise ValueError(f"Shape mismatch: adj_matrix must be ({self.N}, {self.N}), got {adj_matrix.shape}")
 
+        # GUARD: Time Span Validation (Guerrilla V4 fix)
+        if t_span[1] <= t_span[0]:
+             raise ValueError(f"Invalid time span {t_span}: End time must be greater than start time.")
+
         def combined_dynamics(t, y):
             # Split state
             N = self.N
@@ -379,6 +383,10 @@ class Mem4Network:
             
         self.adjacency_matrix = adjacency_matrix
         if adjacency_matrix is not None:
+            # GUARD: Matrix Sanitization (Guerrilla V4 Fix)
+            if np.any(np.isnan(adjacency_matrix)) or np.any(np.isinf(adjacency_matrix)):
+                 raise ValueError("Adjacency matrix contains NaN or Inf.")
+                 
             self.N = adjacency_matrix.shape[0]
             self.size = int(np.sqrt(self.N))
             self.use_stencil = False

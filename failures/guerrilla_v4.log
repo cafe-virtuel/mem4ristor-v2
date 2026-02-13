@@ -1,0 +1,9 @@
+[2026-02-13T23:55:00] GUERRILLA HACKER REPORT (V4)
+Target: Mem4ristor V2 Core
+
+Attacks Attempted:
+1. Stack Smasher (Recursion): FAILED (Python limit held).
+2. Temporal Void (Solver): BLOCKED (Added t_span validation).
+3. Ghost Singularity (Linalg): BLOCKED (Added NaN/Inf validation in Mem4Network).
+
+Status: HARDENED AGAINST GUERRILLA TACTICS.
