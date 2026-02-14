@@ -1,0 +1,13 @@
+[2026-02-13] ROUND 3 ATTACKS
+---------------------------
+Attack Vectors:
+1. Topological Hallucination: Standard `eigh` failed on non-symmetric directed graphs.
+   - Fix: Enforced symmetry check in `get_spectral_gap`.
+2. Stiffness DoS: `solve_rk45` froze on stiff equations (time-scale separation).
+   - Fix: Added `max_step` limit and `nfev` warning.
+3. Chaos Injection: `step()` accepted chaotic objects breaking determinism.
+   - Fix: Added strict type checking for inputs.
+
+Status: FIXED.
+Verification: Passed.
+Exploits: tests/exploits/attack_*.py committed for regression testing.

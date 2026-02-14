@@ -175,6 +175,11 @@ class Mem4ristorV2:
         Returns:
             None (updates internal state in-place)
         """
+        # GUARD: Deterministic Input (Round 3 Fix - Chaos Injection)
+        # Rejects objects with custom __float__ to ensure reproducibility
+        if hasattr(I_stimulus, '__float__') and not isinstance(I_stimulus, (int, float, np.number, np.ndarray)):
+             raise TypeError("Stimulus must be a numeric constant (int/float/array) to ensure reproducibility.")
+        
         # GUARD 0: NaN detection on state variables
         # Prevents NaN propagation from corrupted state to entire network via coupling
         if np.any(np.isnan(self.v)):
@@ -283,6 +288,11 @@ class Mem4ristorV2:
         if t_span[0] < 0 or t_span[1] < 0:
              raise ValueError(f"Invalid time span {t_span}: Time must be non-negative.")
 
+        # GUARD: Singularity Prevention (Round 3 Fix - Stiffness)
+        # Limit max_step to prevent Zeno's Paradox / infinite subdivision on stiff systems
+        duration = t_span[1] - t_span[0]
+        max_step = min(0.1, duration / 10.0) if duration > 0 else 0.1
+
         def combined_dynamics(t, y):
             # Split state
             N = self.N
@@ -317,7 +327,13 @@ class Mem4ristorV2:
             return np.concatenate([dv, dw, du])
 
         y0 = np.concatenate([self.v, self.w, self.u])
-        sol = solve_ivp(combined_dynamics, t_span, y0, method='RK45', rtol=1e-6)
+        # Round 3: Added max_step to prevent freezing on stiff systems
+        sol = solve_ivp(combined_dynamics, t_span, y0, method='RK45', rtol=1e-6, max_step=max_step)
+        
+        # GUARD: Stiff System Detection (Round 3 Fix)
+        if sol.nfev > 50000:
+             import warnings
+             warnings.warn(f"High computational cost ({sol.nfev} steps). System might be stiff. Consider checking parameters.")
         
         # Update state to last point
         y_final = sol.y[:, -1]
@@ -429,6 +445,11 @@ class Mem4Network:
             # For now, return a placeholder or implement the periodic lattice eigenvalues
             return 0.0 
         
+        # GUARD: Topological Consistency (Round 3 Fix - Hallucination)
+        # Spectral gap is only well-defined for undirected graphs (symmetric Laplacian) in this context.
+        if not np.allclose(self.L, self.L.T, atol=1e-10):
+             raise ValueError("Spectral gap requires symmetric Laplacian (undirected graph). For directed graphs, use specific metrics.")
+
         from scipy.linalg import eigh
         vals = eigh(self.L, eigvals_only=True)
         # The eigenvalues are sorted, vals[0] is always ~0 for a connected graph
