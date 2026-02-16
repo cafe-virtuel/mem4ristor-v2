@@ -1,0 +1,57 @@
+FAILURE LOG: V3 Scientific Audit & Migration
+Date: 2026-02-16
+Auditor: Claude Opus 4.6
+Orchestrator: Julien Chauvin
+
+=== FAILURES DISCOVERED DURING AUDIT ===
+
+FAIL-01: test_nan_injection_survial accepted nan_count <= 1
+  Location: tests/test_robustness.py (v2.9.3)
+  Impact: NaN could persist in 1 unit after sanitization
+  Root cause: Guard cleaned v but tolerance allowed 1 survivor
+  Fix: Strict nan_count == 0
+
+FAIL-02: test_manus_v2.py used print() instead of assert (5 tests)
+  Location: tests/test_manus_v2.py (v2.9.3)
+  Impact: CI could not detect regressions - tests always "passed"
+  Root cause: Tests written as demonstration scripts, not automated checks
+  Fix: All print-based checks converted to assert statements
+
+FAIL-03: GUARD 0 did not catch Inf in state variables
+  Location: src/mem4ristor/core.py step() method
+  Impact: Inf in w[5] persisted through step(), caused NaN propagation via arithmetic
+  Root cause: Guard used np.isnan() which misses Inf
+  Fix: Changed to ~np.isfinite() with posinf/neginf handling
+
+FAIL-04: benchmark_kuramoto.py topology mismatch
+  Location: experiments/benchmark_kuramoto.py
+  Impact: Comparison between grid (k=4) and all-to-all was structurally unfair
+  Root cause: Kuramoto used default all-to-all coupling, Mem4ristor used 2D lattice
+  Fix: Both models now use same 2D lattice adjacency matrix
+
+FAIL-05: benchmark_kuramoto.py invalid voltage-to-phase mapping
+  Location: experiments/benchmark_kuramoto.py compute_order_parameter_v()
+  Impact: R (order parameter) was computed for FHN voltage using linear phase rescaling
+  Root cause: FHN is an excitable medium, not a phase oscillator - mapping is unphysical
+  Fix: R computed only for Kuramoto; comparison uses entropy and variance instead
+
+FAIL-06: Preprint "Law of 15%" overclaim
+  Location: docs/preprint.tex
+  Impact: Claimed topological invariance contradicted by own LIMIT-02 (scale-free failure)
+  Root cause: Observation on regular lattices presented as universal law
+  Fix: Renamed to "Empirical Threshold of 15%", removed "topologically invariant"
+
+FAIL-07: Preprint "CCC Validation" overclaim
+  Location: docs/preprint.tex
+  Impact: Retrospective curve-fitting presented as forward validation
+  Root cause: No raw CCC data used; parameters hand-tuned to match known outcomes
+  Fix: Renamed to "CCC Illustration"
+
+FAIL-08: dt inconsistency across code and documentation
+  Location: docs/preprint.tex, src/mem4ristor/config.yaml
+  Impact: Preprint referenced dt=0.01 and dt=0.1 while code used dt=0.05
+  Root cause: Stale references from earlier versions not updated
+  Fix: Harmonized to dt=0.05 everywhere
+
+=== TEST RESULTS AFTER FIX ===
+31 passed, 2 xfailed, 0 failures (2.63s)

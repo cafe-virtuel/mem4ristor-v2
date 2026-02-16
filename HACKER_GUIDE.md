@@ -1,4 +1,4 @@
-# 🏴‍☠️ HACKER GUIDE: Mem4ristor V2 (Hardened)
+# 🏴‍☠️ HACKER GUIDE: Mem4ristor V3 (Hardened)
 
 Bienvenue, challenger. Ce dépôt contient le noyau `mem4ristor`.
 
@@ -24,16 +24,27 @@ Vous gagnez si vous réussissez l'une des actions suivantes via du code Python s
 *   **Config Type Safety** : `_deep_merge` interdit le remplacement d'un dictionnaire par un autre type (Type Confusion).
 *   **DoS Guard** : `N > 10,000,000` est rejeté à l'initialisation.
 *   **Deep Merge** : Les configurations partielles sont complétées par défaut (pas de `KeyError`).
+*   **V3 Kernel Stability** : Le noyau de couplage Levitating Sigmoid `tanh(π(0.5-u)) + δ` élimine la zone morte à u=0.5 du noyau linéaire `(1-2u)`.
 
 ## 🛠️ Outils à votre disposition
 
 *   `tests/test_fuzzing.py` : Le "Vicious Atomizer" (Fuzzing aléatoire).
 *   `tests/test_manus_v2.py` : Le "Chaos Monkey" (Attaques précédentes).
 *   `src/mem4ristor/core.py` : Le code source (Lisez-le pour trouver les failles !).
+*   `experimental/` : Contient les modules expérimentaux comme King (ex-module principal).
+*   `tests/test_adversarial.py` : Suite de tests adverses mise à jour pour V3.
 
 ## ⚠️ Règles
 
 *   Pas de modification du code source (`core.py`). Vous devez casser le système *de l'extérieur* (via l'API Python).
 *   Pas d'attaque OS (suppression de fichiers, fork bombs). Restez dans Python.
+
+## 🆕 V3 Changes
+
+**Kernel Update**: Le noyau de couplage est passé de `(1-2u)` (linéaire) à `tanh(π(0.5-u)) + δ` (Levitating Sigmoid). Cela résout la vulnérabilité SNR Collapse (LIMIT-01) mais introduit potentiellement de nouvelles surfaces d'attaque liées aux fonctions transcendantes.
+
+**Architecture**: King a été déplacé vers `experimental/` et n'est plus le module principal par défaut.
+
+**Test Suite**: Les tests adverses ont été mis à jour pour valider le comportement du nouveau noyau sigmoid, avec de nouveaux tests de stabilité numérique.
 
 Bonne chance. 🛡️

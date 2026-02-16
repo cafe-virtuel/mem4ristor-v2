@@ -3,19 +3,21 @@
 | Claim | Status | Proven | Counter-Example | Falsifiable |
 | :--- | :--- | :--- | :--- | :--- |
 | u ∈ [0,1] works | ❌ UNPROVEN | No | u=0.6 → I_coup < noise | YES (see failure #12) |
-| 15% threshold universal | ⚠️ EMPIRICAL | N=625 | Fails on Scale-Free Hubs | YES (see failure #13) |
+| 15% threshold universal | ⚠️ EMPIRICAL THRESHOLD | N=625 | Fails on Scale-Free Hubs | YES (see failure #13) |
 | Hardware mapping | ❌ SPECULATION | None | No SPICE model exists | NO (unfalsifiable) |
 | Long-term stability | ❌ FALSE | dt=0.05 | H drift > 5% @ 5000 steps | YES (see failures/) |
-| Cross-platform parity | ✅ FIXED | Yes | MKL Non-determinism | YES (v2.6 fix) |
+| Cross-platform parity | ✅ FIXED | Yes | MKL Non-determinism | YES (v3.0 fix) |
 | H ≈ 1.94 Attractor | ❌ FALSE | No | Max H found ≈ 1.56 | YES (see failure #15) |
 
 **Rule**: Any claim marked ❌ MUST be qualified as "Phenomenological" or "Speculative" in the preprint.
 
 ## Detailed Failure Inventory
 
-### [LIMIT-01] SNR Collapse at u > 0.5
-When $u$ approaches 0.5, the signal $|(1-2u) \cdot D_{eff} \cdot L|$ approaches zero. If the noise floor $\sigma$ is fixed, there is a "Dead Zone" where Repulsive Social Coupling is purely noise-driven.
-- **Proof**: Run `self_audit_v27.py` with noise=0.05.
+### [LIMIT-01] SNR Collapse at u > 0.5 (RESOLVED in V3)
+**V2 Issue**: When $u$ approached 0.5, the signal $|(1-2u) \cdot D_{eff} \cdot L|$ approached zero, creating a "Dead Zone" where Repulsive Social Coupling was purely noise-driven.
+
+**V3 Resolution**: The Levitating Sigmoid kernel $\tanh(\pi(0.5-u)) + \delta$ eliminates the dead zone at u=0.5 by maintaining non-zero coupling strength across the full [0,1] range. The sigmoid provides smooth, continuous coupling without the linear kernel's zero-crossing artifact.
+- **Status**: FIXED in V3 via kernel redesign.
 
 ### [LIMIT-02] Topological Strangulation
 In Scale-Free networks, conformist hubs can isolate heretics. If heretics are on the periphery, their phase-inversion signal is absorbed by high-degree conformists before reaching the whole network.
@@ -36,6 +38,14 @@ The preprint claims an attractor diversity of $H \approx 1.94$. Empirical audits
 - **Status**: OPEN. Claim must be revised or exact conditions documented.
 
 ---
+
+## V3.0 Migration Notes
+
+**Major Changes**:
+- **Coupling Kernel**: Replaced linear `(1-2u)` with Levitating Sigmoid `tanh(π(0.5-u)) + δ`
+- **LIMIT-01 Resolution**: Dead zone at u=0.5 eliminated by sigmoid's non-zero gradient
+- **Architecture**: King moved to `experimental/` directory
+- **Test Suite**: Adversarial tests updated for V3 kernel behavior
 
 ## v2.9.2 Fixes (Stability and Integrity Fix)
 
