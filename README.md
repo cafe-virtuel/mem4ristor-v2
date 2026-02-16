@@ -1,18 +1,19 @@
-# Mem4ristor V2: Neuromorphic Cognitive Architecture
+# Mem4ristor V3: Neuromorphic Cognitive Architecture
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18620597.svg)](https://doi.org/10.5281/zenodo.18620597)
 [![Tests](https://github.com/Jusyl236/mem4ristor-v2/actions/workflows/test.yml/badge.svg)](https://github.com/Jusyl236/mem4ristor-v2/actions/workflows/test.yml)
 
-**Mem4ristor V2** is a computational implementation of extended FitzHugh-Nagumo dynamics designed to investigate emergent critical states in neuromorphic networks. This research code focuses on the role of "Constitutional Doubt" ($u$) and "Structural Heretics" in preventing consensus collapse in scale-free and lattice networks.
+**Mem4ristor V3** is a computational implementation of extended FitzHugh-Nagumo dynamics designed to investigate emergent critical states in neuromorphic networks. This research code focuses on the role of "Constitutional Doubt" ($u$) and "Structural Heretics" in preventing consensus collapse in scale-free and lattice networks.
 
-> **Status**: v2.9.3 (Stable Research Release)
+> **Status**: v3.0.0 (Stable Research Release)
 
 ## 🔬 Key Scientific Features
 
 *   **Constitutional Doubt ($u$):** A dynamic state variable that modulates coupling polarity based on local uncertainty, enabling repulsive social coupling when doubt is high.
-*   **Structural Heretics:** A subset of nodes with inverted stimulus perception, critical for maintaining global diversity (Empirically validated at ~15%).
+*   **Structural Heretics:** A subset of nodes with inverted stimulus perception, critical for maintaining global diversity (Empirical Threshold of 15%, validated on regular lattices).
+*   **Inhibition Plasticity:** Dynamic modulation of coupling polarity through the Levitating Sigmoid: tanh(π(0.5-u)) + δ.
 *   **Scale-Invariant Dynamics:** Normalized coupling strength ($D_{eff} = D/\sqrt{N}$) ensures consistent behavior across network sizes ($N=10$ to $N=2500$).
 
 ## 🚀 Installation
@@ -88,9 +89,9 @@ pytest tests/test_robustness.py
 If you use this code in your research, please cite the associated dataset/preprint:
 
 ```bibtex
-@software{mem4ristor_v2,
+@software{mem4ristor_v3,
   author       = {Julien Chauvin},
-  title        = {Mem4ristor V2: Neuromorphic Cognitive Architecture},
+  title        = {Mem4ristor V3: Neuromorphic Cognitive Architecture},
   year         = {2026},
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.18620597},

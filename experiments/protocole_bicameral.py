@@ -5,8 +5,7 @@ import os
 
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from mem4ristor.core import Mem4ristorV2, Mem4Network
-from mem4ristor.mem4ristor_v3 import Mem4ristorV3
+from mem4ristor.core import Mem4ristorV3, Mem4Network
 
 def sigmoid(x, k=10, center=0.5):
     return 1 / (1 + np.exp(-k * (x - center)))

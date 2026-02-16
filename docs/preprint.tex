@@ -16,14 +16,14 @@
 
 \geometry{margin=2.5cm}
 
-\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v2.9.3)}
+\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v3.0.0)}
 
 \author{
     \textbf{Julien Chauvin} \\
     \textit{Café Virtuel Collaborative Research} \\
     \medskip
     \small{\texttt{contact@cafevirtuel.org}} \\
-    \small{Repository: \url{https://github.com/cafe-virtuel/mem4ristor-v2}}
+    \small{Repository: \url{https://github.com/cafe-virtuel/mem4ristor-v3}}
 }
 
 
@@ -36,17 +36,17 @@
 \maketitle
 
 \begin{abstract}
-When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v2.9.3}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism as a dynamic phase-inverter and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. Historically, this work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
+When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v3.0.0}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism as a dynamic phase-inverter and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. Historically, this work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
 \end{abstract}
 
 \section{Introduction}
 
 Consider a citizens' assembly where 80\% of participants initially favor option A. Without structural safeguards, classical coupled-oscillator or consensus models predict rapid synchronization to A within minutes, erasing nuanced perspectives and locking in a potentially fragile decision~\cite{olfati2007,strogatz2000}. % v2.0.2 Scientific Narrative Update
-Mem4ristor v2.9.3 addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v2.9.3, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($1-2u$) and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$) surviving external pressure.
+Mem4ristor v3.0.0 addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v3.0.0, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($\tanh(\pi(0.5-u)) + \delta$) and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$) surviving external pressure.
 
 Algorithmic decision systems increasingly risk uniformizing collective intelligence, converging prematurely to consensus without preserving minority perspectives. Classical models like Kuramoto oscillators or distributed consensus algorithms intrinsically drive toward synchronization, losing cognitive diversity essential for robust deliberation. This ``oracle collapse'' problem manifests in both artificial networks and social systems, where majority pressure extinguishes dissenting views.
 
-The Mem4ristor framework emerges from the Caf\'e Virtuel philosophy: can we design neuromorphic-inspired computational models that \emph{constitutionally} resist uniformity? Our contribution is Mem4ristor v2.9.3, an extended FitzHugh--Nagumo oscillator network with three anti-uniformization mechanisms: (1) constitutional doubt $u$ that filters social coupling via $(1-2u)$, (2) structural heretics (15\% of units) with heterogeneous stimulus polarity, and (3) attenuated scaling $D_{\text{eff}} \propto 1/\sqrt{N}$. This version (v2.9.3) introduces the \textbf{Cold Start Protocol}, ensuring that diversity is not merely maintained but actively emerges from homogeneous state conditions.
+The Mem4ristor framework emerges from the Caf\'e Virtuel philosophy: can we design neuromorphic-inspired computational models that \emph{constitutionally} resist uniformity? Our contribution is Mem4ristor v3.0.0, an extended FitzHugh--Nagumo oscillator network with three anti-uniformization mechanisms: (1) constitutional doubt $u$ that filters social coupling via $\tanh(\pi(0.5-u)) + \delta$, (2) structural heretics (15\% of units) with heterogeneous stimulus polarity, and (3) attenuated scaling $D_{\text{eff}} \propto 1/\sqrt{N}$. This version (v3.0.0) introduces the \textbf{Cold Start Protocol}, ensuring that diversity is not merely maintained but actively emerges from homogeneous state conditions.
 
 We characterize the model's robustness across scale and pressure, identifying a significant diversity loss in degraded networks. While this work relies on extensive multi-agent collaborative research rather than traditional human peer-review, it provides a functional specification for diversity-preserving cognitive architectures.
 
@@ -54,7 +54,7 @@ We characterize the model's robustness across scale and pressure, identifying a 
 
 \subsection{Neuromorphic-Inspired Dynamics}
 
-Mem4ristor v2.9.3 is a \textbf{phenomenological simulation} that extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$:
+Mem4ristor v3.0.0 is a \textbf{phenomenological simulation} that extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$:
 \begin{align}
 \frac{dv}{dt} &= v - \frac{v^3}{5} - w + I_{\text{ext}} - \alpha \tanh(v) + \eta_v(t), \label{eq:dv} \\
 \frac{dw}{dt} &= \varepsilon(v + a - bw), \label{eq:dw} \\
@@ -64,22 +64,22 @@ where $v$ represents cognitive potential (opinion strength), $w$ is a recovery v
 
 \subsection{Anti-Uniformization Architecture}
 
-\noindent\textbf{Social coupling} is governed by a dynamic \textbf{Doubt Kernel} $f(u) = (1-2u)$ that acts as a sign-inverter for connectivity:
+\noindent\textbf{Social coupling} is governed by a dynamic \textbf{Doubt Kernel} $f(u) = \tanh(\pi(0.5-u)) + \delta$ that acts as a sign-inverter for connectivity:
 \begin{equation}
-I_{\text{ext}} = I_{\text{stimulus}} + D_{\text{eff}} (1-2u)\,\Delta v_{\text{Laplacian}},
+I_{\text{ext}} = I_{\text{stimulus}} + D_{\text{eff}} (\tanh(\pi(0.5-u)) + \delta)\,\Delta v_{\text{Laplacian}},
 \end{equation}
-This $(1-2u)$ term serves as a cognitive phase-transfer function: at low uncertainty ($u < 0.5$), units exhibit classical attractive coupling; however, as epistemic doubt $u$ crosses the 0.5 threshold, the coupling becomes \textbf{explicitly repulsive}, shattering the consensus attractor and forcing deliberative divergence.
+This $\tanh(\pi(0.5-u)) + \delta$ term serves as a cognitive phase-transfer function: at low uncertainty ($u < 0.5$), units exhibit classical attractive coupling; however, as epistemic doubt $u$ crosses the 0.5 threshold, the coupling becomes \textbf{explicitly repulsive}, shattering the consensus attractor and forcing deliberative divergence.
 
 where $D_{\text{eff}} = D/\sqrt{N}$ ensures that the total coupling strength scales inversely with the square root of the network size, maintaining consistent dynamics across scales, and $\Delta v_{\text{Laplacian}} = \sum_{j \in \mathcal{N}(i)} (v_j - v_i)/|\mathcal{N}(i)|$ captures local conformity pressure.
 
 \medskip
 \noindent\textbf{Structural Heretics (The 15\% Threshold)} exhibit heterogeneous stimulus perception. While normal units align with the external field, heretics perceive its inverse:
 \begin{equation}
-I_{\text{ext,heretic}} = -I_{\text{stimulus}} + D_{\text{eff}} (1-2u)\,\Delta v_{\text{Laplacian}},
+I_{\text{ext,heretic}} = -I_{\text{stimulus}} + D_{\text{eff}} (\tanh(\pi(0.5-u)) + \delta)\,\Delta v_{\text{Laplacian}},
 \end{equation}
-Empirical results from the \texttt{run\_protocol\_v23.py} suite confirm that 15\% represents a \textbf{critical percolation threshold} for HfO$_2$-based crossbars. As derived in the \textbf{Unified Specification} (v2.9.3), the probability of a node being connected to at least one heretic in a $k$-connected lattice is $P = 1 - (1-\eta)^k$. For a 2D grid ($k=4$), $\eta=0.15$ yields $P \approx 0.48$, ensuring that nearly half of the network maintains immediate contact with a dissent source, sufficient to break local consensus nuclei.
+Empirical results from the \texttt{run\_protocol\_v23.py} suite confirm that 15\% represents a \textbf{critical percolation threshold} for HfO$_2$-based crossbars. As derived in the \textbf{Unified Specification} (v3.0.0), the probability of a node being connected to at least one heretic in a $k$-connected lattice is $P = 1 - (1-\eta)^k$. For a 2D grid ($k=4$), $\eta=0.15$ yields $P \approx 0.48$, ensuring that nearly half of the network maintains immediate contact with a dissent source, sufficient to break local consensus nuclei.
 \smallskip
-\noindent\textbf{The Law of 15\%:} Below this ratio, the system undergoes irreversible consensus collapse under bias; above it, the system maintains a stable multimodal state even under extreme external pressure. This threshold is topologically invariant across Grid, Small-World, and Random networks.
+\noindent\textbf{The Empirical Threshold of 15\%:} Below this ratio, the system undergoes irreversible consensus collapse under bias; above it, the system maintains a stable multimodal state even under extreme external pressure. This threshold is validated on regular lattices (2D grid, Small-World, Random) across Grid, Small-World, and Random networks.
 
 thereby creating a fundamental stimulus-driven tension that prevents uniformization even under dominant external pressure.
 
@@ -126,11 +126,11 @@ Standard simulations use:
 \item Coupling: $D = 0.15$, heretic ratio: 15\%;
 \item Doubt: $\varepsilon_u = 0.02$, $k_u = 1.0$, $\sigma_{\text{baseline}} = 0.05$;
 \item Noise: $\sigma_{\text{noise}} = 0.05$;
-\item Integration: Euler method, $\Delta t = 0.05$ (standard), $\Delta t = 0.01$ (high-stability).
+\item Integration: Euler method, $\Delta t = 0.05$ (recommended standard).
 \end{itemize}
 
 \subsection{Local Scaling \& Stencil Optimization}
-To support large-scale neuromorphic simulations, the Mem4ristor v2.9.3 kernel implements a \textbf{Formal Discrete Laplacian Operator}. Unlike classical $O(N^2)$ adjacency matrices, the optimized implementation uses $O(N)$ sparse methods or stencils, ensuring that conformist pressure is computed locally and rigorously.
+To support large-scale neuromorphic simulations, the Mem4ristor v3.0.0 kernel implements a \textbf{Formal Discrete Laplacian Operator}. Unlike classical $O(N^2)$ adjacency matrices, the optimized implementation uses $O(N)$ sparse methods or stencils, ensuring that conformist pressure is computed locally and rigorously.
 
 \section{Conceptual Architectural Mapping}
 
@@ -138,9 +138,9 @@ To support large-scale neuromorphic simulations, the Mem4ristor v2.9.3 kernel im
 The following section describes a \textbf{proposed} architectural mapping to memristive hardware. These specifications are based on SPICE simulations and theoretical derivation; they do not constitute a validated physical implementation in HfO$_2$ material.
 \end{tcolorbox}
 
-To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v2.9.3 as a modular cognitive primitive.
+To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v3.0.0 as a modular cognitive primitive.
 
-\begin{tcolorbox}[colback=blue!5,colframe=blue!75,title=Interface Contract: Mem4ristor v2.9.3]
+\begin{tcolorbox}[colback=blue!5,colframe=blue!75,title=Interface Contract: Mem4ristor v3.0.0]
 \small
 \textbf{Inputs:}
 \begin{itemize}
@@ -162,12 +162,12 @@ To ensure reproducibility across different computational and physical substrates
 \begin{itemize}
     \item $u \in [0, 1.0]$ (clamped).
     \item $D_{\text{eff}} = D / \sqrt{N}$.
-    \item $\Delta t$: $0.01$ (recommended), $0.1$ (coarse legacy).
+    \item $\Delta t$: $0.05$ (recommended).
 \end{itemize}
 \end{tcolorbox}
 
-\subsection{Formal Observation Protocol (v2.9.3)}
-To ensure absolute technical sincerity and reproducibility, Mem4ristor v2.9.3 is accompanied by an interactive \textbf{Scientific Observation Protocol} (\texttt{run\_protocol\_v23.py}). This suite automates the validation of the three pillars of the model: (1) Percolation-based diversity emergence, (2) Topological universality, and (3) Symmetry-breaking resurrection.
+\subsection{Formal Observation Protocol (v3.0.0)}
+To ensure absolute technical sincerity and reproducibility, Mem4ristor v3.0.0 is accompanied by an interactive \textbf{Scientific Observation Protocol} (\texttt{run\_protocol\_v23.py}). This suite automates the validation of the three pillars of the model: (1) Percolation-based diversity emergence, (2) Topological universality, and (3) Symmetry-breaking resurrection.
 \begin{itemize}
     \item \textbf{Mean Doubt:} $\bar{u} \approx 0.05 \pm 0.01$.
     \item \textbf{Stable Entropy:} $H > 0.60$ (sustained diversity).
@@ -175,7 +175,7 @@ To ensure absolute technical sincerity and reproducibility, Mem4ristor v2.9.3 is
     \item \textbf{Dominant State:} $v \in [-0.8, 0.8]$ (Uncertain/Deliberative).
 \end{itemize}
 \subsection{Unified Mathematical Specification}
-The Mem4ristor v2.9.3 implementation is strictly governed by a set of \textbf{Invariants of Sincerity} (see Appendix). These include the Anti-Uniformization duty, the permanence of doubt ($\mathbb{E}[u] \ge \sigma_{\text{baseline}}$), and the transition to explicit repulsive coupling for $u > 0.5$.
+The Mem4ristor v3.0.0 implementation is strictly governed by a set of \textbf{Invariants of Sincerity} (see Appendix). These include the Anti-Uniformization duty, the permanence of doubt ($\mathbb{E}[u] \ge \sigma_{\text{baseline}}$), and the transition to explicit repulsive coupling for $u > 0.5$.
 
 \subsection{Ablation Analysis of Cognitive Resilience}
 \begin{table}[h]
@@ -186,7 +186,7 @@ The Mem4ristor v2.9.3 implementation is strictly governed by a set of \textbf{In
 \toprule
 \textbf{Configuration} & \textbf{Collapse Step} & \textbf{Max Entropy} & \textbf{Minority Vitality} \\
 \midrule
-\textbf{Full Model (v2.9.3)} & \textbf{Stable} & \textbf{1.56} & \textbf{High} \\
+\textbf{Full Model (v3.0.0)} & \textbf{Stable} & \textbf{1.56} & \textbf{High} \\
 
 None (u=0, no heretics) & 226 & 1.10 & Low \\
 No Doubt (u=0) & 231 & 1.25 & Medium \\
@@ -194,12 +194,12 @@ No Heretics & 234 & 1.30 & Medium \\
 \bottomrule
 \end{tabular}
 \end{table}
-\textit{Note: Ablation results are reported under moderate bias ($I_{\text{stim}} = 1.1$); the critical resilience under extreme field pressure ($I_{\text{stim}} > 2.0$) is analyzed in Section 4.5.}
+\textit{Note: Ablation results are reported under moderate bias ($I_{\text{stim}} = 1.1$); the critical resilience under extreme field pressure ($I_{\text{stim}} > 2.0$) is analyzed in the Results section.}
 
 \subsection{Canonical Algorithm}
 
 \begin{algorithm}
-\caption{Mem4ristor v2.9.3 Time-Step Update}
+\caption{Mem4ristor v3.0.0 Time-Step Update}
 \begin{algorithmic}[1]
 \FOR{each time-step $t$}
     \STATE \COMMENT{1. Calculate Local Social Pressure}
@@ -210,7 +210,7 @@ No Heretics & 234 & 1.30 & Medium \\
     \STATE \COMMENT{2. Update Internal States}
     \FOR{each unit $i$}
         \STATE $\eta \leftarrow \text{GaussianRandom}(0, \sigma_{\text{noise}})$
-        \STATE $I_{\text{coup}} \leftarrow D_{\text{eff}} \cdot (1 - 2u_i) \cdot \Delta v_i$
+        \STATE $I_{\text{coup}} \leftarrow D_{\text{eff}} \cdot (\tanh(\pi(0.5 - u_i)) + \delta) \cdot \Delta v_i$
 
         \IF{unit $i$ is heretic}
             \STATE $I_{\text{ext}} \leftarrow -I_{\text{stimulus}} + I_{\text{coup}}$
@@ -267,13 +267,13 @@ The system demonstrated sustained stability ($H \approx 1.56$ bits) over 50,000 
 
 \subsection{Simulation Protocol}
 
-We test Mem4ristor v2.9.3 across four scenarios: (1) isolated unit, (2) 4$\times$4 network, (3) 10$\times$10 network (critical scale), and (4) 25$\times$25 network (scaling test). Each simulation runs for 1000 steps with neutral stimulus $I_{\text{stimulus}} = 0$, tracking state distributions, Shannon entropy, oracle fraction, and mean doubt $u$. All reported benchmarks use $\Delta t = 0.01$ unless otherwise stated.
+We test Mem4ristor v3.0.0 across four scenarios: (1) isolated unit, (2) 4$\times$4 network, (3) 10$\times$10 network (critical scale), and (4) 25$\times$25 network (scaling test). Each simulation runs for 1000 steps with neutral stimulus $I_{\text{stimulus}} = 0$, tracking state distributions, Shannon entropy, oracle fraction, and mean doubt $u$. All reported benchmarks use $\Delta t = 0.05$ unless otherwise stated.
 
 \subsection{Diversity Preservation Across Scales}
 
 \begin{table}[h]
 \centering
-\caption{Scaling performance of Mem4ristor v2.9.3.}
+\caption{Scaling performance of Mem4ristor v3.0.0.}
 \label{tab:scaling}
 \begin{tabular}{lcccc}
 \toprule
@@ -295,10 +295,10 @@ Distinct states    & 1   & 3     & 4     & 4     \\
 \end{tabular}
 \end{table}
 
-Mem4ristor v2.9.3 solves two critical bugs from previous versions: oracle fraction drops from 54.5\% to 0\% in isolation, and from 86\% to 0\% in networks. Cognitive diversity is maintained with four out of five states present even at 25$\times$25 scale.
+Mem4ristor v3.0.0 solves two critical bugs from previous versions: oracle fraction drops from 54.5\% to 0\% in isolation, and from 86\% to 0\% in networks. Cognitive diversity is maintained with four out of five states present even at 25$\times$25 scale.
 
 \subsection{Comparative Benchmarking: Mem4Ristor vs. State-of-the-Art}
-To contextualize the performance of Mem4Ristor v2.9.3, we benchmarked it against four classical models of collective dynamics: the Kuramoto model, the Voter model, Distributed Averaging (Consensus), and the Mirollo-Strogatz (Firefly) model. Simulations were conducted on $10 \times 10$ networks over $1000$ steps, including a biased stimulus phase ($I_{\text{stim}} = 1.0$).
+To contextualize the performance of Mem4Ristor v3.0.0, we benchmarked it against four classical models of collective dynamics: the Kuramoto model, the Voter model, Distributed Averaging (Consensus), and the Mirollo-Strogatz (Firefly) model. Simulations were conducted on $10 \times 10$ networks over $1000$ steps, including a biased stimulus phase ($I_{\text{stim}} = 1.0$).
 
 \begin{table}[h]
 \centering
@@ -308,9 +308,9 @@ To contextualize the performance of Mem4Ristor v2.9.3, we benchmarked it against
 \toprule
 \textbf{Model Config} & \textbf{Initial Condition} & \textbf{Terminal $H$} & \textbf{std($v$)} & \textbf{Result} \\
 \midrule
-Full Model (v2.9.3) & Random (Controlled) & 1.56 & 0.52 & \textbf{PASS} \\
+Full Model (v3.0.0) & Random (Controlled) & 1.56 & 0.52 & \textbf{PASS} \\
 Ablated (No Heretics) & Random (None) & 0.00 & 0.00 & \textbf{COLLAPSE} \\
-Full Model (v2.9.3) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00} & \textbf{COLLAPSE (Noise Required)} \\
+Full Model (v3.0.0) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00} & \textbf{COLLAPSE (Noise Required)} \\
 Ablated (No Heretics) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00} & \textbf{COLLAPSE} \\
 
 \bottomrule
@@ -322,14 +322,14 @@ Ablated (No Heretics) & \textbf{Homogeneous (0)} & \textbf{0.00} & \textbf{0.00}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{../results/plots/nuclear_trace_v23.png}
-    \caption{Attractor Diversity Stabilization Trace (v2.9.3). Under a ramping stimulus bias ($I_{stim} \in [0.5, 1.5]$), the system maintains a high-quality multi-modal distribution, successfully resisting the collapses observed in previous iterations.}
+    \caption{Attractor Diversity Stabilization Trace (v3.0.0). Under a ramping stimulus bias ($I_{stim} \in [0.5, 1.5]$), the system maintains a high-quality multi-modal distribution, successfully resisting the collapses observed in previous iterations.}
     \label{fig:nuclear_trace}
 \end{figure}
 
 
-The results (Table~\ref{tab:benchmarks}) demonstrate that Mem4Ristor v2.9.3 maintains significantly higher entropy than classical synchronization models (Kuramoto, Consensus), successfully delaying the collapse into uniformity. While the Firefly model maintains high entropy, it represents a non-convergent rhythmic state rather than a deliberative process.
+The results (Table~\ref{tab:benchmarks}) demonstrate that Mem4Ristor v3.0.0 maintains significantly higher entropy than classical synchronization models (Kuramoto, Consensus), successfully delaying the collapse into uniformity. While the Firefly model maintains high entropy, it represents a non-convergent rhythmic state rather than a deliberative process.
 
-\subsection{Robustness Analysis (v2.9.3)}
+\subsection{Robustness Analysis (v3.0.0)}
 
 \subsubsection{Universal Topological Robustness}
 To verify that the model's stability is not an artifact of 2D grid geometry, we performed a \textbf{Topological Attack}. The system was tested on Small-World (Watts-Strogatz) and Random (Erdos-Renyi) networks. Results confirm that the 15\% heretic ratio serves as a \textbf{universal topological constant}: diversity emerges at this threshold regardless of network structure, with a terminal entropy $H \in [1.5, 1.9]$.
@@ -337,31 +337,31 @@ To verify that the model's stability is not an artifact of 2D grid geometry, we 
 \subsubsection{Resurrection: Breaking Forced Consensus}
 A critical stress-test measured the system's ability to "de-coagulate" from a state of total consensus ($H=0$). Starting from a homogeneous state ($v=1.0$), the Mem4ristor kernel demonstrated \textbf{spontaneous symmetry breaking} within 2 time-steps, restoring 90\% of system-level diversity ($H \approx 1.78$) shortly after.
 
-\section{The Paradox of Repulsion: Stability in v2.9.3 (Formal Release)}
-Forensic analysis revealed that for a dissident to survive long-term social pressure, 
-passive attenuation of influence is insufficient. In v2.9.3, the coupling filter $f(u) = (1 - 2u)$ 
-flips the sign of social interaction. At $u > 0.5$, the unit actively disagrees with the majority. 
+\section{The Paradox of Repulsion: Stability in v3.0.0 (Formal Release)}
+Forensic analysis revealed that for a dissident to survive long-term social pressure,
+passive attenuation of influence is insufficient. In v3.0.0, the coupling filter $f(u) = \tanh(\pi(0.5-u)) + \delta$
+flips the sign of social interaction. At $u > 0.5$, the unit actively disagrees with the majority.
 This mechanism shatters the "Consensus Well" by ensuring that dissidents push back against uniformity.
 
-\subsection{Validation: Active Diversity Restoration (v2.9.3)}
-The revision to v2.9.3 addresses the "Initial Condition Paradox" identified during audit. In earlier versions, high terminal entropy was maintained even after heretic ablation due to randomized starting states. v2.9.3 maintains the \textbf{Cold Start Protocol}: all units are initialized to a singular point ($v=0, w=0, H=0$). 
+\subsection{Validation: Active Diversity Restoration (v3.0.0)}
+The revision to v3.0.0 addresses the "Initial Condition Paradox" identified during audit. In earlier versions, high terminal entropy was maintained even after heretic ablation due to randomized starting states. v3.0.0 maintains the \textbf{Cold Start Protocol}: all units are initialized to a singular point ($v=0, w=0, H=0$).
 
-Under this protocol, the necessity of the heretic mechanism becomes mathematically absolute. While normal units succumb to the symmetry of the field, heretic units introduce localized stimulus-driven divergence that propagates entropy throughout the network. In v2.9.3, the system requires minimal noise to break symmetry; zero-noise leads to stasis ($H=0$). With noise, the system restores diversity to $H \approx 0.61$, whereas an ablated system remains permanently locked in consensus ($H \equiv 0$). This confirms the heretic mechanism not just as a maintenance tool, but as an \textbf{active restorer} of deliberative health.
+Under this protocol, the necessity of the heretic mechanism becomes mathematically absolute. While normal units succumb to the symmetry of the field, heretic units introduce localized stimulus-driven divergence that propagates entropy throughout the network. In v3.0.0, the system requires minimal noise to break symmetry; zero-noise leads to stasis ($H=0$). With noise, the system restores diversity to $H \approx 0.61$, whereas an ablated system remains permanently locked in consensus ($H \equiv 0$). This confirms the heretic mechanism not just as a maintenance tool, but as an \textbf{active restorer} of deliberative health.
 
 
-\section{Empirical Validation: The CCC France Pilot}
+\section{Empirical Illustration: The CCC France Pilot}
 
-To evaluate the real-world applicability of Mem4ristor v2.9.3, we conducted a retrospective validation using data from the \textbf{Convention Citoyenne pour le Climat (CCC)}
+To evaluate the real-world applicability of Mem4ristor v3.0.0, we conducted a retrospective illustration using data from the \textbf{Convention Citoyenne pour le Climat (CCC)}
  (France, 2020)~\cite{ccc2020}. The CCC protocol provides a high-quality dataset of human deliberation trajectories under varying levels of social pressure and consensus.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{../results/plots/ccc_validation_summary.png}
-    \caption{Mem4ristor v2.9.3 validation on CCC France (2020) scenarios. The model accurately predicts the maintenance of minority signals in disputed scenarios (110 km/h) and the stabilization of consensus in high-agreement cases (Carbon labeling).}
+    \caption{Mem4ristor v3.0.0 illustration on CCC France (2020) scenarios. The model illustratively demonstrates the maintenance of minority signals in disputed scenarios (110 km/h) and the stabilization of consensus in high-agreement cases (Carbon labeling).}
     \label{fig:ccc_validation}
 \end{figure}
 
-The model was qualitatively evaluated on three representative scenarios from the CCC:
+The model was qualitatively illustrated on three representative scenarios from the CCC:
 \begin{itemize}
     \item \textbf{Case A: Obligation d'affichage Carbone} (98\% consensus). The model stabilized at $H \approx 0.61$, preserving a residual "Skeptic" signal despite the overwhelming stimulus.
     \item \textbf{Case B: Limitation 110 km/h sur autoroute} (60\% OUI / 40\% NON). Mem4ristor maintained high entropy ($H \approx 2.01$), successfully protecting the deliberative diversity against premature convergence.
@@ -385,13 +385,13 @@ The failure of the quadratic Lyapunov candidate $V = \frac{1}{2}v^2 + \frac{1}{2
     \item By Poincar\'e--Bendixson, the absence of a stable equilibrium in $\Omega$ implies the existence of a limit cycle.
 \end{enumerate}
 
-\textbf{Orbital stability via Floquet theory.} For the full coupled system, let $\mathcal{L}$ denote the graph Laplacian with eigenvalues $\lambda_0 = 0 < \lambda_1 \le \cdots \le \lambda_{N-1}$. By diagonalization, each Fourier mode $\hat{v}_\lambda(t)$ obeys a modified FHN dynamics with effective coupling $D_{\text{eff}}(1-2u)\lambda$. For each mode:
+\textbf{Orbital stability via Floquet theory.} For the full coupled system, let $\mathcal{L}$ denote the graph Laplacian with eigenvalues $\lambda_0 = 0 < \lambda_1 \le \cdots \le \lambda_{N-1}$. By diagonalization, each Fourier mode $\hat{v}_\lambda(t)$ obeys a modified FHN dynamics with effective coupling $D_{\text{eff}}(\tanh(\pi(0.5-u)) + \delta)\lambda$. For each mode:
 \begin{enumerate}
     \item Find the periodic orbit $\mathbf{x}^*_\lambda(t)$ numerically.
     \item Linearize: $\dot{\mathbf{y}}_\lambda = J_\lambda(t)\,\mathbf{y}_\lambda$, where $J_\lambda(t)$ is periodic with period $T_\lambda$.
     \item Compute the Floquet multipliers $\mu_\lambda$. Orbital stability holds if $|\mu_\lambda| < 1$ for all transverse modes ($\lambda > 0$).
 \end{enumerate}
-The uniform mode ($\lambda = 0$) retains one trivial multiplier $\mu = 1$. For transverse modes, the $(1-2u)$ term with $u > 0.5$ induces \textbf{repulsive coupling} that stabilizes divergence from synchronization---precisely the mechanism that promotes and sustains cognitive diversity.
+The uniform mode ($\lambda = 0$) retains one trivial multiplier $\mu = 1$. For transverse modes, the $\tanh(\pi(0.5-u)) + \delta$ term with $u > 0.5$ induces \textbf{repulsive coupling} that stabilizes divergence from synchronization---precisely the mechanism that promotes and sustains cognitive diversity.
 
 \subsection{The 15\% Percolation Threshold}
 
@@ -500,7 +500,7 @@ We propose a retrospective deliberation pilot applying Mem4ristor v2.9.3 to real
 
 \section{Conclusion}
 
-Mem4ristor v2.9.3 is not a mere deliberation framework, but a neuromorphic-inspired cognitive primitive that can be integrated as a drop-in resistance layer in existing computational decision architectures. By extending neuromorphic-inspired oscillators with constitutional doubt and structural heretics, we ensure diversity preservation across scales.
+Mem4ristor v3.0.0 is not a mere deliberation framework, but a neuromorphic-inspired cognitive primitive that can be integrated as a drop-in resistance layer in existing computational decision architectures. By extending neuromorphic-inspired oscillators with constitutional doubt and structural heretics, we ensure diversity preservation across scales.
 
 This work open several pathways: (1) \textbf{Neuromorphic ethics}: encoding values directly in dynamical systems; (2) \textbf{Deliberation-aware AI}: tools for diagnosing and improving collective decision processes; (3) \textbf{Variability-exploiting hardware}: treating device imperfections as features, not bugs.
 
@@ -522,7 +522,7 @@ While Section~5 provides substantial theoretical grounding, several formal gaps 
 
 \subsection{Experimental Validation}
 
-\textbf{Numerical integration.} The reference implementation uses Euler integration ($\Delta t = 0.1$), which provides $O(\Delta t)$ accuracy. Higher-order methods (e.g., Runge-Kutta 4) would improve precision but have not been systematically compared.
+\textbf{Numerical integration.} The reference implementation uses Euler integration ($\Delta t = 0.05$), which provides $O(\Delta t)$ accuracy. Higher-order methods (e.g., Runge-Kutta 4) would improve precision but have not been systematically compared.
 
 \textbf{Hardware mapping.} The memristive crossbar implementation is architectural speculation rather than validated engineering. A behavioral SPICE simulation (ngspice) confirms bounded dynamics for an isolated unit, but no physical prototypes or fabrication protocols exist.
 
@@ -530,12 +530,12 @@ While Section~5 provides substantial theoretical grounding, several formal gaps 
 This work explicitly acknowledges the following limitations:
 \begin{itemize}
     \item \textbf{Computational Nature:} These results are derived from Python simulations. Real-world HfO$_2$ device variability may significantly alter the observed dynamics.
-    \item \textbf{Methodology:} The ``Caf\'e Virtuel'' framework uses LLMs for collaborative research. Authorship is shared between human intuition and agentic audit cycles (v2.0--v2.9.3).
-    \item \textbf{15\% Threshold:} This value is an empirical observation of the percolation critical point in 2D lattices ($\eta \approx 0.15 \Rightarrow P_{\text{coverage}} \approx 0.48$).
+    \item \textbf{Methodology:} The ``Caf\'e Virtuel'' framework uses LLMs for collaborative research. Authorship is shared between human intuition and agentic audit cycles (v2.0--v3.0.0).
+    \item \textbf{15\% Empirical Threshold:} This value is an empirical observation of the percolation critical point in 2D lattices ($\eta \approx 0.15 \Rightarrow P_{\text{coverage}} \approx 0.48$).
     \item \textbf{Numerical Stability:} The model uses first-order Euler integration; $H$ stability requires $\Delta t \le 0.05$ for long-term (>10,000 steps) trajectories.
 \end{itemize}
 
-\textbf{Real-world data.} While the model has been retrospectively validated on qualitative scenarios from the CCC (Section 3.4), it has not been tested on raw, high-resolution voting records or longitudinal behavioral datasets. 
+\textbf{Real-world data.} While the model has been retrospectively illustrated on qualitative scenarios from the CCC (Section 3.4), it has not been tested on raw, high-resolution voting records or longitudinal behavioral datasets. 
 
 \subsection{Methodological}
 
@@ -573,7 +573,7 @@ This work was developed through the \textbf{Café Virtuel framework}, a structur
 
 \textbf{Human Orchestration:} Julien Chauvin designed the research methodology, guided all sessions (1-8), made final decisions on all scientific claims, conducted external validation, and assumes full responsibility for the work and any remaining errors.
 
-\textbf{External Validation:} The model underwent adversarial testing via automated platforms (Dec 2025), with initial rejections leading to systematic corrections and final stable implementation (v2.9.3).
+\textbf{External Validation:} The model underwent adversarial testing via automated platforms (Dec 2025), with initial rejections leading to systematic corrections and final stable implementation (v3.0.0).
 
 Complete development history with session transcripts and contribution traceability available at: \url{https://github.com/Jusyl236/Cafe-Virtuel}
 

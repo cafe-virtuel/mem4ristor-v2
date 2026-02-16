@@ -1,4 +1,4 @@
-# Mem4ristor V2 Default Configuration
+# Mem4ristor V3.0.0 Default Configuration
 # Standard Dynamics Parameters
 dynamics:
   a: 0.7
@@ -7,6 +7,10 @@ dynamics:
   alpha: 0.15
   v_cubic_divisor: 5.0
   dt: 0.05
+  # V3: Inhibition Plasticity Parameters
+  lambda_learn: 0.05       # Plasticity learning rate
+  tau_plasticity: 1000     # Forgetting time constant (steps)
+  w_saturation: 2.0        # Maximum plasticity range
 
 # Coupling Parameters
 coupling:
