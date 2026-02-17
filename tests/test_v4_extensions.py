@@ -12,7 +12,7 @@ from mem4ristor.core import Mem4ristorV3, Mem4Network
 # ============================================================
 
 class TestAdaptiveMetaDoubt:
-    """Test suite for the Bayesian-surprise adaptive epsilon_u."""
+    """Test suite for the social-surprise adaptive epsilon_u."""
 
     def test_meta_doubt_activates_under_social_pressure(self):
         """When sigma_social is high, doubt should change faster than baseline."""
@@ -319,6 +319,61 @@ class TestDoubtDrivenRewiring:
 
         net.step(I_stimulus=0.0)
         assert net.rewire_count > 0, "Counter should increment after rewiring"
+
+    def test_incremental_laplacian_matches_full_rebuild(self):
+        """Verify that incremental Laplacian updates produce the same result as full rebuild."""
+        n = 15
+        adj = self._make_ring_adjacency(n)
+        net = Mem4Network(adjacency_matrix=adj.copy(), seed=42,
+                          rewire_threshold=0.5, rewire_cooldown=1)
+
+        net.model.u = np.full(n, 0.9)
+        net.model.v = np.linspace(-2, 2, n)
+
+        # Run several steps with incremental updates
+        for _ in range(10):
+            net.step(I_stimulus=0.0)
+
+        # Get the incrementally maintained Laplacian
+        L_incremental = net.L.copy()
+
+        # Rebuild from scratch and compare
+        net._rebuild_laplacian()
+        L_full = net.L.copy()
+
+        assert np.allclose(L_incremental, L_full, atol=1e-12), (
+            f"Incremental Laplacian diverged from full rebuild. "
+            f"Max diff: {np.max(np.abs(L_incremental - L_full)):.2e}"
+        )
+
+    def test_spectral_gap_preserved_after_rewiring(self):
+        """Fiedler value should remain positive after rewiring (graph stays connected)."""
+        from scipy.linalg import eigh
+
+        n = 12
+        adj = self._make_ring_adjacency(n)
+        net = Mem4Network(adjacency_matrix=adj.copy(), seed=42,
+                          rewire_threshold=0.5, rewire_cooldown=1)
+
+        # Initial Fiedler value (ring graph)
+        fiedler_before = net.get_spectral_gap()
+        assert fiedler_before > 0, "Ring graph should be connected (Fiedler > 0)"
+
+        # Force rewiring
+        net.model.u = np.full(n, 0.9)
+        net.model.v = np.linspace(-3, 3, n)
+
+        for _ in range(20):
+            net.step(I_stimulus=0.0)
+
+        assert net.rewire_count > 0, "No rewiring happened — test is invalid"
+
+        # Fiedler value after rewiring
+        fiedler_after = net.get_spectral_gap()
+        assert fiedler_after > 0, (
+            f"Graph became disconnected after {net.rewire_count} rewires! "
+            f"Fiedler: {fiedler_before:.4f} → {fiedler_after:.4f}"
+        )
 
 
 # ============================================================
