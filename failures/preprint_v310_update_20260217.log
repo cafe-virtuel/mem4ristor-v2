@@ -1,0 +1,45 @@
+FAILURE LOG: Preprint Update to v3.1.0
+Date: 2026-02-17
+Auditor: Claude Opus 4.6
+Orchestrator: Julien Chauvin
+
+=== ISSUES FOUND IN PREPRINT (pre-update) ===
+
+ISSUE-01: Stale kernel reference
+  Location: Section 2.3 (Constitutional Doubt Dynamics)
+  Problem: Text referenced "(1-2u) filtering" — the V2 linear kernel
+  Fix: Replaced with "Levitating Sigmoid kernel tanh(π(0.5-u)) + δ"
+
+ISSUE-02: Missing plasticity term in dw equation
+  Location: Section 2.1 (Neuromorphic-Inspired Dynamics), Eq. (2)
+  Problem: dw/dt showed only FHN term, missing dw_plasticity
+  Fix: Added "+ dw_plasticity" to Eq. (2)
+
+ISSUE-03: Fixed epsilon_u in du equation
+  Location: Section 2.1, Eq. (3) and Section 2.3
+  Problem: du/dt used fixed ε_u, inconsistent with V3.1.0 adaptive code
+  Fix: Changed to ε_{u,eff}(i)/τ_u with forward reference to Section 6
+
+ISSUE-04: Duplicate "External validation" bullet
+  Location: Section 4.1 (Core Principles list)
+  Problem: Same bullet appeared twice
+  Fix: Removed duplicate
+
+ISSUE-05: Version references outdated
+  Location: Title, abstract, introduction, interface contract, conclusion
+  Problem: All references said v3.0.0 for the current model
+  Fix: Updated to v3.1.0 where referring to current version
+
+ISSUE-06: No documentation of V4 mechanisms
+  Location: Missing entirely
+  Problem: Code had Meta-Doubt and Rewiring but preprint didn't describe them
+  Fix: Added Section 6 "Adaptive Extensions (v3.1.0)" with full equations
+
+ISSUE-07: Missing bibliography entry
+  Location: Section 6.2 referenced [gross2008] but entry didn't exist
+  Fix: Added Gross & Blasius (2008) adaptive networks reference
+
+=== RESULT ===
+
+Preprint recompiled: 20 pages, 0 LaTeX errors, 0 undefined references.
+All v3.1.0 code mechanisms now documented in the paper.
