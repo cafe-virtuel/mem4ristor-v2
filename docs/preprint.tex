@@ -36,7 +36,7 @@
 \maketitle
 
 \begin{abstract}
-When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v3.1.0}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism via a Levitating Sigmoid kernel $f(u) = \tanh(\pi(0.5-u)) + \delta$ and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Version 3.1.0 introduces two adaptive extensions: (1)~\textbf{Adaptive Meta-Doubt}, where the doubt learning rate $\varepsilon_u$ accelerates proportionally to social surprise $\sigma_{\text{social}}$, providing Bayesian-like meta-plasticity; and (2)~\textbf{Doubt-Driven Topological Rewiring}, where high-doubt units disconnect from consensual neighbors and reconnect to random non-neighbors, resolving hub strangulation in scale-free networks. Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. This work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
+When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v3.1.0}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism via a Levitating Sigmoid kernel $f(u) = \tanh(\pi(0.5-u)) + \delta$ and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Version 3.1.0 introduces two adaptive extensions: (1)~\textbf{Adaptive Meta-Doubt}, where the doubt learning rate $\varepsilon_u$ accelerates proportionally to social surprise $\sigma_{\text{social}}$, providing social-surprise-driven meta-plasticity; and (2)~\textbf{Doubt-Driven Topological Rewiring}, where high-doubt units disconnect from consensual neighbors and reconnect to random non-neighbors, resolving hub strangulation in scale-free networks. Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. This work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
 \end{abstract}
 
 \section{Introduction}
@@ -479,14 +479,14 @@ The v3.0.0 model described above uses fixed hyperparameters for doubt dynamics a
 
 Version 3.1.0 addresses both limitations with two adaptive mechanisms that preserve full backward compatibility (disabling them recovers exact v3.0.0 behavior).
 
-\subsection{Adaptive Meta-Doubt (Bayesian Surprise)}
+\subsection{Adaptive Meta-Doubt (Social Surprise)}
 
 We replace the fixed doubt speed $\varepsilon_u$ with a per-unit adaptive rate modulated by social surprise:
 \begin{equation}
     \varepsilon_{u,\text{eff}}(i) = \varepsilon_u \cdot \min\!\bigl(1 + \alpha_s \cdot \sigma_{\text{social}}(i),\; C_{\text{cap}}\bigr),
     \label{eq:meta_doubt}
 \end{equation}
-where $\alpha_s = 2.0$ is the surprise gain and $C_{\text{cap}} = 5.0$ prevents runaway acceleration. The intuition is Bayesian: when a unit's neighborhood contradicts its internal state ($\sigma_{\text{social}}$ large), its epistemic uncertainty should update faster. Conversely, in a stable neighborhood ($\sigma_{\text{social}} \approx 0$), doubt evolves at the baseline rate.
+where $\alpha_s = 2.0$ is the surprise gain and $C_{\text{cap}} = 5.0$ prevents runaway acceleration. The intuition is social: when a unit's neighborhood contradicts its internal state ($\sigma_{\text{social}}$ large), its epistemic uncertainty should update faster. Conversely, in a stable neighborhood ($\sigma_{\text{social}} \approx 0$), doubt evolves at the baseline rate.
 
 \textbf{Properties:}
 \begin{itemize}

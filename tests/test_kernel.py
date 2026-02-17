@@ -119,23 +119,35 @@ def test_reproducibility():
 
 
 def test_plasticity_activation():
-    """Verify that inhibition plasticity activates only when u > 0.5."""
+    """Verify that inhibition plasticity activates only when u > 0.5.
+
+    Strategy: Two units with IDENTICAL v and w but DIFFERENT u.
+    Both receive the same coupling (same neighbor structure).
+    The FHN contribution to dw is identical for both.
+    The ONLY difference in dw comes from the plasticity term:
+        dw_learn = lambda * sigma_social * I(u>0.5) * (1 - (w/w_sat)^2) - w/tau
+    With w=0 initially, decay is 0, saturation is 1, so:
+        dw_learn = lambda * sigma_social * I(u>0.5)
+    Unit with u=0.1: I(u>0.5)=0 → no plasticity
+    Unit with u=0.8: I(u>0.5)=1 → plasticity active
+    """
     cfg = {
         'dynamics': {'a': 0.7, 'b': 0.8, 'epsilon': 0.08, 'alpha': 0.15, 'v_cubic_divisor': 5.0, 'dt': 0.05,
-                     'lambda_learn': 0.1, 'tau_plasticity': 1e6, 'w_saturation': 10.0},
-        'coupling': {'D': 0.5, 'heretic_ratio': 0.0},
-        'doubt': {'epsilon_u': 0.0, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
+                     'lambda_learn': 1.0, 'tau_plasticity': 1e9, 'w_saturation': 10.0},
+        'coupling': {'D': 1.0, 'heretic_ratio': 0.0},
+        'doubt': {'epsilon_u': 0.0, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0,
+                  'alpha_surprise': 0.0, 'surprise_cap': 5.0},
         'noise': {'sigma_v': 0.0}
     }
     model = Mem4ristorV3(config=cfg, seed=42)
-    model._initialize_params(N=4)
-    model.v = np.array([0.0, 1.0, 0.0, 1.0])
+    model._initialize_params(N=4, cold_start=True)
+
+    # Two pairs: (0,1) and (2,3) — identical v, w, but different u
+    model.v = np.array([-1.0, 1.0, -1.0, 1.0])
     model.w = np.array([0.0, 0.0, 0.0, 0.0])
+    model.u = np.array([0.1, 0.1, 0.8, 0.8])  # Pair 0,1: low doubt. Pair 2,3: high doubt.
 
-    # Units 0,1 have u < 0.5 (no plasticity), units 2,3 have u > 0.5 (plasticity active)
-    model.u = np.array([0.1, 0.1, 0.8, 0.8])
-
-    # Build coupling that creates social stress
+    # Coupling: 0↔1 and 2↔3 (two isolated pairs)
     adj = np.array([[0, 1, 0, 0],
                     [1, 0, 0, 0],
                     [0, 0, 0, 1],
@@ -143,16 +155,23 @@ def test_plasticity_activation():
 
     w_before = model.w.copy()
     model.step(I_stimulus=0.0, coupling_input=adj)
-
-    # Plasticity decay is negligible (tau=1e6), so the change in w
-    # for units 2,3 should include the plasticity term
-    # For units 0,1, plasticity should be zero (innovation_mask = 0)
-    # We compare relative magnitudes - the effect may be subtle
     dw = model.w - w_before
-    # This is a structural test: we check the innovation mask was applied
-    # Not a perfect test since FHN dynamics also affect w, but with symmetric
-    # pairs the FHN contribution should be similar
-    assert True  # Structural test - the code path is exercised without crash
+
+    # FHN dw contribution is identical for units 0 and 2 (same v, w, a, b, epsilon)
+    # But unit 2 has plasticity active (u=0.8 > 0.5), unit 0 does not (u=0.1 < 0.5)
+    # sigma_social is |laplacian_v| = |v_neighbor - v_self| = 2.0 for both pairs
+    # dw_learn for unit 2 = lambda * 2.0 * 1.0 * 1.0 * dt = 1.0 * 2.0 * 0.05 = 0.1
+    # dw_learn for unit 0 = 0 (innovation_mask = 0)
+
+    # Unit 2 should have MORE w change than unit 0
+    assert abs(dw[2]) > abs(dw[0]) + 0.01, (
+        f"Plasticity not detected: dw[2]={dw[2]:.6f} should exceed dw[0]={dw[0]:.6f} "
+        f"by at least 0.01 (expected ~0.1 plasticity contribution)"
+    )
+    # Same for unit 3 vs unit 1
+    assert abs(dw[3]) > abs(dw[1]) + 0.01, (
+        f"Plasticity not detected: dw[3]={dw[3]:.6f} should exceed dw[1]={dw[1]:.6f}"
+    )
 
 
 def test_backward_compatibility_alias():

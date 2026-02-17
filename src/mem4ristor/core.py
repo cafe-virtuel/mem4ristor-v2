@@ -24,7 +24,7 @@ class Mem4ristorV3:
     Adaptive Meta-Doubt (v4 extension):
         ε_u_eff(i) = ε_u × (1 + α_surprise × σ_social(i))
         When social coupling contradicts a unit's internal state, the doubt
-        speed increases proportionally. This provides Bayesian-surprise-like
+        speed increases proportionally. This provides social-surprise-driven
         meta-plasticity: stable environments → slow doubt adaptation, volatile
         environments → fast doubt adaptation. The gain is clamped to prevent
         runaway acceleration (max 5× base speed).
@@ -297,7 +297,7 @@ class Mem4ristorV3:
               self.cfg['dynamics']['alpha'] * np.tanh(self.v) + eta)
         dw = self.cfg['dynamics']['epsilon'] * (self.v + self.cfg['dynamics']['a'] - self.cfg['dynamics']['b'] * self.w)
 
-        # V4: Adaptive Meta-Doubt (Bayesian Surprise)
+        # V4: Adaptive Meta-Doubt (Social Surprise)
         # ε_u_eff(i) = ε_u × (1 + α_surprise × σ_social(i))
         # When neighbors contradict, doubt accelerates. Capped to prevent runaway.
         alpha_s = self.cfg['doubt'].get('alpha_surprise', 2.0)
@@ -513,10 +513,32 @@ class Mem4Network:
         self.model._initialize_params(self.N, cold_start=cold_start)
 
     def _rebuild_laplacian(self):
-        """Recompute Laplacian from current adjacency matrix."""
+        """Recompute Laplacian from current adjacency matrix (full rebuild)."""
         deg = np.array(np.sum(self.adjacency_matrix, axis=1)).flatten()
         D = np.diag(deg)
         self.L = D - self.adjacency_matrix
+
+    def _update_laplacian_incremental(self, i, j, k):
+        """
+        Incremental Laplacian update after a single rewire: disconnect i↔j, connect i↔k.
+
+        Instead of recomputing the full O(N²) Laplacian, we update only the 3 affected
+        rows/columns (i, j, k). The Laplacian L = D - A, so:
+          - Remove edge (i,j): L[i,i]-=1, L[j,j]-=1, L[i,j]+=1, L[j,i]+=1
+          - Add edge (i,k):    L[i,i]+=1, L[k,k]+=1, L[i,k]-=1, L[k,i]-=1
+        Net effect on degree: deg(i) unchanged, deg(j)-=1, deg(k)+=1.
+        Complexity: O(1) per rewire instead of O(N²).
+        """
+        # Remove edge i↔j
+        self.L[i, i] -= 1
+        self.L[j, j] -= 1
+        self.L[i, j] += 1
+        self.L[j, i] += 1
+        # Add edge i↔k
+        self.L[i, i] += 1
+        self.L[k, k] += 1
+        self.L[i, k] -= 1
+        self.L[k, i] -= 1
 
     def _doubt_driven_rewire(self):
         """
@@ -555,9 +577,17 @@ class Mem4Network:
                 continue  # Don't rewire if only 1 neighbor (would disconnect)
 
             # Find the MOST CONSENSUAL neighbor (smallest |v_i - v_j|)
+            # but exclude neighbors whose degree is ≤ 1 (removing them would disconnect)
             v_diffs = np.abs(v[i] - v[neighbors])
-            most_consensual_idx = np.argmin(v_diffs)
-            j = neighbors[most_consensual_idx]
+            sorted_idx = np.argsort(v_diffs)
+            j = None
+            for idx in sorted_idx:
+                candidate = neighbors[idx]
+                if np.sum(adj[candidate] > 0) > 1:  # candidate keeps ≥1 edge after removal
+                    j = candidate
+                    break
+            if j is None:
+                continue  # All neighbors have degree 1 — can't safely rewire
 
             # Find non-neighbors (excluding self and current neighbors)
             non_neighbors = np.where(adj[i] == 0)[0]
@@ -574,14 +604,12 @@ class Mem4Network:
             adj[i, k] = 1
             adj[k, i] = 1
 
+            # Incremental Laplacian update: O(1) instead of O(N²)
+            self._update_laplacian_incremental(i, j, k)
+
             # Reset cooldown
             self._rewire_timers[i] = self.rewire_cooldown
             self.rewire_count += 1
-            rewired = True
-
-        # Rebuild Laplacian only if topology changed
-        if rewired:
-            self._rebuild_laplacian()
 
     def get_spectral_gap(self) -> float:
         """
