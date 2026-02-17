@@ -16,7 +16,7 @@
 
 \geometry{margin=2.5cm}
 
-\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v3.0.0)}
+\title{Attractor Diversity Stabilization in Neuromorphic-Inspired Computational Models (v3.1.0)}
 
 \author{
     \textbf{Julien Chauvin} \\
@@ -36,17 +36,17 @@
 \maketitle
 
 \begin{abstract}
-When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v3.0.0}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism as a dynamic phase-inverter and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. Historically, this work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
+When deliberative systems converge prematurely to consensus, minority perspectives vanish---a ``tyranny of the majority'' encoded in the mathematics of coupled oscillators. We introduce \textbf{Mem4ristor v3.1.0}, a neuromorphic-inspired computational model where \textbf{constitutional doubt} ($u$) and \textbf{structural heretics} mathematically prevent uniformization. Crucially, we formalize the \textbf{Repulsive Social Coupling} mechanism via a Levitating Sigmoid kernel $f(u) = \tanh(\pi(0.5-u)) + \delta$ and demonstrate that the 15\% heretic ratio serves as a critical threshold for cognitive diversity \textbf{emergence} starting from zero entropy (\textbf{Cold Start Protocol}, requiring noise). Version 3.1.0 introduces two adaptive extensions: (1)~\textbf{Adaptive Meta-Doubt}, where the doubt learning rate $\varepsilon_u$ accelerates proportionally to social surprise $\sigma_{\text{social}}$, providing Bayesian-like meta-plasticity; and (2)~\textbf{Doubt-Driven Topological Rewiring}, where high-doubt units disconnect from consensual neighbors and reconnect to random non-neighbors, resolving hub strangulation in scale-free networks. Grounded in \textbf{phenomenological mapping} to memristive systems, our model demonstrates \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$ bits, Shannon entropy over 5 cognitive states). Stress-testing reveals a ``Fragility Law'': the absence of structural heretics triggers a significant collapse in global cognitive diversity. This work represents a computational exploration of \textbf{Frustrated Synchronization}, where doubt serves as the necessary frustration to maintain simulated system-level intelligence.
 \end{abstract}
 
 \section{Introduction}
 
 Consider a citizens' assembly where 80\% of participants initially favor option A. Without structural safeguards, classical coupled-oscillator or consensus models predict rapid synchronization to A within minutes, erasing nuanced perspectives and locking in a potentially fragile decision~\cite{olfati2007,strogatz2000}. % v2.0.2 Scientific Narrative Update
-Mem4ristor v3.0.0 addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v3.0.0, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($\tanh(\pi(0.5-u)) + \delta$) and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$) surviving external pressure.
+Mem4ristor addresses this by introducing \textbf{constitutional doubt} ($u$) and \textbf{structural heretics}. This paper presents Mem4ristor v3.1.0, a formal evolution addressing the convergence issues identified during automated auditing. By introducing \textbf{Repulsive Social Coupling} ($\tanh(\pi(0.5-u)) + \delta$), \textbf{Adaptive Meta-Doubt}, \textbf{Doubt-Driven Rewiring}, and \textbf{Formal Robustness} benchmarks, we demonstrate \textbf{Attractor Diversity Stabilization} ($H \approx 1.56$) surviving external pressure.
 
 Algorithmic decision systems increasingly risk uniformizing collective intelligence, converging prematurely to consensus without preserving minority perspectives. Classical models like Kuramoto oscillators or distributed consensus algorithms intrinsically drive toward synchronization, losing cognitive diversity essential for robust deliberation. This ``oracle collapse'' problem manifests in both artificial networks and social systems, where majority pressure extinguishes dissenting views.
 
-The Mem4ristor framework emerges from the Caf\'e Virtuel philosophy: can we design neuromorphic-inspired computational models that \emph{constitutionally} resist uniformity? Our contribution is Mem4ristor v3.0.0, an extended FitzHugh--Nagumo oscillator network with three anti-uniformization mechanisms: (1) constitutional doubt $u$ that filters social coupling via $\tanh(\pi(0.5-u)) + \delta$, (2) structural heretics (15\% of units) with heterogeneous stimulus polarity, and (3) attenuated scaling $D_{\text{eff}} \propto 1/\sqrt{N}$. This version (v3.0.0) introduces the \textbf{Cold Start Protocol}, ensuring that diversity is not merely maintained but actively emerges from homogeneous state conditions.
+The Mem4ristor framework emerges from the Caf\'e Virtuel philosophy: can we design neuromorphic-inspired computational models that \emph{constitutionally} resist uniformity? Our contribution is Mem4ristor v3.1.0, an extended FitzHugh--Nagumo oscillator network with five anti-uniformization mechanisms: (1) constitutional doubt $u$ that filters social coupling via $\tanh(\pi(0.5-u)) + \delta$, (2) structural heretics (15\% of units) with heterogeneous stimulus polarity, (3) attenuated scaling $D_{\text{eff}} \propto 1/\sqrt{N}$, (4) adaptive meta-doubt where doubt speed accelerates under social surprise, and (5) doubt-driven topological rewiring that breaks hub strangulation. The Cold Start Protocol ensures that diversity is not merely maintained but actively emerges from homogeneous state conditions.
 
 We characterize the model's robustness across scale and pressure, identifying a significant diversity loss in degraded networks. While this work relies on extensive multi-agent collaborative research rather than traditional human peer-review, it provides a functional specification for diversity-preserving cognitive architectures.
 
@@ -54,13 +54,13 @@ We characterize the model's robustness across scale and pressure, identifying a 
 
 \subsection{Neuromorphic-Inspired Dynamics}
 
-Mem4ristor v3.0.0 is a \textbf{phenomenological simulation} that extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$:
+Mem4ristor v3.1.0 is a \textbf{phenomenological simulation} that extends the FitzHugh--Nagumo model with a constitutional doubt variable $u$:
 \begin{align}
 \frac{dv}{dt} &= v - \frac{v^3}{5} - w + I_{\text{ext}} - \alpha \tanh(v) + \eta_v(t), \label{eq:dv} \\
-\frac{dw}{dt} &= \varepsilon(v + a - bw), \label{eq:dw} \\
-\frac{du}{dt} &= \varepsilon_u(k_u \sigma_{\text{social}} + \sigma_{\text{baseline}} - u), \label{eq:du}
+\frac{dw}{dt} &= \varepsilon(v + a - bw) + dw_{\text{plasticity}}, \label{eq:dw} \\
+\frac{du}{dt} &= \frac{\varepsilon_{u,\text{eff}}(i)}{\tau_u}(k_u \sigma_{\text{social}} + \sigma_{\text{baseline}} - u), \label{eq:du}
 \end{align}
-where $v$ represents cognitive potential (opinion strength), $w$ is a recovery variable (inhibition), and $u$ is constitutional doubt (epistemic uncertainty). The cubic nonlinearity is softened to $v^3/5$ (vs.\ standard $v^3/3$) to reduce explosion risk, while the term $-\alpha \tanh(v)$ introduces cognitive resistance preventing trivial saturation.
+where $v$ represents cognitive potential (opinion strength), $w$ is a recovery variable (inhibition) with plasticity term $dw_{\text{plasticity}}$ encoding structural memory of dissidence, and $u$ is constitutional doubt (epistemic uncertainty) with adaptive speed $\varepsilon_{u,\text{eff}}$ (Eq.~\ref{eq:meta_doubt}). The cubic nonlinearity is softened to $v^3/5$ (vs.\ standard $v^3/3$) to reduce explosion risk, while the term $-\alpha \tanh(v)$ introduces cognitive resistance preventing trivial saturation.
 
 \subsection{Anti-Uniformization Architecture}
 
@@ -87,9 +87,9 @@ thereby creating a fundamental stimulus-driven tension that prevents uniformizat
 
 Doubt $u$ evolves according to social stress $\sigma_{\text{social}} = |\Delta v_{\text{Laplacian}}|$:
 \begin{equation}
-\frac{du}{dt} = \varepsilon_u(k_u \sigma_{\text{social}} + \sigma_{\text{baseline}} - u),
+\frac{du}{dt} = \frac{\varepsilon_{u,\text{eff}}(i)}{\tau_u}(k_u \sigma_{\text{social}} + \sigma_{\text{baseline}} - u),
 \end{equation}
-where $\sigma_{\text{baseline}} > 0$ guarantees activation even in isolation, and higher doubt reduces conformity pressure via $(1-2u)$ filtering.
+where $\sigma_{\text{baseline}} > 0$ guarantees activation even in isolation, $\tau_u$ controls the time scale, and higher doubt reduces conformity pressure via the Levitating Sigmoid kernel $\tanh(\pi(0.5-u)) + \delta$. In v3.1.0, the effective doubt speed $\varepsilon_{u,\text{eff}}$ is adaptive (see Section~\ref{sec:v4_extensions}).
 
 \subsection{Hardware-Realistic Noise}
 
@@ -124,7 +124,9 @@ Standard simulations use:
 \begin{itemize}
 \item Dynamics: $a = 0.7$, $b = 0.8$, $\varepsilon = 0.08$, $\alpha = 0.15$;
 \item Coupling: $D = 0.15$, heretic ratio: 15\%;
-\item Doubt: $\varepsilon_u = 0.02$, $k_u = 1.0$, $\sigma_{\text{baseline}} = 0.05$;
+\item Doubt: $\varepsilon_u = 0.02$, $k_u = 1.0$, $\sigma_{\text{baseline}} = 0.05$, $\tau_u = 1.0$;
+\item Meta-Doubt (v3.1.0): $\alpha_{\text{surprise}} = 2.0$, surprise cap $= 5.0$;
+\item Rewiring (v3.1.0): $u_{\text{rewire}} = 0.8$, cooldown $= 50$ steps;
 \item Noise: $\sigma_{\text{noise}} = 0.05$;
 \item Integration: Euler method, $\Delta t = 0.05$ (recommended standard).
 \end{itemize}
@@ -138,9 +140,9 @@ To support large-scale neuromorphic simulations, the Mem4ristor v3.0.0 kernel im
 The following section describes a \textbf{proposed} architectural mapping to memristive hardware. These specifications are based on SPICE simulations and theoretical derivation; they do not constitute a validated physical implementation in HfO$_2$ material.
 \end{tcolorbox}
 
-To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v3.0.0 as a modular cognitive primitive.
+To ensure reproducibility across different computational and physical substrates, we define Mem4ristor v3.1.0 as a modular cognitive primitive.
 
-\begin{tcolorbox}[colback=blue!5,colframe=blue!75,title=Interface Contract: Mem4ristor v3.0.0]
+\begin{tcolorbox}[colback=blue!5,colframe=blue!75,title=Interface Contract: Mem4ristor v3.1.0]
 \small
 \textbf{Inputs:}
 \begin{itemize}
@@ -199,9 +201,15 @@ No Heretics & 234 & 1.30 & Medium \\
 \subsection{Canonical Algorithm}
 
 \begin{algorithm}
-\caption{Mem4ristor v3.0.0 Time-Step Update}
+\caption{Mem4ristor v3.1.0 Time-Step Update}
 \begin{algorithmic}[1]
 \FOR{each time-step $t$}
+    \STATE \COMMENT{0. Doubt-Driven Rewiring (v3.1.0, explicit graphs only)}
+    \FOR{each unit $i$ with $u_i > u_{\text{rewire}}$ and cooldown expired}
+        \STATE $j \leftarrow \arg\min_{k \in \mathcal{N}(i)} |v_i - v_k|$ \COMMENT{Most consensual neighbor}
+        \STATE $k \leftarrow \text{RandomNonNeighbor}(i)$
+        \STATE Disconnect $i \leftrightarrow j$; Connect $i \leftrightarrow k$ \COMMENT{Degree-neutral}
+    \ENDFOR
     \STATE \COMMENT{1. Calculate Local Social Pressure}
     \FOR{each unit $i$}
         \STATE $\Delta v_i \leftarrow \sum_{j \in \mathcal{N}(i)} (v_j - v_i) / |\mathcal{N}(i)|$
@@ -218,10 +226,12 @@ No Heretics & 234 & 1.30 & Medium \\
             \STATE $I_{\text{ext}} \leftarrow +I_{\text{stimulus}} + I_{\text{coup}}$
         \ENDIF
         \STATE \COMMENT{Euler Integration}
-        \STATE $v_i \leftarrow v_i + (v_i - v_i^3/5 - w_i + I_x - \alpha \tanh(v_i) + \eta) \cdot \Delta t$
+        \STATE $v_i \leftarrow v_i + (v_i - v_i^3/5 - w_i + I_{\text{ext}} - \alpha \tanh(v_i) + \eta) \cdot \Delta t$
 
-        \STATE $w_i \leftarrow w_i + (\varepsilon(v_i + a - b w_i)) \cdot \Delta t$
-        \STATE $u_i \leftarrow u_i + (\varepsilon_u(k_u \sigma_{s, i} + \sigma_{b} - u_i)) \cdot \Delta t$
+        \STATE $w_i \leftarrow w_i + (\varepsilon(v_i + a - b w_i) + dw_{\text{plasticity}}) \cdot \Delta t$
+        \STATE \COMMENT{Adaptive Meta-Doubt (v3.1.0)}
+        \STATE $\varepsilon_{u,\text{eff}} \leftarrow \varepsilon_u \cdot \min(1 + \alpha_s \cdot \sigma_{\text{social},i},\; C_{\text{cap}})$
+        \STATE $u_i \leftarrow u_i + \frac{\varepsilon_{u,\text{eff}}}{\tau_u}(k_u \sigma_{\text{social},i} + \sigma_{\text{baseline}} - u_i) \cdot \Delta t$
 
         \STATE $u_i \leftarrow \max(0, \min(1, u_i))$ \COMMENT{Constraint clamp}
     \ENDFOR
@@ -244,7 +254,6 @@ The methodology operates through discrete \emph{sessions}, each with explicit re
     \item \textbf{Pluralité réelle}: Each AI system contributes from its distinct training corpus, architectural biases, and reasoning patterns. No system simulates or substitutes for others.
     \item \textbf{Human orchestration}: All scientific claims, parameter choices, and publication decisions are made by the human researcher. AI contributions are advisory and generative, not directive.
     \item \textbf{Documented failures}: Rejected intermediate versions (e.g., v2.0.1/2) are preserved rather than erased, maintaining complete developmental traceability.
-    \item \textbf{External validation}: Critical evaluation by non-collaborative external systems (Automated Adversarial Analysis) ensures rigor beyond self-assessment.
     \item \textbf{External validation}: Critical evaluation by non-collaborative external systems (Automated Adversarial Analysis) ensures rigor beyond self-assessment.
 \end{itemize}
 
@@ -458,6 +467,64 @@ H \gtrsim 1.4 \text{ bits},
 \]
 consistent with the observed $H \approx 1.56$ bits for standard parameters.
 
+\section{Adaptive Extensions (v3.1.0)}
+\label{sec:v4_extensions}
+
+The v3.0.0 model described above uses fixed hyperparameters for doubt dynamics and static network topology. Two structural limitations emerged during extended testing:
+
+\begin{enumerate}
+    \item \textbf{Rigid doubt speed:} The constant $\varepsilon_u$ cannot adapt to changing environments. In volatile regimes (rapidly varying stimulus), doubt evolves too slowly; in stable regimes, it may overshoot.
+    \item \textbf{Hub strangulation:} On scale-free networks (Barab\'asi--Albert), heretic units relegated to the periphery have their dissent signals averaged out by high-degree hub nodes before reaching the rest of the network, causing entropy collapse despite $\eta = 0.15$.
+\end{enumerate}
+
+Version 3.1.0 addresses both limitations with two adaptive mechanisms that preserve full backward compatibility (disabling them recovers exact v3.0.0 behavior).
+
+\subsection{Adaptive Meta-Doubt (Bayesian Surprise)}
+
+We replace the fixed doubt speed $\varepsilon_u$ with a per-unit adaptive rate modulated by social surprise:
+\begin{equation}
+    \varepsilon_{u,\text{eff}}(i) = \varepsilon_u \cdot \min\!\bigl(1 + \alpha_s \cdot \sigma_{\text{social}}(i),\; C_{\text{cap}}\bigr),
+    \label{eq:meta_doubt}
+\end{equation}
+where $\alpha_s = 2.0$ is the surprise gain and $C_{\text{cap}} = 5.0$ prevents runaway acceleration. The intuition is Bayesian: when a unit's neighborhood contradicts its internal state ($\sigma_{\text{social}}$ large), its epistemic uncertainty should update faster. Conversely, in a stable neighborhood ($\sigma_{\text{social}} \approx 0$), doubt evolves at the baseline rate.
+
+\textbf{Properties:}
+\begin{itemize}
+    \item \textbf{Backward compatible:} Setting $\alpha_s = 0$ recovers the v3.0.0 fixed-$\varepsilon_u$ dynamics exactly.
+    \item \textbf{Bounded:} The clamp $C_{\text{cap}}$ ensures $\varepsilon_{u,\text{eff}} \leq 5\varepsilon_u$, preventing numerical instability.
+    \item \textbf{Per-unit:} Each unit adapts independently, allowing heterogeneous doubt dynamics across the network.
+\end{itemize}
+
+The doubt equation becomes:
+\begin{equation}
+    \frac{du_i}{dt} = \frac{\varepsilon_{u,\text{eff}}(i)}{\tau_u}\bigl(k_u \sigma_{\text{social},i} + \sigma_{\text{baseline}} - u_i\bigr).
+    \label{eq:du_adaptive}
+\end{equation}
+
+\subsection{Doubt-Driven Topological Rewiring}
+
+To address hub strangulation, we introduce a degree-neutral rewiring mechanism triggered by constitutional doubt. When a unit's doubt exceeds a threshold $u_{\text{rewire}}$, it disconnects from its most \emph{consensual} neighbor (the one with smallest $|v_i - v_j|$) and reconnects to a random non-neighbor:
+
+\begin{equation}
+    \text{If } u_i > u_{\text{rewire}} \text{ and cooldown expired:} \quad
+    j^* = \arg\min_{j \in \mathcal{N}(i)} |v_i - v_j|, \quad
+    k \sim \text{Uniform}(\overline{\mathcal{N}}(i)),
+    \label{eq:rewire}
+\end{equation}
+where $\overline{\mathcal{N}}(i)$ denotes the set of non-neighbors of unit $i$. The edge $(i, j^*)$ is removed and $(i, k)$ is added, preserving the total edge count and graph symmetry.
+
+\textbf{Design constraints:}
+\begin{itemize}
+    \item \textbf{Degree-neutral:} The total number of edges is invariant under rewiring. Each rewire removes one edge and adds one edge.
+    \item \textbf{Symmetric:} Both $A_{ij}$ and $A_{ji}$ are updated simultaneously (undirected graph).
+    \item \textbf{Cooldown:} Each unit has a per-unit timer (default: 50 steps) preventing excessive topological churn.
+    \item \textbf{Consensual targeting:} By disconnecting from the most similar neighbor, the unit actively seeks informational diversity---analogous to an ``epistemic foraging'' strategy.
+\end{itemize}
+
+This mechanism operates only on networks with explicit adjacency matrices. On regular lattice grids (stencil Laplacian), the fixed topology is preserved.
+
+\textbf{Connection to adaptive network theory.} The rewiring rule couples the dynamical state $(v, u)$ to the network topology $A$, creating a co-evolutionary system. This is related to the adaptive network framework of Gross and Blasius~\cite{gross2008}, where node states and link structure evolve on comparable timescales. The key novelty is that the rewiring criterion is driven by \emph{doubt} rather than state similarity, providing a constitutionally motivated mechanism for topological adaptation.
+
 \section{Discussion}
 
 To bridge theory and physical implementation, we provide a phenomenological mapping onto memristive crossbars. Using parameters inspired by RRAM literature, we formalize $w$ as an analogue to oxygen-vacancy-driven conductance. 
@@ -500,9 +567,9 @@ We propose a retrospective deliberation pilot applying Mem4ristor v2.9.3 to real
 
 \section{Conclusion}
 
-Mem4ristor v3.0.0 is not a mere deliberation framework, but a neuromorphic-inspired cognitive primitive that can be integrated as a drop-in resistance layer in existing computational decision architectures. By extending neuromorphic-inspired oscillators with constitutional doubt and structural heretics, we ensure diversity preservation across scales.
+Mem4ristor v3.1.0 is not a mere deliberation framework, but a neuromorphic-inspired cognitive primitive that can be integrated as a drop-in resistance layer in existing computational decision architectures. By extending neuromorphic-inspired oscillators with constitutional doubt, structural heretics, adaptive meta-doubt, and doubt-driven topological rewiring, we ensure diversity preservation across scales and topologies.
 
-This work open several pathways: (1) \textbf{Neuromorphic ethics}: encoding values directly in dynamical systems; (2) \textbf{Deliberation-aware AI}: tools for diagnosing and improving collective decision processes; (3) \textbf{Variability-exploiting hardware}: treating device imperfections as features, not bugs.
+This work opens several pathways: (1) \textbf{Neuromorphic ethics}: encoding values directly in dynamical systems; (2) \textbf{Deliberation-aware AI}: tools for diagnosing and improving collective decision processes; (3) \textbf{Variability-exploiting hardware}: treating device imperfections as features, not bugs; (4) \textbf{Adaptive network dynamics}: co-evolution of opinions and social structure driven by epistemic uncertainty.
 
 \section{Limitations}
 
@@ -530,7 +597,7 @@ While Section~5 provides substantial theoretical grounding, several formal gaps 
 This work explicitly acknowledges the following limitations:
 \begin{itemize}
     \item \textbf{Computational Nature:} These results are derived from Python simulations. Real-world HfO$_2$ device variability may significantly alter the observed dynamics.
-    \item \textbf{Methodology:} The ``Caf\'e Virtuel'' framework uses LLMs for collaborative research. Authorship is shared between human intuition and agentic audit cycles (v2.0--v3.0.0).
+    \item \textbf{Methodology:} The ``Caf\'e Virtuel'' framework uses LLMs for collaborative research. Authorship is shared between human intuition and agentic audit cycles (v2.0--v3.1.0).
     \item \textbf{15\% Empirical Threshold:} This value is an empirical observation of the percolation critical point in 2D lattices ($\eta \approx 0.15 \Rightarrow P_{\text{coverage}} \approx 0.48$).
     \item \textbf{Numerical Stability:} The model uses first-order Euler integration; $H$ stability requires $\Delta t \le 0.05$ for long-term (>10,000 steps) trajectories.
 \end{itemize}
@@ -573,7 +640,7 @@ This work was developed through the \textbf{Café Virtuel framework}, a structur
 
 \textbf{Human Orchestration:} Julien Chauvin designed the research methodology, guided all sessions (1-8), made final decisions on all scientific claims, conducted external validation, and assumes full responsibility for the work and any remaining errors.
 
-\textbf{External Validation:} The model underwent adversarial testing via automated platforms (Dec 2025), with initial rejections leading to systematic corrections and final stable implementation (v3.0.0).
+\textbf{External Validation:} The model underwent adversarial testing via automated platforms (Dec 2025--Feb 2026), with initial rejections leading to systematic corrections and final stable implementation (v3.1.0).
 
 Complete development history with session transcripts and contribution traceability available at: \url{https://github.com/Jusyl236/Cafe-Virtuel}
 
@@ -636,6 +703,9 @@ Complete development history with session transcripts and contribution traceabil
 \bibitem{liu2018} Liu, Y., Yao, X., \emph{Ensemble learning via negative correlation}, Neural Networks, 12(10):1399-1404, 1999.
 
 \bibitem{odor2024} Ódor, G., Deng, S., Kelling, J., \emph{Frustrated Synchronization of the Kuramoto Model on Complex Networks}, Entropy, 26(12):1074, 2024.
+
+% Adaptive Networks
+\bibitem{gross2008} Gross, T., Blasius, B., \emph{Adaptive coevolutionary networks: a review}, Journal of the Royal Society Interface, 5(20):259-271, 2008.
 \bibitem{ccc2020} Convention Citoyenne pour le Climat, \emph{Le rapport final}, \url{https://www.conventioncitoyennepourleclimat.fr/}, 2020.
 \end{thebibliography}
 
