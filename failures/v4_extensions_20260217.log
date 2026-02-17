@@ -1,0 +1,72 @@
+FAILURE LOG: V4 Adaptive Extensions
+Date: 2026-02-17
+Auditor: Claude Opus 4.6
+Orchestrator: Julien Chauvin
+Source: Analysis by Manus AI Agent (vulnerability report on V3)
+
+=== VULNERABILITIES IDENTIFIED (Manus Analysis) ===
+
+VULN-01: Hub Strangulation in Scale-Free Networks
+  Description: On Barabási-Albert graphs, heretic units relegated to
+    periphery have their dissent signal averaged out by hub nodes
+    before reaching the rest of the network.
+  Impact: Entropy collapse despite 15% heretic ratio on complex topologies.
+  Severity: STRUCTURAL
+  Fix: Doubt-driven rewiring (V4) - high-doubt units disconnect from
+    consensual neighbors and reconnect to random non-neighbors.
+
+VULN-02: Rigid Hyperparameters (No Meta-Plasticity)
+  Description: epsilon_u is a fixed constant. When external stimulus
+    regime changes radically (e.g., constant → white noise), the system
+    can get stuck in permanent doubt (u≈1) or blind certainty (u≈0).
+  Impact: No adaptation to changing environments.
+  Severity: FUNCTIONAL
+  Fix: Adaptive Meta-Doubt (V4) - epsilon_u modulated by social surprise.
+    ε_u_eff(i) = ε_u × clip(1 + α_surprise × σ_social(i), 1, cap)
+
+VULN-03: Numerical Overflow in Meta-Doubt Under Fuzzing
+  Description: When sigma_social is astronomically large (fuzzing inputs),
+    alpha_s * sigma_social overflows float64 before np.clip can cap it.
+  Impact: RuntimeWarning (overflow encountered in scalar multiply)
+  Severity: LOW (result is still correct due to clip, but warning is noisy)
+  Fix: Pre-clamp sigma_social to 100.0 before multiplication.
+
+=== FIXES APPLIED ===
+
+FIX-01: Adaptive Meta-Doubt (Bayesian Surprise)
+  File: src/mem4ristor/core.py (step() and solve_rk45())
+  Mechanism: ε_u_eff(i) = ε_u × clip(1 + α × σ_social_safe(i), 1, cap)
+  Default params: alpha_surprise=2.0, surprise_cap=5.0
+  Backward compatible: alpha_surprise=0 → exact V3 behavior
+  Tests: 5 new tests in test_v4_extensions.py
+
+FIX-02: Doubt-Driven Topological Rewiring
+  File: src/mem4ristor/core.py (Mem4Network class)
+  Mechanism: When u_i > threshold, disconnect from most consensual
+    neighbor (min |v_i - v_j|), reconnect to random non-neighbor.
+  Properties: Degree-neutral, symmetric, per-unit cooldown
+  Default params: rewire_threshold=0.8, rewire_cooldown=50
+  Limitation: Only works with explicit adjacency matrices (not stencil grids)
+  Tests: 7 new tests + 2 integration tests in test_v4_extensions.py
+
+FIX-03: Overflow Guard for Meta-Doubt
+  File: src/mem4ristor/core.py (step())
+  Mechanism: sigma_social_safe = clip(sigma_social, 0, 100) before
+    computing alpha_s * sigma_social
+  Tests: Passes fuzzing suite with -W error::RuntimeWarning
+
+=== TEST RESULTS ===
+
+Full suite: 48 tests, 46 passed, 2 xfailed, 0 warnings
+New tests: 15/15 passed (test_v4_extensions.py)
+Regression: 0 failures on existing 33 tests
+
+=== REPO CLEANUP (same commit) ===
+
+- .gitignore: Deduplicated (was copy-pasted twice), added egg-info, synctex, nul, pycache
+- Removed: archives/ (4 legacy debug scripts), bicameral_trace.png (orphaned),
+  src/mem4ristor.egg-info/ (build artifacts)
+- Reorganized: FINAL_SCIENTIFIC_REPORT_V26.md → docs/scientific_report_v26.md
+  CAFE-VIRTUEL-LIMITATIONS.md → docs/limitations.md
+  docs/reports → docs/observation_report_v23.md
+- VERSION: v3.0.0 → v3.1.0
