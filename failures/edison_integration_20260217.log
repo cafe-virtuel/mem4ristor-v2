@@ -1,0 +1,41 @@
+FAILURE LOG: Edison Scientific Review Integration
+Date: 2026-02-17
+Auditor: Claude Opus 4.6 (integrating Edison Scientific independent review)
+Orchestrator: Julien Chauvin
+
+=== INTEGRATION OF EDISON SCIENTIFIC EXTERNAL REVIEW ===
+
+SOURCE: Edison Scientific Platform (platform.edisonscientific.com)
+TYPE: Independent computational review of Mem4ristor v3.1.0
+DELIVERABLES: 5 figures, 1 SPICE netlist, 1 Jupyter notebook, 1 review report
+
+ITEM-01: FLOP Benchmark
+  Result: ~56N FLOPs/step, O(N) scaling confirmed
+  Integration: New Section "Computational Complexity" in preprint
+  Figure: figures/flop_benchmark.png
+
+ITEM-02: Phase Diagram (α_surprise, rewire_threshold)
+  Result: 144 configs swept, rewiring functional on small-world (1777 events)
+  Key finding: H~0.7-0.9 on small-world vs H~1.5-1.9 on stencil (topology-dependent)
+  Integration: New Section "Phase Diagram of v3.1.0 Extensions" + entropy clarification
+  Figure: figures/phase_diagram_corrected.png
+
+ITEM-03: Floquet Multipliers + Lyapunov Exponents
+  Result: |λ| >> 1 (resists periodic entrainment), λ_max ≈ 0 (quasi-periodic)
+  Integration: New Section "Stability Under Periodic Forcing"
+  Figures: figures/floquet_multipliers.png, figures/lyapunov_analysis.png
+
+ITEM-04: SPICE Coupled Network
+  Result: Automated netlist generator for NxN grids, 3x3 example (166 lines)
+  Integration: spice/mem4ristor_coupled_3x3.cir added to repo
+  Updated limitations section to reference coupled SPICE model
+
+ADDITIONAL:
+  - Added entropy measurement conditions note in Results section
+  - Updated Limitations: Floquet now computed, SPICE network available
+  - Added Edison Scientific to Acknowledgments
+  - Added bridge protection and incremental Laplacian notes to Rewiring section
+  - Preprint recompiled: 23 pages, 0 errors, 0 undefined references
+
+=== RESULT ===
+All 48 tests pass (+ 2 xfail). Preprint expanded from 20 to 23 pages.
