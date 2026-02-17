@@ -9,16 +9,25 @@ from scipy.integrate import solve_ivp
 
 class Mem4ristorV3:
     """
-    Canonical Implementation of Mem4ristor v3.0.0.
+    Canonical Implementation of Mem4ristor v3.0.0 (with v4 adaptive extensions).
 
     Implements extended FitzHugh-Nagumo dynamics with constitutional doubt (u),
-    structural heretics, Levitating Sigmoid coupling, and inhibition plasticity
-    for diversity preservation in neuromorphic-inspired computational models.
+    structural heretics, Levitating Sigmoid coupling, inhibition plasticity,
+    and adaptive meta-doubt for diversity preservation in neuromorphic-inspired
+    computational models.
 
     Core Equations:
         dv/dt = v - v³/5 - w + I_ext - α·tanh(v) + η(t)
         dw/dt = ε(v + a - bw) + dw_plasticity
-        du/dt = ε_u(k_u·σ_social + σ_baseline - u) / τ_u
+        du/dt = ε_u_eff(i) · (k_u·σ_social + σ_baseline - u) / τ_u
+
+    Adaptive Meta-Doubt (v4 extension):
+        ε_u_eff(i) = ε_u × (1 + α_surprise × σ_social(i))
+        When social coupling contradicts a unit's internal state, the doubt
+        speed increases proportionally. This provides Bayesian-surprise-like
+        meta-plasticity: stable environments → slow doubt adaptation, volatile
+        environments → fast doubt adaptation. The gain is clamped to prevent
+        runaway acceleration (max 5× base speed).
 
     Coupling Kernel (Levitating Sigmoid):
         f(u) = tanh(π(0.5 - u)) + δ
@@ -35,6 +44,7 @@ class Mem4ristorV3:
         - Heretic units: 15% with inverted stimulus polarity (empirical threshold)
         - 1/√N scaling for consistent dynamics across network sizes
         - Structural memory of dissidence via inhibition plasticity
+        - Adaptive ε_u driven by social surprise (meta-doubt, v4)
 
     Migration Note (v2.9.3 → v3.0.0):
         This class replaces Mem4ristorV2. The linear kernel (1-2u) is replaced
@@ -70,7 +80,8 @@ class Mem4ristorV3:
                 'lambda_learn': 0.05, 'tau_plasticity': 1000, 'w_saturation': 2.0
             },
             'coupling': {'D': 0.15, 'heretic_ratio': 0.15, 'uniform_placement': True},
-            'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0},
+            'doubt': {'epsilon_u': 0.02, 'k_u': 1.0, 'sigma_baseline': 0.05, 'u_clamp': [0.0, 1.0], 'tau_u': 1.0,
+                      'alpha_surprise': 2.0, 'surprise_cap': 5.0},
             'noise': {'sigma_v': 0.05, 'use_rtn': False, 'rtn_amplitude': 0.1, 'rtn_p_flip': 0.01}
         }
 
@@ -285,7 +296,18 @@ class Mem4ristorV3:
         dv = (self.v - (self.v**3) / self.cfg['dynamics']['v_cubic_divisor'] - self.w + I_ext -
               self.cfg['dynamics']['alpha'] * np.tanh(self.v) + eta)
         dw = self.cfg['dynamics']['epsilon'] * (self.v + self.cfg['dynamics']['a'] - self.cfg['dynamics']['b'] * self.w)
-        du = (self.cfg['doubt']['epsilon_u'] * (self.cfg['doubt']['k_u'] * sigma_social +
+
+        # V4: Adaptive Meta-Doubt (Bayesian Surprise)
+        # ε_u_eff(i) = ε_u × (1 + α_surprise × σ_social(i))
+        # When neighbors contradict, doubt accelerates. Capped to prevent runaway.
+        alpha_s = self.cfg['doubt'].get('alpha_surprise', 2.0)
+        surprise_cap = self.cfg['doubt'].get('surprise_cap', 5.0)
+        # Pre-clamp sigma_social to prevent overflow in alpha_s * sigma_social
+        sigma_social_safe = np.clip(sigma_social, 0.0, 100.0)
+        epsilon_u_adaptive = self.cfg['doubt']['epsilon_u'] * np.clip(
+            1.0 + alpha_s * sigma_social_safe, 1.0, surprise_cap
+        )
+        du = (epsilon_u_adaptive * (self.cfg['doubt']['k_u'] * sigma_social +
               self.cfg['doubt']['sigma_baseline'] - self.u)) / self.cfg['doubt']['tau_u']
 
         self.v += dv * self.dt
@@ -353,7 +375,14 @@ class Mem4ristorV3:
             dw_learn = (plasticity_drive * saturation_factor) - plasticity_decay
 
             dw = dw_fhn + dw_learn
-            du = (self.cfg['doubt']['epsilon_u'] * (self.cfg['doubt']['k_u'] * sigma_social +
+
+            # V4: Adaptive Meta-Doubt in continuous-time
+            alpha_s = self.cfg['doubt'].get('alpha_surprise', 2.0)
+            surprise_cap = self.cfg['doubt'].get('surprise_cap', 5.0)
+            epsilon_u_adaptive = self.cfg['doubt']['epsilon_u'] * np.clip(
+                1.0 + alpha_s * sigma_social, 1.0, surprise_cap
+            )
+            du = (epsilon_u_adaptive * (self.cfg['doubt']['k_u'] * sigma_social +
                   self.cfg['doubt']['sigma_baseline'] - u)) / self.cfg['doubt']['tau_u']
 
             return np.concatenate([dv, dw, du])
@@ -422,10 +451,24 @@ Mem4ristorV2 = Mem4ristorV3
 
 
 class Mem4Network:
-    """High-level API for Mem4ristorV3 with formal Laplacian operators."""
+    """
+    High-level API for Mem4ristorV3 with formal Laplacian operators
+    and doubt-driven topological rewiring (v4 extension).
+
+    V4 Rewiring Mechanism:
+        When a unit's doubt u_i exceeds rewire_threshold, it disconnects from
+        its most consensual neighbor (smallest |v_i - v_j|) and reconnects to
+        a random non-neighbor. This resolves hub strangulation in scale-free
+        networks by allowing high-doubt units to seek diverse information sources.
+
+        The rewiring preserves the total number of edges (degree-neutral) and
+        maintains graph symmetry (undirected). A rewire_cooldown prevents
+        excessive topological churn.
+    """
     def __init__(self, size: int = 10, heretic_ratio: float = 0.15, seed: int = 42,
                  adjacency_matrix: Optional[np.ndarray] = None, cold_start: bool = False,
-                 boundary: str = 'periodic'):
+                 boundary: str = 'periodic',
+                 rewire_threshold: float = 0.8, rewire_cooldown: int = 50):
         """
         Args:
             size: Grid side length (total units = size * size)
@@ -435,9 +478,16 @@ class Mem4Network:
             cold_start: If True, initialize all units to identical state
             boundary: Boundary condition for stencil Laplacian:
                       'periodic' (toroidal wrap, default) or 'neumann' (zero-flux)
+            rewire_threshold: Doubt level above which a unit can rewire (default: 0.8)
+            rewire_cooldown: Minimum steps between rewires for a given unit (default: 50)
         """
         self.rng = np.random.RandomState(seed)
         self.boundary = boundary
+
+        # V4: Rewiring parameters
+        self.rewire_threshold = rewire_threshold
+        self.rewire_cooldown = rewire_cooldown
+        self.rewire_count = 0  # Total rewires performed (diagnostic)
 
         self.adjacency_matrix = adjacency_matrix
         if adjacency_matrix is not None:
@@ -448,18 +498,90 @@ class Mem4Network:
             self.N = adjacency_matrix.shape[0]
             self.size = int(np.sqrt(self.N))
             self.use_stencil = False
-            deg = np.array(np.sum(adjacency_matrix, axis=1)).flatten()
-            D = np.diag(deg)
-            self.L = D - adjacency_matrix
+            self._rebuild_laplacian()
+            # V4: Per-unit cooldown timers
+            self._rewire_timers = np.zeros(self.N, dtype=int)
         else:
             self.size = size
             self.N = size * size
             self.use_stencil = True
             self.L = None
+            self._rewire_timers = None
 
         self.model = Mem4ristorV3(seed=seed)
         self.model.cfg['coupling']['heretic_ratio'] = heretic_ratio
         self.model._initialize_params(self.N, cold_start=cold_start)
+
+    def _rebuild_laplacian(self):
+        """Recompute Laplacian from current adjacency matrix."""
+        deg = np.array(np.sum(self.adjacency_matrix, axis=1)).flatten()
+        D = np.diag(deg)
+        self.L = D - self.adjacency_matrix
+
+    def _doubt_driven_rewire(self):
+        """
+        V4: Topological rewiring driven by constitutional doubt.
+
+        For each unit i where u_i > rewire_threshold and cooldown has expired:
+        1. Find its most consensual neighbor j (smallest |v_i - v_j|)
+        2. Disconnect i ↔ j
+        3. Reconnect i ↔ k where k is a random non-neighbor
+        4. Reset cooldown timer for unit i
+
+        This breaks hub strangulation by allowing high-doubt units to seek
+        diverse information sources instead of being trapped in consensus echo chambers.
+
+        Only operates on explicit adjacency matrices (not stencil grids).
+        """
+        if self.use_stencil or self.adjacency_matrix is None:
+            return
+
+        v = self.model.v
+        u = self.model.u
+        adj = self.adjacency_matrix
+        rewired = False
+
+        # Decrement cooldown timers
+        self._rewire_timers = np.maximum(self._rewire_timers - 1, 0)
+
+        # Find eligible units: high doubt AND cooldown expired
+        eligible = (u > self.rewire_threshold) & (self._rewire_timers == 0)
+        eligible_ids = np.where(eligible)[0]
+
+        for i in eligible_ids:
+            # Find neighbors of i
+            neighbors = np.where(adj[i] > 0)[0]
+            if len(neighbors) <= 1:
+                continue  # Don't rewire if only 1 neighbor (would disconnect)
+
+            # Find the MOST CONSENSUAL neighbor (smallest |v_i - v_j|)
+            v_diffs = np.abs(v[i] - v[neighbors])
+            most_consensual_idx = np.argmin(v_diffs)
+            j = neighbors[most_consensual_idx]
+
+            # Find non-neighbors (excluding self and current neighbors)
+            non_neighbors = np.where(adj[i] == 0)[0]
+            non_neighbors = non_neighbors[non_neighbors != i]
+            if len(non_neighbors) == 0:
+                continue  # Fully connected, can't rewire
+
+            # Pick a random non-neighbor
+            k = self.rng.choice(non_neighbors)
+
+            # Perform rewire: disconnect i↔j, connect i↔k (symmetric)
+            adj[i, j] = 0
+            adj[j, i] = 0
+            adj[i, k] = 1
+            adj[k, i] = 1
+
+            # Reset cooldown
+            self._rewire_timers[i] = self.rewire_cooldown
+            self.rewire_count += 1
+            rewired = True
+
+        # Rebuild Laplacian only if topology changed
+        if rewired:
+            self._rebuild_laplacian()
 
     def get_spectral_gap(self) -> float:
         """
@@ -504,7 +626,10 @@ class Mem4Network:
         return output.flatten()
 
     def step(self, I_stimulus: float = 0.0):
-        """Perform one simulation step."""
+        """Perform one simulation step with optional doubt-driven rewiring."""
+        # V4: Topological adaptation before dynamics
+        self._doubt_driven_rewire()
+
         if self.use_stencil:
             l_v = self._calculate_laplacian_stencil(self.v)
         else:
