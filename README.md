@@ -4,12 +4,22 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18620596.svg)](https://doi.org/10.5281/zenodo.18620596)
 [![Tests](https://github.com/cafe-virtuel/Mem4ristor/actions/workflows/test.yml/badge.svg)](https://github.com/cafe-virtuel/Mem4ristor/actions/workflows/test.yml)
+[![Preprint Guardian](https://github.com/cafe-virtuel/Mem4ristor/actions/workflows/guardian.yml/badge.svg)](https://github.com/cafe-virtuel/Mem4ristor/actions/workflows/guardian.yml)
 
 **Mem4ristor V6** is a computational implementation of extended FitzHugh-Nagumo dynamics designed to investigate emergent critical states in neuromorphic networks. The model uses "Constitutional Doubt" ($u$) and "Structural Heretics" to maintain phase diversity in scale-free networks, generating robust Chimera states without requiring stochastic noise.
 
-> **Status**: V6.0.0 — arXiv Ready. See `PROJECT_STATUS.md` for the full scientific claims register and `docs/limitations.md` for the honest truth table of what has and has not been proven.
+> **Status**: V6.0.0 — arXiv Ready. See `PROJECT_STATUS.md` for the current state, and
+> [`docs/CLAIMS_REGISTER.md`](docs/CLAIMS_REGISTER.md) for the claim-by-claim register
+> (value, producing script, seeds, status). For an honest ledger of what holds and what
+> has **fallen** — including six refuted claims, each with its number and its source —
+> see [`docs/BILAN_FORCES_FAIBLESSES.md`](docs/BILAN_FORCES_FAIBLESSES.md) *(in French)*.
+> `docs/limitations.md` is **superseded** and kept for history only.
 >
-> **Publication status (checked against the Zenodo API on 2026-08-02).** The code in this
+> **Verify the numbers yourself — you no longer have to take our word for it.** Every
+> published figure is recomputed from its data on each push:
+> [`tools/`](tools/README.md), and the badge above.
+>
+> **Publication status (re-checked against the Zenodo API on 2026-09-03).** The code in this
 > repository is **V6.0.0**. The **latest deposited version is V4.0.0** (2026-05-02, version DOI
 > `10.5281/zenodo.19986042`); V5 and V6 have not been deposited. The badge above is the
 > **concept DOI**, which always resolves to the most recent deposit. The current preprint
@@ -59,7 +69,7 @@ for step in range(1000):
 
 # Calculate final entropy (measure of diversity)
 print(f"Final System Entropy: {net.calculate_entropy():.4f}")
-# See docs/limitations.md for expected values and binning notes
+# See docs/CLAIMS_REGISTER.md for expected values and binning notes
 ```
 
 ### Scale-Free Networks
@@ -79,8 +89,17 @@ for step in range(3000):
     net.step(I_stimulus=0.0)
 
 print(f"Scale-Free Entropy: {net.calculate_entropy():.4f}")
-# Expected: H_stable ~ 0.83 (86% recovery of lattice performance)
+# Expected: ~3.18 with this exact snippet (seed=42, BA m=3, 3000 steps, V6.0.0).
 ```
+
+> **On these two numbers.** They are what the snippets above print *as written* — measured on
+> 2026-09-03 from a fresh clone. They are **demonstrations, not claims**: a single seed, and two
+> different protocols (10x10 lattice / 1000 steps vs. BA m=3 / 3000 steps), so they must **not**
+> be divided by one another to obtain a "recovery ratio" — an earlier version of this README did
+> exactly that. The publishable figures are elsewhere, with their seed counts and their
+> verification scripts: `H_stable = 4.09 +/- 0.19 bits` over 10 seeds on the 10x10 lattice
+> (claim `C01`, see [`docs/CLAIMS_REGISTER.md`](docs/CLAIMS_REGISTER.md)), checked on every push
+> by [`tools/preprint_guardian.py`](tools/README.md).
 
 ### Running Demos
 
@@ -140,7 +159,7 @@ pytest tests/test_scientific_regression.py
 | `sonification.py` | Audio output from doubt dynamics |
 | `benchmarks/engine.py` | Benchmark harness for throughput and reproducibility |
 
-### Experimental modules — `experimental/`
+### Applied demos and experimental modules — `examples/`
 
 | File | Role |
 |---|---|
@@ -170,9 +189,13 @@ pytest tests/test_scientific_regression.py
 
 ### Experiments — `experiments/`
 
-**Note:** Historical, exploratory, and verification scripts have been organized into the `experiments/scratch/` directory to keep the root clean and maintain focus on the core modules.
+**Note:** On 2026-08-05, **30 scripts were moved back out of `experiments/scratch/`** (a
+gitignored directory) into `experiments/`. Until then, the paths listed below existed in
+this README but **not in a clone** — twelve versioned scripts depended on one of them.
+Everything listed here is now versioned and present after `git clone`. Purely historical
+material remains in `experiments/scratch/` and is *not* part of the repository.
 
-**Paper 1 experiments** (produce CSV + PNG in `figures/`, located in `experiments/scratch/`):
+**Paper 1 experiments** (produce CSV + PNG in `figures/`):
 
 | Script | Produces | Description |
 |---|---|---|
@@ -190,7 +213,8 @@ pytest tests/test_scientific_regression.py
 | `experiments/p2_compartments.py` | `p2_compartments.*` | Compartimentalised dynamics exploration |
 | `experiments/p2_nonlocal_coupling.py` | `p2_nonlocal_coupling.*` | Non-local coupling by doubt similarity |
 
-**SPICE validation** (Paper B, located in `experiments/scratch/`):
+**SPICE validation** (Paper B) — these require **ngspice** on the `PATH`, which
+`requirements.txt` cannot install; without it, claim `C11` cannot be replayed:
 
 | Script | Description |
 |---|---|
@@ -201,7 +225,7 @@ pytest tests/test_scientific_regression.py
 | `experiments/spice_art_kirchhoff.py` | Kirchhoff law validation of ART in SPICE |
 | `experiments/spice_p420_hfo2_memristor.py` | HfO2 memristor SPICE characterization |
 
-**Binder cumulant / Finite-size scaling** (V6, located in `experiments/scratch/`):
+**Binder cumulant / Finite-size scaling** (V6):
 
 | Script | Description |
 |---|---|
@@ -213,10 +237,10 @@ pytest tests/test_scientific_regression.py
 
 | File | Description |
 |---|---|
-| `preprint.tex` / `preprint.pdf` | **Paper 1** — "Sustained Attractor Diversity in Doubt-Modulated FHN Networks" (14 pages) |
-| `paper_B/paper_B.tex` / `.pdf` | **Paper B** — SPICE validation + topological dead zone (hardware bridge) |
-| `paper_2/paper_2.tex` / `.pdf` | **Paper 2** — Draft on doubt variable as anti-synchronization filter |
-| `limitations.md` | **Scientific truth table** — confirmed claims, known limits, reconciled binning artifacts |
+| `papers/preprint/preprint.tex` / `.pdf` | **Paper 1** — "Sustained Attractor Diversity in Doubt-Modulated FHN Networks" (27 pages, V6.0.0) |
+| `papers/paper_B/paper_B.tex` / `.pdf` | **Paper B** — SPICE validation + topological dead zone (hardware bridge) |
+| `papers/paper_2/paper_2.tex` / `.pdf` | **Paper 2** — Draft on doubt variable as anti-synchronization filter |
+| `limitations.md` | ⚠️ **Superseded** — kept for history. Use `CLAIMS_REGISTER.md` and `BILAN_FORCES_FAIBLESSES.md` |
 | `academic_history.md` | Full chronological history of the project |
 | `theoretical_anchoring.md` | Mathematical foundations and literature connections |
 | `scientific_report_v26.md` | Full scientific documentation |
@@ -232,7 +256,9 @@ pytest tests/test_scientific_regression.py
 | `HACKER_GUIDE.md` | Deep dive into the codebase for contributors |
 | `CITATION.cff` | Machine-readable citation metadata |
 | `ai_contributors.json` | AI collaboration log (Kimi, Edison, Manus, Claude) |
-| `docs/limitations.md` | Truth table of scientific claims |
+| `docs/CLAIMS_REGISTER.md` | **Claim-by-claim register** — value, producing script, seeds, status |
+| `docs/BILAN_FORCES_FAIBLESSES.md` | **What holds and what fell**, one figure per statement *(in French)* |
+| `tools/` | The guardrails that verify every published figure against its data |
 
 ### Figures — `figures/`
 
