@@ -1,0 +1,124 @@
+{
+  "_comment": "Ancrages TEXTE <-> CSV pour le preprint Mem4ristor. Cree le 2026-07-30.",
+  "_why": "Le Guardian compare des CSV a des valeurs attendues ; il ne lit JAMAIS preprint.tex. Les 17 defauts de la passe du 30/07 etaient TOUS dans le .tex : un claim supprime le 06/05 encore publie (Floquet), des valeurs du CSV du 26/04 survivant a la regeneration du 29/07 (0.75, 0.031), et une reformulation appliquee a 1 endroit sur 5 (le ratio ~90-fold). Motif commun : chaque correction est locale, rien ne mesure sa propagation. Ce fichier ancre chaque nombre PUBLIE a la source qui le porte, pour qu'une regeneration de CSV casse l'ancre au lieu de derailler en silence.",
+  "_semantique": {
+    "value": "la chaine EXACTE telle qu'ecrite dans le .tex (ex: '0.697')",
+    "claim": "id du claim de claims_mapping.json dont le CSV porte la valeur de reference",
+    "context": "sous-chaine devant se trouver sur la MEME ligne, pour lever l'ambiguite quand le nombre apparait plusieurs fois. Optionnel.",
+    "verdicts": "OK | TEX_STALE (le CSV a bouge, le texte non) | ANCHOR_LOST (la chaine n'est plus dans le .tex)"
+  },
+  "tex_file": "docs/papers/preprint/preprint.tex",
+
+  "_docs_scannes": "Le registre des valeurs mortes ne servait qu'au .tex. Or le 30/07 la regle de cloture soustractive a trouve « 0.031 contre 0.751 » dans docs/FUTURE_WORK.md — les DEUX valeurs mortes cote a cote, dans un document que la regeneration du 29/07 n'avait pas mis a jour. Le premier point de la regle (« chercher le chiffre corrige dans TOUT le depot ») est donc mecanisable : c'est ce que fait --docs. Non bloquant a dessein : un document d'histoire peut legitimement citer une valeur morte pour dire qu'elle est morte (le registre lui-meme en est plein). D'ou sauf_si_ligne_contient.",
+  "docs_scannes": [
+    "PROJECT_STATUS.md",
+    "README.md",
+    "docs/*.md"
+  ],
+
+  "_n3_retire": "Un troisieme niveau a ete essaye le 30/07 puis RETIRE, et le resultat negatif est conserve ici : detecter les debris par PROXIMITE NUMERIQUE avec les valeurs canoniques (bande +/-25% relatif). Mesure : 603 suspects sur le preprint, dont la quasi-totalite absurdes ('3.14 proche de 3.1234'). Ce n'est pas une fenetre a regler : pour attraper le cas cible (0.75 contre 0.696680 = 7.6% d'ecart) il faut une bande >= 8%, et a 8% il reste des centaines de faux positifs. Sans lien SEMANTIQUE entre un nombre et la quantite qu'il denote, la proximite ne signifie rien. Remplace par 'valeurs_perimees' ci-dessous, qui est exact au lieu d'etre probabiliste.",
+
+  "valeurs_perimees": [
+    {"value": "0.031",  "remplacee_par": "0.002", "claim": "C14", "quand": "2026-07-29",
+     "motif": "Ancienne synchronie FULL de tab:ablations, issue du CSV du 26/04 (anterieur au fix de bruit Euler-Maruyama du 01/05, AUDIT-024). Le tableau a ete regenere le 29/07 -> 0.002312. Cette valeur ne doit plus apparaitre nulle part, SAUF marquee comme morte.",
+     "sauf_si_ligne_contient": "[valeur morte]",
+     "_pourquoi_garde": "Ajoutee le 31/07. Les deux dernieres occurrences vivaient dans docs/CLAIMS_REGISTER.md (L25, le claim C07 lui-meme ; L79, la note qui explique la confusion de topologie). Meme situation que le '985' acquitte le 30/07 : un registre d'histoire cite legitimement une valeur morte POUR DIRE qu'elle est morte. Difference de forme, et elle est deliberee : le '985' s'acquitte par une chaine FORTUITE ('Preprint corrig'), celle-ci par un marqueur EXPLICITE que l'auteur doit ecrire sciemment. La friction est le garde-fou -- on n'acquitte pas par accident."},
+    {"value": "0.0197", "remplacee_par": "0.036", "claim": "C07b", "quand": "2026-07-31",
+     "motif": "Ancienne synchronie lattice 10x10 de tab:benchmarks, produite SANS cold_start par .brain/gen_c07_csv.py. Exacte chez elle et reproductible au bit pres -- mais pas le protocole revendique par le papier. Regeneree en cold start dans le meme run que l'entropie -> 0.035881.",
+     "contexte_requis": "sync",
+     "_pourquoi_contexte": "FAUX POSITIF verifie AVANT d'ajouter cette entree (l'outil est bloquant depuis ce matin, une fausse alerte refuserait les commits) : docs/papers/recommendations/CAMPAIGN_J_VALIDATION_REPORT.md:119 contient '0.0197' dans un tableau de campagne sans aucun rapport. Ce fichier n'est pas scanne aujourd'hui (docs/*.md n'est pas recursif), mais le contexte protege si quelqu'un elargit le glob. Le std associe (0.0142) n'est PAS enregistre comme valeur morte : trop banal a 4 decimales pour etre identifie par sa seule ecriture -- meme raison que le 0.75 du 30/07.",
+     "sauf_si_ligne_contient": "[valeur morte]"},
+    {"value": "0.751",  "remplacee_par": "0.697", "claim": "C15", "quand": "2026-07-29",
+     "motif": "Ancienne synchronie FROZEN_U de tab:ablations (CSV du 26/04). Survivait encore en L338 sous la forme '0.75' au 30/07 au matin."},
+    {"value": "0.75",   "remplacee_par": "0.697", "claim": "C15", "quand": "2026-07-30",
+     "motif": "Ecriture a 2 decimales de la meme valeur morte. Corrigee en L338 le 30/07.",
+     "contexte_requis": "frozen",
+     "_pourquoi_contexte": "SANS contrainte semantique, cette entree produit un FAUX POSITIF verifie : en L353 le preprint ecrit '-0.75' comme coefficient de Pearson du degre moyen, sans aucun rapport. Une valeur a 2 decimales est trop courte pour etre identifiee par sa seule ecriture — c'est la meme lecon que le retrait de N3 (cf. _n3_retire) : un nombre sans son contexte ne denote rien."},
+    {"value": "0.069",  "remplacee_par": "0.034", "claim": "C14", "quand": "2026-07-29",
+     "motif": "Ancienne synchronie NO_HERETIC de tab:ablations (CSV du 26/04).",
+     "contexte_requis": "heretic",
+     "_pourquoi_contexte": "FAUX POSITIF verifie le 30/07 : docs/limitations.md:70 ecrit '0.828 +/- 0.069' — un ecart-type de synchronie dans le tableau des normalisations, sans aucun rapport. Trois decimales ne suffisent pas a identifier une quantite."},
+    {"value": "1.134",  "remplacee_par": "1.154", "claim": "C16", "quand": "2026-07-29",
+     "motif": "Ancienne LZ NO_HERETIC de tab:ablations (CSV du 26/04).",
+     "contexte_requis": "LZ"},
+    {"value": "1.635",  "remplacee_par": "1.602", "claim": "C17", "quand": "2026-07-29",
+     "motif": "Ancienne LZ FROZEN_U de tab:ablations (CSV du 26/04).",
+     "contexte_requis": "LZ"},
+    {"value": "1.073",  "remplacee_par": "1.069", "claim": "C16", "quand": "2026-07-29",
+     "motif": "Ancienne LZ NO_SIGMOID de tab:ablations (CSV du 26/04).",
+     "contexte_requis": "LZ"},
+    {"value": "12.5",   "remplacee_par": "10.0",  "claim": null, "quand": "2026-05-06",
+     "motif": "tau_u : valeur fausse, listee comme claim SUPPRIME dans docs/CLAIMS_REGISTER.md. La valeur correcte est 10.0.",
+     "contexte_requis": "tau_u",
+     "_note": "Les frontieres de mot suffisent a eviter '12.58' (L301, lambda2 du BA m=15), verifie ; le contexte est une ceinture de plus."},
+    {"value": "985",    "remplacee_par": "Cohen d ~ 9", "claim": "C18", "quand": "2026-06-12",
+     "motif": "Le '+985% synchrony surge' de l'ancien bruit (AUDIT-024). Remplace par une separation complete ; ne doit plus etre cite.",
+     "contexte_requis": "%",
+     "sauf_si_ligne_contient": "Preprint corrig",
+     "_pourquoi_garde": "FAUX POSITIF verifie le 30/07 : docs/CLAIMS_REGISTER.md:22 ecrit « Preprint corrige (« +985% » -> « ~90-fold, 0.007 -> 0.658 ») ». Citer une valeur morte POUR DIRE qu'elle est morte est legitime — c'est meme ce que fait ce registre. La garde acquitte les mentions historiques sans desarmer la detection."}
+  ],
+
+  "anchors": [
+    {"id": "tab-ablations-sync-full",   "claim": "C14", "value": "0.002",  "context": "Full model",
+     "note": "tab:ablations, ligne Full model. Regenere le 29/07."},
+    {"id": "tab-ablations-sync-frozen", "claim": "C15", "value": "0.697",  "context": "Frozen",
+     "note": "tab:ablations, ligne Frozen u. Regenere le 29/07 (etait 0.751)."},
+    {"id": "tab-ablations-lz-full",     "claim": "C16", "value": "1.096",  "context": "Full model",
+     "note": "tab:ablations, LZ du modele complet."},
+    {"id": "tab-ablations-lz-frozen",   "claim": "C17", "value": "1.602",  "context": "Frozen",
+     "note": "tab:ablations, LZ frozen."},
+    {"id": "alpha-sweep-vs-frozen",     "claim": "C15", "value": "0.697",  "context": "frozen-doubt ablation",
+     "note": "L338. Disait 0.75 (valeur du CSV du 26/04) jusqu'au 30/07 : c'est PRECISEMENT le debris que cette ancre doit empecher de revenir."},
+
+    {"id": "tab-benchmarks-sync-this-work", "claim": "C07b", "value": "0.036", "context": "this work",
+     "_maj_2026-07-31": "Valeur passee de 0.0197 a 0.036 : meme quantite, PROTOCOLE different. L'ancienne venait d'un run SANS cold_start (gen_c07_csv.py, depot pilote) alors que le papier revendique le Cold Start Protocol et affirmait que les deux colonnes de cette ligne viennent d'un seul protocole. Desormais vrai : verify_table1_preprint.py ecrit les deux CSV dans le meme run. LECON POUR CET OUTIL, et elle le limite : cette ancre TENAIT parfaitement avant la correction (0.0197 = la valeur exacte de son CSV). Une ancre qui tient prouve que le nombre publie vient bien de son CSV ; elle ne prouve RIEN sur le protocole qui a produit ce CSV. Ce defaut-la est un etage au-dessus de ce que N1 sait voir.",
+     "note": "tab:benchmarks, ligne du modele. RESOLU le 30/07 (decision de Julien : option lattice). Publiait 0.031 +/- 0.034 — chiffre du CSV du 26/04, introuvable dans figures/, et contredisant tab:ablations qui revendique le meme protocole. Le tableau se contredisait lui-meme : son corps (L511) disait 'lattice 10x10' et sa legende 'BA m=3'. Le corps avait raison. La ligne porte desormais les valeurs du lattice 10x10 (sync C07 = 0.0196818, H = 4.09 de tab:scaling) : les deux colonnes viennent enfin des MEMES runs. Mesure M1 du 30/07 : l'ecart 0.031 -> 0.002 n'etait pas un artefact de graines ni de duree (1.7 % de l'ecart), donc bien un residu du code d'avant le fix de bruit du 01/05."},
+
+    {"id": "bench-h-this-work", "claim": "C01", "value": "4.09", "context": "this work",
+     "note": "tab:benchmarks L521, MEME LIGNE que l'ancre de synchronie ci-dessus : les deux colonnes viennent des memes runs depuis le 30/07. ANCRE AJOUTEE le 31/07, rendue possible par le repointage de C01 : jusque-la, tex_anchors listait cette valeur en 'non_ancres_connus' avec le motif « deux sources pour une meme quantite, non demelees ». Elles le sont : le preprint cite verify_table1_preprint.py, qui ecrit p2_table1_lattice.csv (lattice_10x10 = 4.086280), et c'est desormais la cible de C01. p2_delta_sweep.csv (4.157) etait l'autre source -- elle n'est publiee nulle part."},
+
+    {"id": "lz-regime-m6-lz", "claim": "C19", "value": "0.65", "context": "3.87",
+     "note": "tab:lz_regime, ligne adaptative m=6 -- la valeur en gras qui porte la section (franchissement du seuil C_LZ < 0.85). ANCRE AJOUTEE le 31/07 : ce tableau n'etait couvert par AUCUN claim, son CSV vivait dans figures/scratch/ (gitignore) et a ete sorti le meme jour. Contexte '3.87' = le lambda2 de cette ligne, qui la distingue des autres."},
+    {"id": "lz-regime-m6-h",  "claim": "C22", "value": "4.23", "context": "3.87",
+     "note": "Meme ligne du tableau, colonne H_stable. Voir la reserve de count=1 dans la note de C19."},
+
+    {"id": "scaling-h-4x4",   "claim": "C02", "value": "3.21",   "context": "H_{\\text{stable}}",
+     "note": "tab:scaling, lattice 4x4."},
+    {"id": "scaling-h-25x25", "claim": "C03", "value": "4.40",   "context": "H_{\\text{stable}}",
+     "note": "tab:scaling, lattice 25x25."},
+    {"id": "scaling-h-10x10", "claim": "C01", "value": "4.09",   "context": "H_{\\text{stable}}",
+     "note": "tab:scaling L206, lattice 10x10 -- le pendant manquant de scaling-h-4x4 (C02) et scaling-h-25x25 (C03), qui vivent sur la MEME ligne du .tex. ANCRE AJOUTEE le 31/07 : les trois valeurs de cette ligne viennent du meme CSV (p2_table1_lattice.csv, regenere le 08/07 avec cold_start=True) et deux seulement etaient protegees. C'est le meme motif que le « ~90-fold » du 30/07 -- une correction appliquee aux endroits nommes et pas a l'affirmation : le 08/07 avait regenere les trois tailles, le registre et les ancres n'en ont suivi que deux."},
+    {"id": "lambda2-midpoint", "claim": "C05", "value": "2.31",  "context": "midpoint",
+     "note": "Frontiere correlationnelle, requalifiee le 06/07. CSV: 2.315."},
+    {"id": "alpha-crit-hopf",  "claim": "C06", "value": "0.296", "context": "Hopf bifurcation",
+     "note": "alpha_crit. CSV: 0.2955."},
+    {"id": "ablations-vs-benchmarks", "claim": "C14", "value": "0.002", "context": "Table~\\ref{tab:ablations}), the lattice being",
+     "note": "Legende de tab:benchmarks : le renvoi a la valeur BA m=3 (0.002 +/- 0.009) qui justifie que le lattice soit le choix conservateur. Ancre le lien entre les deux tableaux, celui-la meme qui manquait quand ils se contredisaient. Remplace l'ancienne ancre 'bench-lattice-sync', dont le contexte ('lattice value') a disparu avec la reecriture de la legende le 30/07."}
+  ],
+
+  "dettes_ouvertes": [
+    {"value": "0.658", "claim": "C15",
+     "motif": "PAS une derive : vient d'un AUTRE harnais. p2_sigma_social_ablation.csv (set de graines canonique, 5000 pas) donne FROZEN_U=0.658187, tandis que C15/tab:ablations vient de ablation_coordination.py (graines 0-9, 3000 pas) et donne 0.696680. Les deux chiffres sont exacts chez eux. LE DEFAUT RESTANT EST DE PROSE : le preprint ne dit nulle part qu'il cite deux harnais differents. Acquitte ici pour ne pas masquer le vrai probleme derriere une fausse alerte numerique.",
+     "dette": "OUVERTE au 2026-07-30 — nommer le harnais a chaque citation, ou unifier les protocoles."},
+    {"value": "0.007", "claim": "C14",
+     "motif": "Meme raison : p2_sigma_social_ablation.csv donne FULL=0.007211 (5000 pas, graines canoniques) contre 0.002312 pour C14 (3000 pas, graines 0-9). Exact chez lui.",
+     "dette": "OUVERTE au 2026-07-30 — idem."}
+  ],
+
+  "non_ancres_connus": [
+    {"quoi": "[RESOLU le 2026-07-31] tab:scaling + tab:benchmarks, H_stable 10x10 = 4.09 +/- 0.19",
+     "pourquoi": "Cette entree disait « NE PAS l'ancrer a C01 : deux sources pour une meme quantite, non demelees au 30/07 ». Elles sont demelees. Le preprint cite verify_table1_preprint.py, qui ecrit p2_table1_lattice.csv (lattice_10x10 = 4.086280 +/- 0.186014) : c'est la valeur publiee. p2_delta_sweep.csv (delta=0, 4.157) etait l'autre source, et elle n'apparait NULLE PART dans le .tex -- ce que N2 signalait depuis le 30/07. C01 repointe (accord de Julien), deux ancres posees : scaling-h-10x10 et bench-h-this-work. La prudence de cette entree etait la bonne : elle a empeche d'ancrer 4.09 a un CSV qui ne le produit pas."},
+    {"quoi": "tab:adaptive_D_sweep (tout le tableau)",
+     "pourquoi": "aucun CSV ni script identifie dans le depot. Rien a quoi ancrer."},
+    {"quoi": "[RESOLU le 2026-07-31] tab:lz_regime — ancre par C19 (LZ 0.65) et C22 (H 4.23)",
+     "pourquoi": "Le CSV existait depuis le 01/06 dans figures/scratch/ (gitignore) : il n'y avait rien a regenerer, seulement a SORTIR. Verification faite AVANT d'ancrer — les 7 lignes du tableau publie correspondent au centieme (lambda2 3.01/3.87/4.83/7.59, H 3.51/4.23/4.00/3.06, LZ 0.88/0.65/0.63/0.58). PIEGE DE FILTRE trouve au passage : le CSV est binne par lambda2, il y a DEUX lignes par (m, D), et le tableau ne prend pas toujours le meme bin — adaptive m=6 vient du bin 3.75, static m=6 du bin 4.0. Sans lambda2_bin dans le filtre, le Guardian aurait teste la premiere ligne venue.",
+     "_reserve_a_remonter": "La cellule ancree (m=6 adaptatif, la valeur EN GRAS du tableau) a count = 1 : une seule graine sur cinq est tombee dans ce bin. L'autre bin donne 0.6636, donc la conclusion tient — mais la legende annonce « 5 seeds », ce qui est vrai du sweep global et faux de cette cellule apres binning. Meme famille que les defauts du 29-30/07."},
+
+    {"quoi": "[ancien] tab:lz_regime et fig:lz_regime",
+     "pourquoi": "RESOLU le 30/07 : fss_lz_sweep.py sorti de experiments/scratch/ et versionne (commit e4eb7f8). Le chemin cite par le preprint est desormais le bon. Restent non ancres : les valeurs du tableau lui-meme, faute de CSV -- le script produit fss_lz_agg.csv mais celui-ci n'est pas dans figures/. A regenerer pour ancrer.",
+     "_corrige_par": "la passe soustractive du 30/07 -- cette entree affirmait 'non versionne' alors que la MEME session venait de le versionner. Le fichier qui documente le probleme l'a reproduit."},
+    {"quoi": "Cohen d ~ 9 (C18, ex-C13), MI 2.85x / 3.41x (C08/C08b), SPICE 3.1x",
+     "pourquoi": "verifies a la main le 30/07 et justes ; ancrage a faire dans un second temps (chaines ambigues dans le .tex).",
+     "_precision_2026-07-31": "Pour « Cohen d ~ 9 » l'ambiguite a un nom : le .tex l'ecrit en ENTIER, et NUM_RE (L91-93) ignore les entiers par conception. C'est aussi la raison pour laquelle N2 signale C18 comme non cite -- signalement STRUCTUREL, pas une dette. A ne pas « resoudre » en elargissant NUM_RE aux entiers : le commentaire de conception dit pourquoi (tailles de reseau, numeros de section, comptes de graines), et N3 a deja paye ce prix le 30/07 avec 603 faux positifs mesures."}
+  ]
+}

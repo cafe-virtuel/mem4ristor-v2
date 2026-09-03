@@ -27,7 +27,7 @@
   30 seeds. C'est le résultat le plus robuste et le moins attaquable du papier (corrélation
   de Pearson, indépendant du binning).
 - **Guardian** : **22/22** claims vérifiées automatiquement à chaque commit
-  (`.brain/claims_mapping.json` + `.brain/preprint_guardian.py`, hook pre-commit).
+  (`tools/claims_mapping.json` + `tools/preprint_guardian.py`, hook pre-commit).
   *Ce compteur était resté à « 14/14 » du 29/07 au 31/07 — cible identifiée par la passe
   soustractive du 30/07 et corrigée seulement le 31 : la détection ne vaut que si la
   correction suit.*
@@ -141,12 +141,16 @@ nouveau document — c'est l'inverse qui a été montré.
 ## 3. ÉTAT DES CLAIMS SCIENTIFIQUES
 
 **Sources de vérité actuelles** (pas `docs/limitations.md`, périmé) :
-- **`.brain/claims_mapping.json`** + **`.brain/preprint_guardian.py`** — vérification
+
+> 🟢 **3 septembre 2026 — l'appareil de vérification est ENTRÉ DANS LE DÉPÔT (`tools/`).** Il vivait jusque-là dans `D:\ANTIGRAVITY\.brain\`, hors du dépôt publié : **personne qui clonait ne pouvait vérifier un seul des 22 claims**, ni même lire leur définition. Le preprint et le compendium se réclamaient d'un appareil que le dépôt ne livrait pas — c'est le chantier **B1** de l'audit du 2 août, resté ouvert un mois.
+>
+> `MEM4_ROOT` n'est plus un chemin de machine (déduit de l'emplacement du script, surchargeable par variable d'environnement) et le hook `pre-commit` demande sa racine à git : **un clone, un worktree ou un autre poste installent le même hook et il marche**. Vérifié le jour même **depuis un clone GitHub neuf**, avec des bibliothèques plus récentes que les locales (numpy 2.5.2, pandas 3.0.5) : **22/22**. Mode d'emploi : [`tools/README.md`](tools/README.md).
+- **`tools/claims_mapping.json`** + **`tools/preprint_guardian.py`** — vérification
   **automatisée** à chaque commit (hook pre-commit), **22 claims**, **22/22 OK** au
   6 août 2026. *(20 → 22 le 06/08 : `C11b` et `C11c`, deux grandeurs **dérivées** —
   un ratio entre lignes et un écart de ratios — que le format « une cellule = un claim »
   ne savait pas exprimer, d'où l'angle mort de C11.)*
-- **`.brain/tex_guardian.py`** (créé le 30/07) — second garde-fou au même hook :
+- **`tools/tex_guardian.py`** (créé le 30/07) — second garde-fou au même hook :
   il compare le **texte publié** à ses **données** (ancrages, registre des valeurs mortes,
   audit des sources citées). **15/15 ancres, 0 valeur morte, 14/14 sources** au 05/08 (le compte est passé de 12 à 14 quand l'audit des sources a été étendu aux chemins de DOSSIER, invisibles jusque-là : voir docs/audits/2026-08-05/).
 - **`docs/CLAIMS_REGISTER.md`** — registre narratif détaillé (valeur, script, seeds,
@@ -507,7 +511,7 @@ Niveau de transparence : **Radical** — transcripts complets dans le dépôt Ca
 
 > **Toute claim doit correspondre à une preuve dans le code.**
 > Zéro valeur numérique publiée sans script de vérification reproductible listé dans
-> `docs/CLAIMS_REGISTER.md` et vérifiable par `.brain/claims_mapping.json` (Guardian).
+> `docs/CLAIMS_REGISTER.md` et vérifiable par `tools/claims_mapping.json` (Guardian).
 > Si une claim est marquée FAUX ou RÉFUTÉE, elle doit être qualifiée de
 > «phénoménologique» ou «spéculative» dans le preprint, jamais silencieusement retirée.
 > Les échecs sont conservés (`failures/`, `PROJECT_HISTORY.md` §13). Rien n'est effacé.

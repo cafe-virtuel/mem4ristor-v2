@@ -1,0 +1,257 @@
+{
+  "_comment": "Mapping claim ID -> (verification rule). Mapping entre les claims du CLAIMS_REGISTER.md et les CSV dans figures/ du repo Mem4ristor.",
+  "_format": "Les valeurs 'expected' sont extraites du CSV direct (derniere ligne, comme dans le CLAIMS_REGISTER). 'colonne_principale' est la cle de verification.",
+
+  "C01": {
+    "description": "H_stable lattice 10x10 (Table 1 du preprint, verify_table1_preprint.py)",
+    "csv": "p2_table1_lattice.csv",
+    "row_filter": {"topology": "lattice_10x10"},
+    "colonne": "h_cont_mean",
+    "expected": 4.0863,
+    "tolerance": 0.05,
+    "unit": "bits",
+    "statut": "OK",
+    "note": "REPOINTE 2026-07-31 (accord de Julien). Ce claim visait p2_delta_sweep.csv (delta=0, 4.157) -- une valeur qui n'est publiee NULLE PART dans le preprint : c'est ce que N2 du tex_guardian signalait depuis le 30/07. Le preprint publie 4.09 +/- 0.19 a SIX endroits (L36, L50, L182, L206, L521 tab:scaling, L621 Conclusion), et cette valeur est celle de p2_table1_lattice.csv / lattice_10x10 = 4.086280 +/- 0.186014, produit par verify_table1_preprint.py -- le script que le preprint cite lui-meme. Le claim protege donc desormais la valeur publiee. Tolerance 0.05 : le CSV est deterministe a code constant (10 graines fixes), la tolerance n'a pas a couvrir la variabilite entre graines (std 0.186) mais la derive de code -- elle attrape une derive du type de celle subie par C03 le 08/07 (4.28 -> 4.404). Meme famille que C02/C03 : tous trois viennent de ce CSV, regenere le 08/07 avec cold_start=True."
+  },
+  "C02": {
+    "description": "H_stable lattice 4x4",
+    "csv": "p2_table1_lattice.csv",
+    "row_filter": {"topology": "lattice_4x4"},
+    "colonne": "h_cont_mean",
+    "expected": 3.205,
+    "tolerance": 0.14,
+    "unit": "bits",
+    "statut": "OK",
+    "note": "Regenere 2026-07-08 (backlog A4) : cold_start=True ajoute a verify_table1_preprint.py (le texte revendiquait v=w=0 mais le script tournait en init aleatoire). A I_stim=0.5 la valeur bouge a peine (3.22->3.205, u sature). Le script ecrit desormais lui-meme p2_table1_lattice.csv."
+  },
+  "C03": {
+    "description": "H_stable lattice 25x25",
+    "csv": "p2_table1_lattice.csv",
+    "row_filter": {"topology": "lattice_25x25"},
+    "colonne": "h_cont_mean",
+    "expected": 4.404,
+    "tolerance": 0.10,
+    "unit": "bits",
+    "statut": "OK",
+    "note": "Regenere 2026-07-08 (backlog A4) : cold_start=True. Le 25x25 monte le plus (4.28->4.404, +0.12) ; std 0.06->0.085 (tolerance elargie a 0.10). Table 1 du preprint mise a jour en consequence."
+  },
+  "C04": {
+    "description": "sync FULL vs FROZEN (~x90)",
+    "csv": "p2_sigma_social_ablation.csv",
+    "row_filter": {"condition": "FULL"},
+    "colonne": "sync_mean",
+    "expected": 0.0072,
+    "tolerance": 0.01,
+    "unit": "sync",
+    "statut": "OK",
+    "note": "REGENERE 2026-06-12 (Option A validee par Julien, AUDIT-024) : CSV canonique regenere avec le code actuel (bruit Euler-Maruyama, commit 818cf67 du 01/05). FULL=0.007211, FROZEN=0.658187 (ratio ~91x, etait +985% avec l'ancien bruit ; note corrigee le 2026-07-30 par la passe soustractive : elle disait FROZEN=0.6513, valeur qui ne correspond a aucune ligne du CSV actuel). Preprint mis a jour en consequence (abstract, conclusion, limitations). Historique complet : AUDIT_LOG AUDIT-024."
+  },
+  "C05": {
+    "description": "lambda2_crit midpoint",
+    "csv": "lambda2_crit_regression.csv",
+    "row_filter": {"metric": "lambda2_crit_ebc_midpoint"},
+    "colonne": "value",
+    "expected": 2.315,
+    "tolerance": 0.01,
+    "unit": "lambda2",
+    "statut": "OK"
+  },
+  "C06": {
+    "description": "alpha_crit Hopf",
+    "csv": "reviewer2_linear_stability.csv",
+    "row_filter": {"critere": "proche_zero_re_lambda"},
+    "colonne": "alpha",
+    "expected": 0.2955,
+    "tolerance": 0.001,
+    "unit": "alpha",
+    "statut": "OK"
+  },
+  "C07b": {
+    "description": "pairwise synchrony lattice 10x10 FULL (publie dans tab:benchmarks)",
+    "csv": "p2_table1_sync.csv",
+    "row_filter": {"topology": "lattice_10x10"},
+    "colonne": "sync_mean",
+    "expected": 0.035881,
+    "tolerance": 0.015,
+    "unit": "sync",
+    "statut": "OK",
+    "note_2026-07-31_protocole": "VALEUR CHANGEE le 31/07 (decision de Julien) : 0.0197 -> 0.035881. Le CSV n'etait pas casse -- il se rejouait AU BIT PRES (verifie). Le defaut etait ailleurs : il etait produit par .brain/gen_c07_csv.py, SANS cold_start, alors que le preprint revendique le Cold Start Protocol et affirmait en TROIS endroits que les deux colonnes de tab:benchmarks viennent d'un seul protocole (L182, L195, L515). Mesure : sans cold start 0.0197, avec 0.0359 -- ecart +0.0162, SUPERIEUR a l'ecart-type publie (0.0142), donc non cosmetique. p2_table1_sync.csv est desormais ecrit par experiments/verify_table1_preprint.py, dans le MEME run que l'entropie : la phrase publiee est devenue vraie au lieu d'etre corrigee. Gate de fidelite passe : p2_table1_lattice.csv est reste IDENTIQUE AU BIT PRES (meme hash SHA256) apres l'ajout. Formule : np.corrcoef (Pearson exact, ce que le texte annonce) ; gen_c07_csv divisait une covariance en (T-1) par des ecarts-types en T, soit +0.13 % -- ecart mesure a 0.0000479, conforme au facteur 750/749 predit. Tolerance MAINTENUE a 0.015 : elle aurait attrape la derive subie (0.0162 > 0.015). ATTENTION, ce que ce claim NE protege PAS : il verifie que le nombre publie est celui du CSV, PAS que le CSV a ete produit par le protocole annonce -- c'est precisement l'angle mort qui a laisse passer ce defaut, et le tex_guardian a le meme (son ancre tenait parfaitement).",
+    "note": "RENOMME C07 -> C07b le 2026-07-31 (accord de Julien) : COLLISION D'ETIQUETTE. Le Guardian appelait 'C07' ce que docs/CLAIMS_REGISTER.md appelle C07b (lattice 10x10 = 0.0197 +/- 0.0142, publie en tab:benchmarks L521). Le vrai C07 du registre est une AUTRE quantite -- BA m=3 FORCED FULL = 0.031, valeur du CSV du 26/04 anterieure au fix de bruit du 01/05, regeneree le 29/07 a 0.0023 et desormais couverte par C14. AUDIT_LOG:1284 (12/06) nommait deja cette quantite C07b : c'est le mapping qui avait la mauvaise etiquette, pas le registre. Aucun chiffre verifie ne change : seule l'etiquette bouge. DETTE CONNUE, hors perimetre du jour : p2_table1_sync.csv est versionne mais AUCUN script du depot M4R ne le regenere -- son producteur est .brain/gen_c07_csv.py (depot pilote), dont le chemin source pointe vers mem4ristor-v2-main, repertoire MORT."
+  },
+  "C08": {
+    "description": "MI FROZEN_U / FULL ratio (lattice, d=1)",
+    "csv": "p2_spatial_mutual_information.csv",
+    "row_filter": "ratio_FROZEN_FULL",
+    "colonne": "ratio",
+    "expected": 2.85,
+    "tolerance": 0.05,
+    "unit": "ratio",
+    "statut": "OK",
+    "note": "REGENERE 2026-06-12 (Option A, AUDIT-024) puis monte a 10 seeds le meme jour : ratio lattice = 1.7118/0.6015 = 2.85x, tres stable vs 3 seeds (2.84x). Etait 2.25x avec l'ancien bruit (CSV 24/04). Le guardian calcule le ratio lui-meme (cas special C08). BA m=3 : 0.4875 -> 1.6625 = 3.41x (cite dans le preprint)."
+  },
+  "C08b": {
+    "description": "MI lattice d=1 FROZEN_U (numerateur du ratio 2.84x)",
+    "csv": "p2_spatial_mutual_information.csv",
+    "row_filter": {"topo": "lattice", "ablation": "FROZEN_U", "distance": "1"},
+    "colonne": "mi_mean",
+    "expected": 1.7118,
+    "tolerance": 0.05,
+    "unit": "nats",
+    "statut": "OK",
+    "note": "Ajoute 2026-06-12, mis a jour apres montee a 10 seeds. Avec C08 : ratio lattice 2.85x. BA m=3 : FULL 0.4875, FROZEN 1.6625 -> 3.41x (cite dans le preprint, pas mappe separement)."
+  },
+  "C09": {
+    "description": "ART hard H_min_post vs V4",
+    "csv": "p2_art_benchmark.csv",
+    "row_filter": {"label": "ART agressive / Grok (hard)"},
+    "colonne": "H_min_post",
+    "expected": 3.123,
+    "tolerance": 0.01,
+    "unit": "bits",
+    "statut": "OK"
+  },
+  "C10": {
+    "description": "Combi metacog+compart H_stable",
+    "csv": "p2_v5_combination.csv",
+    "row_filter": {"label": "Metacog + Compart. (combi)"},
+    "colonne": "H_stable",
+    "expected": 4.525,
+    "tolerance": 0.01,
+    "unit": "bits",
+    "statut": "OK"
+  },
+  "C11": {
+    "description": "ART soft H_min_post : accord SPICE/Python en valeur absolue",
+    "csv": "spice_art_kirchhoff.csv",
+    "row_filter": {"condition": "ART soft"},
+    "colonne": "delta_pct",
+    "expected": 0.0,
+    "tolerance": 0.5,
+    "unit": "pct",
+    "statut": "OK",
+    "note": "delta_pct=0.0 = accord SPICE/Python sur la VALEUR ABSOLUE de H_min_post ART soft (0.8476). ATTENTION : cette colonne NE VOIT PAS le ratio ART_soft/V4 -- elle vaut 0.0 A LA FOIS avant et apres le realignement de leak_delta 0.05->0.01 (2026-08-05), pendant que le ratio SPICE passait de 1.490 a 1.134. Ce claim reste donc VRAI et UTILE, mais il ne couvre qu'une des trois affirmations numeriques de l'entree C11 du registre. Les deux autres sont ancrees par C11b (ratio SPICE) et C11c (ecart des ratios) depuis le 2026-08-06. Voir docs/CLAIMS_REGISTER.md note (**)."
+  },
+  "C11b": {
+    "description": "ART soft/V4 ratio cote SPICE (DERIVE) : direction de l'effet ART",
+    "csv": "spice_art_kirchhoff.csv",
+    "derived": {
+      "type": "row_ratio",
+      "numerator": {"condition": "ART soft"},
+      "denominator": {"condition": "V4 pur"},
+      "colonne": "H_min_post_spice"
+    },
+    "expected": 1.134,
+    "tolerance": 0.01,
+    "unit": "ratio",
+    "statut": "OK",
+    "note": "GRANDEUR DERIVEE de DEUX lignes du CSV -- aucune cellule ne la porte. Ancre la valeur '1.134 cote SPICE' publiee dans l'entree C11 du registre. Ancre AUSSI, mecaniquement, la phrase en gras du claim : 'le circuit reproduit la DIRECTION de l'effet ART' est vraie ssi ce ratio > 1 ; a 1.134 +/- 0.01 la direction est acquise, donc pas de claim separe pour elle. Temoin fige : sur 6833cde (avant le realignement de leak_delta) ce claim rend 1.4896 et BLOQUE -- voir --self-test. Cree le 2026-08-06."
+  },
+  "C11c": {
+    "description": "Ecart des ratios ART_soft/V4, SPICE vs Python (DERIVE)",
+    "csv": "spice_art_kirchhoff.csv",
+    "derived": {
+      "type": "row_ratio_gap_pct",
+      "numerator": {"condition": "ART soft"},
+      "denominator": {"condition": "V4 pur"},
+      "colonne_a": "H_min_post_spice",
+      "colonne_b": "H_min_post_python"
+    },
+    "expected": -23.89,
+    "tolerance": 0.5,
+    "unit": "pct",
+    "statut": "OK",
+    "note": "GRANDEUR DERIVEE de QUATRE cellules. Ancre le '23.9 % d'ecart' publie dans l'entree C11 du registre et dans sa note (**). SIGNE conserve exprès : le signe negatif dit que le circuit SOUS-estime l'effet ART, et c'est la moitie du claim ('la direction, pas l'amplitude'). C'est CE claim qui repare l'angle mort du 2026-08-05 : sur le temoin fige 6833cde il rend 0.0000 (accord parfait a delta=0.05) et BLOQUE contre -23.89, la ou C11 rendait 0.0 dans LES DEUX etats. Cree le 2026-08-06."
+  },
+  "C12": {
+    "description": "Transition thermodynamique FSS (Binder U4)",
+    "csv": "v6_binder_cumulant_U4.csv",
+    "row_filter": {"N": "100", "lambda2_bin": "5.0"},
+    "colonne": "U4",
+    "expected": 0.667,
+    "tolerance": 0.01,
+    "unit": "U4",
+    "statut": "PARTIEL",
+    "note": "N=800 run non disponible dans le CSV. U4(N=100)=0.667 conforme."
+  },
+  "_comment_C18": "RENOMME C13 -> C18 le 2026-07-31 (accord de Julien) : COLLISION D'ETIQUETTE. docs/CLAIMS_REGISTER.md utilise C13 pour une TOUTE AUTRE chose -- la classification de regime LZ76 sous D(u) adaptatif (script fss_lz_sweep.py). Les deux vivaient sous le meme nom depuis le 08/07 ; collision signalee le 26/07. C18 est libre des deux cotes (le registre va jusqu'a C21, le mapping allait jusqu'a C17). VERIFIE AVANT DE RENOMMER, et le diagnostic du 30/07 etait FAUX : N2 disait « ce claim ne protege rien de publie ». Il protege en realite le RESULTAT CENTRAL du papier -- « Cohen's d ~ 9 » est publie a TROIS endroits (L50 contributions, L235 sec:ablation, L621 Conclusion). N2 ne le voit pas parce que le texte l'ecrit en ENTIER (« ~ 9 ») et que NUM_RE ignore les entiers PAR CONCEPTION (tex_guardian.py:91-93, pour eviter le bruit des tailles de reseau et des numeros de section). Ce n'est pas le claim qui est en defaut, c'est la portee de l'oeil qui le regarde. Retirer ce claim aurait desarme le garde-fou du resultat central.",
+
+  "C18": {
+    "description": "Cohen d ablation FROZEN_U vs FULL (BA m=3, 30 seeds) -- backe « Cohen's d ~ 9 » du preprint",
+    "csv": "b4_ablation_summary.csv",
+    "row_filter": {"topo": "BA_m3"},
+    "colonne": "cohen_d",
+    "expected": 9.38,
+    "tolerance": 0.5,
+    "unit": "cohen_d",
+    "statut": "OK",
+    "note": "Ajoute 2026-07-08 (B4 robustesse). Backe la reformulation du preprint (abstract + sec:ablation) : le resultat central FROZEN_U -> surge de synchronie est exprime comme une SEPARATION COMPLETE (Cohen d~9), pas un ratio '~90-fold' fragile (denominateur FULL~0). Script : experiments/b4_ablation_robustness.py (30 seeds = 10 canoniques + 20 nouveaux, deterministe). LATTICE d=4.72 aussi separation complete. separation_complete=1 dans le CSV. Complete C04 (qui verifie deja FULL sync=0.0072). ATTENTION 2026-07-29 : le script importait p2_sigma_social_ablation, qui vivait dans experiments/scratch/ (gitignore) -> b4 ne s'executait plus et le CSV n'etait pas regenerable par qui clone le depot. Script deplace vers experiments/ le 29/07 ; b4 rejoue desormais ses deux CSV BIT A BIT."
+  },
+
+  "_comment_C14_C17": "Ajoutes le 2026-07-29 (accord explicite de Julien). tab:ablations etait le SEUL tableau du preprint couvert par AUCUN claim : son CSV datait du 26/04/2026, soit AVANT le fix de bruit Euler-Maruyama du 01/05 (AUDIT-024, 818cf67), il vivait dans figures/scratch/ (gitignore, donc non versionne), et personne ne l'avait jamais reteste. La derive etait reelle : synchronies reproduites mais LZ hors des ecarts publies. Les tolerances ci-dessous sont calibrees pour AVOIR ATTRAPE cette derive precise (sync FULL 0.031->0.002 = 0.029 > 0.01 ; lz_full FULL 1.069->1.096 = 0.027 > 0.02 ; lz_full FROZEN 1.635->1.602 = 0.033 > 0.02). Le CSV vise est un RESUME (1 ligne par cellule) et non le CSV par graine, parce que le Guardian lit la PREMIERE ligne correspondant a son filtre et ne calcule aucune moyenne : un claim pointe sur le CSV par graine testerait la graine 0, pas la valeur publiee. Meme motif que b4_ablation_summary.csv. Script : experiments/ablation_coordination.py (deterministe, reproductible bit-a-bit verifie sur 3 executions).",
+
+  "_comment_C19_C22": "Ajoutes le 2026-07-31 : tab:lz_regime n'etait couvert par AUCUN claim -- son CSV (fss_lz_sweep_agg.csv, produit le 01/06 par experiments/fss_lz_sweep.py) vivait dans figures/scratch/, gitignore. Sorti et versionne le 31/07. Les 7 lignes du tableau publie correspondent AU CENTIEME au CSV (lambda2 3.01/3.87/4.83/7.59, H 3.51/4.23/4.00/3.06, LZ 0.88/0.65/0.63/0.58) : verification faite AVANT d'ancrer. ATTENTION AU FILTRE : le CSV est binne par lambda2, donc il y a DEUX lignes par (m, D) et le tableau ne prend pas toujours le meme bin -- adaptive m=6 vient du bin 3.75, static m=6 du bin 4.0. Le filtre inclut donc lambda2_bin explicitement, sinon le Guardian testerait la premiere ligne venue.",
+
+  "C19": {
+    "description": "tab:lz_regime -- LZ76 adaptatif D=0.50u a m=6 (le seuil du regime structure)",
+    "csv": "fss_lz_sweep_agg.csv",
+    "row_filter": {"m": "6", "D": "0.5", "lambda2_bin": "3.75"},
+    "colonne": "lz_mean",
+    "expected": 0.652171,
+    "tolerance": 0.02,
+    "unit": "LZ",
+    "statut": "OK",
+    "note": "C'est LA valeur en gras du tableau : le franchissement du seuil C_LZ < 0.85 a m=6, qui porte le resultat de la section. /!\\ FRAGILITE MESUREE LE 31/07, a remonter a Julien : cette cellule a count = 1 -- une seule graine sur cinq est tombee dans ce bin de lambda2. L'autre bin (4.0, count = 4) donne 0.6636, donc la CONCLUSION tient largement ; mais la legende du tableau annonce « 5 seeds », ce qui est vrai du sweep global et FAUX de cette cellule apres binning. Defaut de meme famille que ceux du 29-30/07 : la legende dit un cran de plus que la donnee."
+  },
+  "C22": {
+    "description": "tab:lz_regime -- H_stable adaptatif D=0.50u a m=6",
+    "csv": "fss_lz_sweep_agg.csv",
+    "row_filter": {"m": "6", "D": "0.5", "lambda2_bin": "3.75"},
+    "colonne": "H_cont_mean",
+    "expected": 4.232270,
+    "tolerance": 0.05,
+    "unit": "bits",
+    "statut": "OK",
+    "note": "Meme cellule que C19 (meme reserve de count=1). Etiquette C22 : C19 etait la premiere libre, C20 et C21 sont pris par docs/CLAIMS_REGISTER.md."
+  },
+
+  "C14": {
+    "description": "tab:ablations -- synchronie FULL (BA m=3, FORCED, 10 seeds)",
+    "csv": "ablation_coordination_summary.csv",
+    "row_filter": {"regime": "FORCED", "ablation": "FULL"},
+    "colonne": "sync_mean",
+    "expected": 0.002312,
+    "tolerance": 0.01,
+    "unit": "sync",
+    "statut": "OK"
+  },
+  "C15": {
+    "description": "tab:ablations -- synchronie FROZEN_U (BA m=3, FORCED, 10 seeds)",
+    "csv": "ablation_coordination_summary.csv",
+    "row_filter": {"regime": "FORCED", "ablation": "FROZEN_U"},
+    "colonne": "sync_mean",
+    "expected": 0.696680,
+    "tolerance": 0.02,
+    "unit": "sync",
+    "statut": "OK"
+  },
+  "C16": {
+    "description": "tab:ablations -- LZ complexity FULL (BA m=3, FORCED, 10 seeds)",
+    "csv": "ablation_coordination_summary.csv",
+    "row_filter": {"regime": "FORCED", "ablation": "FULL"},
+    "colonne": "lz_full_mean",
+    "expected": 1.096326,
+    "tolerance": 0.02,
+    "unit": "LZ",
+    "statut": "OK"
+  },
+  "C17": {
+    "description": "tab:ablations -- LZ complexity FROZEN_U (BA m=3, FORCED, 10 seeds)",
+    "csv": "ablation_coordination_summary.csv",
+    "row_filter": {"regime": "FORCED", "ablation": "FROZEN_U"},
+    "colonne": "lz_full_mean",
+    "expected": 1.602453,
+    "tolerance": 0.02,
+    "unit": "LZ",
+    "statut": "OK"
+  }
+}

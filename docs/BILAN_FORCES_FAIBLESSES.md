@@ -60,7 +60,7 @@ grandeurs calculées, et un **contrôle positif** rejoue les nouvelles vérifica
 d'avant pour prouver qu'elles savent dire non — parce qu'un feu vert ne prouve rien tant qu'on n'a
 pas montré que le feu peut passer au rouge.
 
-📁 `.brain/preprint_guardian.py` · `.brain/tex_guardian.py` · hook `pre-commit`
+📁 `tools/preprint_guardian.py` · `tools/tex_guardian.py` · hook `pre-commit`
 
 ### 1.3 Le projet s'est réfuté lui-même sur son idée d'origine — et l'a publié
 

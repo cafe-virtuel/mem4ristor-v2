@@ -1,0 +1,57 @@
+name: Preprint Guardian
+
+# Verifie publiquement, a chaque push, que chaque valeur numerique publiee dans le
+# preprint est bien celle que produisent les donnees du depot.
+#
+# Ce workflow n'existe que depuis le 2026-09-03, et pas par oubli : jusqu'a cette date
+# les Guardians vivaient HORS du depot (D:\ANTIGRAVITY\.brain\), donc la CI ne pouvait
+# pas les lancer -- et personne d'exterieur ne pouvait verifier un seul des 22 claims.
+# Ils sont desormais dans tools/. Voir tools/README.md.
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  guardian:
+    name: 22 claims verifies contre leurs donnees
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Historique COMPLET : le controle positif (--self-test) rejoue les claims
+        # derives contre un temoin figé (`git show 6833cde:...`). Avec le checkout
+        # superficiel par defaut, ce commit est absent et le self-test echoue pour
+        # une mauvaise raison -- un controle qui echoue a tort ne vaut pas mieux
+        # qu'un controle qui passe a tort.
+        fetch-depth: 0
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install -r requirements.txt
+
+    - name: Preprint Guardian — chaque chiffre publie vient-il de son CSV ?
+      env:
+        PYTHONIOENCODING: utf-8
+      run: python tools/preprint_guardian.py
+
+    - name: Controle positif — le garde-fou sait-il dire NON ?
+      env:
+        PYTHONIOENCODING: utf-8
+      run: python tools/preprint_guardian.py --self-test
+
+    - name: Tex Guardian — le texte publie dit-il encore ce que disent ses sources ?
+      env:
+        PYTHONIOENCODING: utf-8
+      run: python tools/tex_guardian.py
