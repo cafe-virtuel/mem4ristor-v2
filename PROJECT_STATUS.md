@@ -16,6 +16,58 @@
 
 ---
 
+## 0bis. SESSION DU 3-4 SEPTEMBRE 2026 — ce qui a changé pour un lecteur extérieur
+
+> **Rien de scientifique n'a bougé. Tout ce qui a bougé concerne ce qu'un tiers peut
+> vérifier.** Le papier est stable depuis le 06/07 ; aucun chiffre publié n'a été modifié.
+
+1. ✅ **L'appareil de vérification est ENTRÉ DANS LE DÉPÔT** (`tools/`) et tourne en
+   **intégration continue publique** (`.github/workflows/guardian.yml`, vert au premier run).
+   Avant le 03/09, personne qui clonait ne pouvait vérifier un seul des 22 claims.
+2. ✅ **Campagne de rejeu depuis un clone GitHub neuf** (bibliothèques plus récentes que les
+   locales : numpy 2.5.2, pandas 3.0.5) : **20 des 22 claims se rejouent, écart relatif
+   `0.000e+00`**. Ce qui ne se rejoue pas est nommé au §0ter.
+3. ✅ **Deux précédents ajoutés au preprint** après recherche bibliographique : Zanette &
+   Mikhailov (Physica D 194:203-218, 2004) — le plus proche du principe, dont la différence est
+   que leurs variables internes sont *autonomes* quand `u` est *rétroactif* — et Hong &
+   Strogatz (PRL 106:054102, 2011). PDF recompilé : **28 pages**.
+4. ✅ **Compendium réécrit** (`docs/compendium/COMPENDIUM.md`, désormais la source) : la
+   colonne B y est versée, l'énergie recadrée, les deux figures non rejouables signalées.
+   ⚠️ `COMPENDIUM.tex` **n'est pas encore son rendu** et porte un avertissement de péremption.
+5. ✅ **Le « push intermittent » n'existait pas.** Deux helpers d'identifiants empilés, GCM
+   appelé en premier, qui attend une **fenêtre graphique** quand personne n'est devant l'écran.
+   Corrigé (`credential.interactive = false`) : un `--dry-run` qui expirait à 120 s passe en 1 s.
+6. 🔴 **La sauvegarde automatique du dépôt est MORTE depuis le 14/07/2026** — le rangement
+   de ce jour-là a supprimé le chemin qu'elle visait, et elle échoue toutes les 6 h depuis, en
+   silence. Le code est sur GitHub ; ce qui n'est **nulle part ailleurs** que sur le disque de
+   l'auteur, c'est `.brain`, les contextes, les témoignages et le Café.
+
+**Mesuré le 04/09/2026** : Guardian **22/22**, Tex Guardian **15/15 ancres · 0 valeur morte ·
+14/14 sources · N4 13/13**, tests **153 collectés, 0 échec** (151 + 2 xfail), dépôt **synchro**.
+
+## 0ter. CE QU'UN TIERS NE PEUT PAS REJOUER, nommément
+
+- 🔴 **`C05`** (la frontière λ₂ = 2,31, citée dans l'abstract) : son producteur s'arrête sur
+  un `FileNotFoundError` — il lit `figures/p2_stochastic_resonance_topology.csv`, **non
+  versionné**, dont le producteur l'est. Rien n'indique qu'il faut lancer un autre script
+  d'abord. *Ce que ça révèle du garde-fou : `N4` vérifie qu'un producteur existe et est
+  versionné, pas que ses propres ENTRÉES existent.*
+- ⚠️ **`C12`** : `v6_binder_cumulant_u4.py` tourne (26 min) mais rend une grille différente du
+  CSV publié (4 bins / 9 simulations). Reste à établir si les valeurs coïncident sur les bins
+  communs.
+- ⚠️ **`C19`/`C22`** : reproduits **exactement**, mais seulement avec `--nseeds 5` — paramètre
+  d'exécution documenté nulle part. Sans lui : 300 lignes au lieu des 120 publiées.
+- ⚠️ **`run_heroic_800.py` / `run_heroic_1600.py`** : calculent **40 minutes** puis perdent tout
+  à l'écriture (`'../figures'`, relatif au répertoire courant, alors qu'ils utilisent
+  correctement `__file__` pour leurs imports). Même défaut que le `parent.parent` corrigé le
+  31/07 ; il en restait deux.
+- ⚠️ **Les deux figures `[3]` et `[4]`** du compendium (LZ par nœud, chimères) : scripts et CSV
+  présents dans `scratch/`, **gitignorés**. Le chiffre de [3] est retrouvé (**r = −0,7156**)
+  mais **sa description publiée est fausse** : N = 100 nœuds et 5 graines, pas « N = 400 », et
+  uniquement sous `I_stim = 0,3` (à 0, r = −0,63).
+
+---
+
 ## 0. ÉTAT ACTUEL EN UNE MINUTE (2026-07-26)
 
 - **Version** : V6.0.0. Le preprint a été **reformulé** (titre/abstract/résultats) : l'ancien

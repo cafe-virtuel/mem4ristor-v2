@@ -1,3 +1,31 @@
+% ============================================================================
+% !! CE FICHIER EST PERIME AU 4 SEPTEMBRE 2026. NE PAS COMPILER NI DEPOSER. !!
+% ============================================================================
+% La SOURCE du compendium est desormais COMPENDIUM.md, dans ce meme dossier.
+% Ce .tex doit en devenir le RENDU ; la conversion n'est pas encore faite.
+%
+% Ce qu'il contient encore et qui est FAUX :
+%   - « Topology dictates cognitive destiny » et la figure de Fiedler : cadrage
+%     spectral REFUTE le 06/07/2026 (la cause est le degre de couplage) ;
+%   - les ratios FROZEN_U « x24.2 » et « +2326 % » : RETIRES le 08/07/2026, le
+%     denominateur etant proche de zero ; et les valeurs 0.031 / 0.751 datent
+%     d'avant le changement de modele de bruit du 1er mai (AUDIT-024) ;
+%   - « 130 passing » : la suite en compte 153, 0 echec ;
+%   - « 1 preprint submitted (Zenodo) » : il n'est NI soumis NI depose en V6 ;
+%   - les rapports d'energie 10^9 a 10^14 sans leur reserve : ils comparent deux
+%     TECHNOLOGIES, pas deux methodes (cf. BILAN_FORCES_FAIBLESSES.md §3.1) ;
+%   - « the prochaine etape est le Binder cumulant » : il a ete fait, et il a
+%     rendu son verdict (crossover continu, U4 plat a 2/3).
+%
+% Il manque par ailleurs tout ce que le .md a ajoute : la colonne B (six
+% ambitions mesurees puis abandonnees), la reponse a l'ambition initiale,
+% l'appareil de verification, et le statut des deux figures non rejouables.
+%
+% Pourquoi cet avertissement plutot qu'une correction : la conversion demande
+% une session dediee, et un document perime SANS MARQUE est exactement le
+% defaut que la session du 03-04/09 a passe son temps a corriger ailleurs.
+% ============================================================================
+
 % COMPENDIUM — Mem4ristor V6.0.0
 % Compiled with XeLaTeX
 \documentclass[11pt, a4paper]{article}
@@ -94,6 +122,25 @@
 % ═════════════════════════════════════════════════════════════════════════════
 
 \begin{document}
+
+% ─── AVERTISSEMENT DE PEREMPTION (04/09/2026) ────────────────────────────────
+% Visible dans le PDF : un lecteur qui compile ce fichier doit savoir ce qu'il
+% tient en main. A retirer le jour ou ce .tex sera regenere depuis COMPENDIUM.md.
+\begin{mdframed}[linecolor=negative, linewidth=3pt, backgroundcolor=white,
+                 topline=true, bottomline=true, rightline=false, leftline=true]
+{\bfseries\color{negative} OUTDATED DOCUMENT --- DO NOT CITE OR DEPOSIT.}\\[0.3em]
+{\small This \LaTeX{} rendering has not been regenerated since the scientific
+reframing of July 2026. It still presents the \emph{spectral} account of the dead
+zone, which was \textbf{refuted} on 6 July 2026 (the boundary is governed by
+coupling degree, not by algebraic connectivity), reports ablation ratios that were
+deliberately withdrawn on 8 July 2026 (near-zero denominator), and states that the
+preprint has been submitted --- it has \textbf{not} been submitted, and version
+V6.0.0 has \textbf{not} been deposited on Zenodo.\\[0.4em]
+\textbf{The current source of record is} \texttt{COMPENDIUM.md}, in this same
+directory. It supersedes this file in full, and additionally reports what the
+project has \emph{refuted about itself}, which this version omits entirely.}
+\end{mdframed}
+\vspace{0.8em}
 
 % ─── TITLE BLOCK ─────────────────────────────────────────────────────────────
 \begin{center}

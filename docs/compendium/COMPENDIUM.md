@@ -11,9 +11,14 @@
 > n'est **ni soumis ni publié**. Le document déposé porte encore l'ancien cadrage causal, réfuté
 > depuis (§4.1).
 >
-> 📌 **Ce document est la source du contenu**, `COMPENDIUM.tex` en est le rendu. Les deux avaient
-> divergé — chacun à jour là où l'autre était périmé — et c'est ce qui a produit un PDF public
-> daté de mai portant des affirmations abandonnées en juin.
+> 📌 **Ce document est la source du contenu.** Les deux fichiers du compendium avaient divergé —
+> chacun à jour là où l'autre était périmé — et c'est ce qui a produit un PDF public daté de mai
+> portant des affirmations abandonnées en juin.
+>
+> ⚠️ **`COMPENDIUM.tex` n'est PAS encore le rendu de ce document** : sa conversion reste à faire.
+> Il porte, en tête de fichier **et** en tête du PDF qu'il produit, un avertissement de
+> péremption. **Ne pas le compiler pour un dépôt.** *(État au 4 septembre 2026 — cette réserve
+> disparaît le jour où la conversion est faite.)*
 
 ---
 
