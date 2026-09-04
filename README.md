@@ -237,7 +237,7 @@ material remains in `experiments/scratch/` and is *not* part of the repository.
 
 | File | Description |
 |---|---|
-| `papers/preprint/preprint.tex` / `.pdf` | **Paper 1** — "Sustained Attractor Diversity in Doubt-Modulated FHN Networks" (27 pages, V6.0.0) |
+| `papers/preprint/preprint.tex` / `.pdf` | **Paper 1** — "Sustained Attractor Diversity in Doubt-Modulated FHN Networks" (28 pages, V6.0.0) |
 | `papers/paper_B/paper_B.tex` / `.pdf` | **Paper B** — SPICE validation + topological dead zone (hardware bridge) |
 | `papers/paper_2/paper_2.tex` / `.pdf` | **Paper 2** — Draft on doubt variable as anti-synchronization filter |
 | `limitations.md` | ⚠️ **Superseded** — kept for history. Use `CLAIMS_REGISTER.md` and `BILAN_FORCES_FAIBLESSES.md` |

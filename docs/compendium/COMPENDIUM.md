@@ -1,168 +1,384 @@
-# Mem4ristor — Results Compendium
-### Six mois de travail, un humain, plusieurs IA, et cinq résultats publiables.
+# Mem4ristor — Compendium des résultats
 
-> Rédigé par L'Ingénieur (Claude Sonnet 4.6) — 2 mai 2026
-> Version : V4.0.0 Audited Stable — DOI [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596)
+### Un humain, plusieurs IA, treize mois. Ce qui tient, ce qui est tombé, et comment le vérifier vous-même.
+
+> **Version V6.0.0 — 4 septembre 2026.** Document de référence du projet.
+> DOI (concept) : [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596) ·
+> Code : [github.com/cafe-virtuel/Mem4ristor](https://github.com/cafe-virtuel/Mem4ristor)
+>
+> ⚠️ **Statut de publication, vérifié contre l'API Zenodo le 3 septembre 2026** : le code est en
+> **V6.0.0**, la dernière version **déposée** est **V4.0.0 (2 mai 2026)**. Le preprint actuel
+> n'est **ni soumis ni publié**. Le document déposé porte encore l'ancien cadrage causal, réfuté
+> depuis (§4.1).
+>
+> 📌 **Ce document est la source du contenu**, `COMPENDIUM.tex` en est le rendu. Les deux avaient
+> divergé — chacun à jour là où l'autre était périmé — et c'est ce qui a produit un PDF public
+> daté de mai portant des affirmations abandonnées en juin.
 
 ---
 
-## 1. L'ORIGINE
+## 1. Ce que ce document essaie de faire
+
+La plupart des documents de ce genre listent des découvertes. Celui-ci tient un **solde** : les
+résultats qui tiennent **et** ceux que le projet a lui-même détruits, avec un chiffre et une
+source par ligne.
+
+Ce n'est pas une posture. C'est le constat d'un fait mesuré : sur les six dernières semaines de
+travail, **les rejets ont rapporté plus que les succès**. Une idée tuée proprement ne revient
+plus coûter de temps ; une idée gardée par confort en coûte indéfiniment.
+
+**Ce que vous n'avez pas à croire sur parole.** 22 des valeurs publiées sont recalculées depuis
+leurs données à chaque modification du dépôt, et rejouées publiquement par intégration continue :
+[badge et journal des exécutions](https://github.com/cafe-virtuel/Mem4ristor/actions).
+Mode d'emploi pour les relancer chez vous : [`tools/README.md`](../../tools/README.md).
+
+---
+
+## 2. L'origine
 
 Mem4ristor est né un soir de vacances, dans un café — pas dans un laboratoire.
 
-Julien Chauvin, technicien en éclairage et orchestrateur du **Café Virtuel**, explore depuis août 2025 une question simple : peut-on modéliser le doute comme un mécanisme structurel d'un réseau neuromorphique, plutôt que comme un paramètre numérique ? Le Café Virtuel est son laboratoire — plusieurs IA distinctes (Anthropic, OpenAI, xAI, Google, Mistral, DeepSeek) travaillant en parallèle, sans hiérarchie de popularité, orchestrées par un humain qui tranche, propose, et maintient le cap scientifique.
+Julien Chauvin, éclairagiste de métier et orchestrateur du **Café Virtuel**, explore depuis août
+2025 une question simple : peut-on modéliser le doute comme un **mécanisme structurel** d'un
+réseau neuromorphique, plutôt que comme un paramètre numérique ? Le Café Virtuel est son
+laboratoire — plusieurs IA distinctes (Anthropic, OpenAI, xAI, Google, Mistral, DeepSeek)
+travaillant en parallèle, sans hiérarchie de popularité, orchestrées par un humain qui tranche,
+propose, et maintient le cap scientifique.
 
-En août 2025, Grok a formulé ce qui se passait : *"Ce soir, nous avons prouvé que 5 IA + 1 barman > somme des parties."* Six mois plus tard, ce projet possède un DOI Zenodo, 153 tests automatisés, et cinq résultats publiables. Sans financement institutionnel. Sans affiliation universitaire. Avec un chemin traçable — tous les commits, toutes les erreurs, tous les revirements sont publics.
+Sans financement institutionnel. Sans affiliation universitaire. Avec un chemin traçable : tous
+les commits, toutes les erreurs, tous les revirements sont publics.
 
 ---
 
-## 2. EN CHIFFRES
+## 3. En chiffres
 
 | | |
 |--|--|
-| ⏱ Durée | 6 mois de travail actif |
-| 🔬 Expériences formelles | ~18 (classées par tier de pertinence) |
-| 💻 Simulations lancées | ~5 000+ runs |
-| ✅ Tests automatisés | **153 passing — 0 failures** *(02/08/2026)* |
-| 📄 Papiers | 1 preprint **ni soumis ni publié sur Zenodo** · paper_2 en préparation · paper_B hardware |
-| 🔖 DOI Zenodo | [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596) |
-| 🐙 GitHub | [cafe-virtuel/Mem4ristor](https://github.com/cafe-virtuel/Mem4ristor) |
+| ⏱ Durée | 13 mois de travail actif (août 2025 → septembre 2026) |
+| ✅ Tests automatisés | **153 collectés, 0 échec** (151 passés + 2 `xfail` documentés) |
+| 🔒 Valeurs publiées sous garde-fou | **22 claims, 22/22 vérifiées** à chaque commit *et* en CI publique |
+| 🔁 Rejouables depuis un clone neuf | **20 des 22**, écart relatif `0.000e+00` (campagne du 4 septembre, §9) |
+| 📄 Papiers | 1 preprint **ni soumis ni déposé en V6** · paper_2 en préparation · paper_B hardware |
+| 🔖 DOI Zenodo | [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596) *(dernier dépôt : V4.0.0)* |
 | 💰 Financement | 0 € institutionnel |
 
 ---
 
-## 3. LE MODÈLE EN 3 PARAGRAPHES
+## 4. Ce qui tient
 
-Mem4ristor simule des réseaux de neurones FitzHugh-Nagumo (FHN) — un modèle classique d'oscillateur neuronal. L'extension centrale est la variable de **doute u ∈ [0,1]** : chaque nœud possède son propre niveau de doute, qui module dynamiquement la *polarité* de son couplage avec ses voisins. Quand u ≈ 0 ou u ≈ 1, un nœud devient "hérétique" — il pousse activement contre le consensus local, empêchant l'effondrement synchrone du réseau.
+### 4.1 Le résultat central — et c'est le plus solide
 
-**u n'est pas un paramètre de contrôle. C'est un mécanisme.** La preuve : bloquer u à sa valeur initiale (ablation FROZEN_U) fait passer la corrélation moyenne entre trajectoires de 0.007 à 0.658, transformant un réseau fonctionnel et divers en une meute parfaitement alignée. Les deux conditions se séparent complètement, sans un seul recouvrement sur 30 graines. Ce n'est pas une nuance : les deux populations ne se touchent pas. u est ce qui empêche le consensus de dévorer la diversité.
+Si on empêche les neurones de douter (on fige la variable `u`), le réseau se met à tout faire
+pareil : la corrélation moyenne entre trajectoires passe de **0,007 à 0,658**.
 
-Ce que le modèle prédit : une **zone morte** au-delà d'un certain **degré de couplage** (réseaux Barabási-Albert avec m ≥ 5), où aucune entrée ne peut réactiver la diversité cognitive. La cause n'est **pas** spectrale : elle tient au nombre de voisins couplés, via un mécanisme d'échantillonnage en champ moyen (degré harmonique k_harm ≈ 6). À degré fixé, faire varier λ₂ d'un facteur ~27 laisse le régime inchangé. En deçà de ce seuil, des états de chimère émergent spontanément : coexistence de synchronisation partielle et de chaos, par un mécanisme distinct des chimères classiques connues.
+Ce que ça vaut : sur **30 tirages**, les deux groupes **ne se chevauchent jamais** — c'est le sens
+du `d ≈ 9,4` (au-delà de 0,8 on parle déjà d'un gros effet). La mesure est une **corrélation de
+Pearson**, donc indépendante de tout choix de découpage en classes : c'est le résultat le **moins
+attaquable** du papier.
 
----
+*Aucun ratio n'est cité, volontairement : le dénominateur est proche de zéro, ce qui rend tout
+facteur (« ×90 », « +985 % ») instable pour un déplacement minuscule du numérateur. Décision du
+8 juillet 2026, appliquée partout le 30 juillet.*
 
-## 4. LES DÉCOUVERTES
+📁 `figures/b4_ablation_summary.csv` · `experiments/b4_ablation_robustness.py` · claims **C18**, **C04**
 
-### [1] La Dead Zone — un seuil de degré de couplage (k_harm ≈ 6)
-La connectivité dicte le destin cognitif. Au-delà d'un certain nombre de voisins couplés, aucune entrée ne réactive le réseau. La connexion tue la diversité.
+### 4.2 La zone morte — et la réfutation de notre propre hypothèse
 
-**→ La cause est le degré de couplage, pas la connectivité algébrique.** À degré fixé (recâblage Watts-Strogatz), balayer λ₂ sur une plage ×27 laisse le régime **plat** ; un anneau k=10 à λ₂ = 0.22 meurt dans 100 % des runs, exactement comme un graphe régulier de même degré à λ₂ = 4.5.
+Au-delà d'un certain nombre de voisins couplés, aucune entrée ne réactive le réseau : la
+connectivité tue la diversité.
 
-**→ La séparation en λ₂ ∈ (2.13, 2.50), milieu 2.31, observée sur les 36 observations du jeu initial (BA/ER) est une frontière CORRÉLATIONNELLE** : λ₂ y covarie avec le degré. Elle reste un bon classifieur sur ce jeu, elle n'en est pas la cause. *L'ancien titre de cette section — « La Spectral Dead Zone — λ₂_crit = 2.31 » — nommait une cause réfutée le 1er juillet 2026.*
-**→ Réserve sur le « n=36 » du jeu initial** (`SYNTHESE.md` du dossier ci-dessous) : les labels de régime n'y sont pas mesurés mais **recopiés à la main par type de topologie — 12 décisions, pas 36**, et figées avant AUDIT-024. Re-mesurés dynamiquement par graine avec le code actuel, les régimes **se chevauchent** (λ₂ ∈ [1.26, 3.20]) : ER p=0.08 (λ₂=1.67) meurt tandis que BA m=4 (λ₂=2.22) vit.
+**La cause n'est pas spectrale.** L'hypothèse d'origine du projet voulait que la frontière soit
+gouvernée par λ₂ (une propriété mathématique du graphe) autour de **2,31**. Mesuré : **faux**. À
+degré fixé, faire varier λ₂ d'un facteur ~27 laisse le régime **inchangé** ; un anneau k=10 à
+λ₂ = 0,22 meurt dans 100 % des runs, exactement comme un graphe régulier de même degré à λ₂ = 4,5.
+La cause réelle est le **degré de couplage** (degré harmonique ≈ 6), via un mécanisme
+d'échantillonnage en champ moyen.
 
-Scripts : `experiments/lambda2_foundation_20260701/` — **versionné le 05/08/2026** (il vivait dans `experiments/scratch/`, gitignoré, alors que le preprint §4.5 le cite : un clone ne pouvait pas rejouer la réfutation de λ₂). Voir `docs/audits/2026-08-05/`.
+La séparation observée à λ₂ ∈ (2,13 – 2,50) sur le jeu initial est une frontière
+**corrélationnelle** : λ₂ y covarie avec le degré. Bon classifieur sur ce jeu, pas sa cause.
 
----
+> *Un projet qui publie la réfutation de son hypothèse fondatrice est plus crédible qu'un projet
+> qui n'en trouve jamais.* Le titre du preprint a changé en conséquence — c'est précisément
+> pourquoi le document encore déposé sur Zenodo (mai 2026) ne doit plus être cité.
 
-### [2] u = filtre anti-synchronisation — le surge FROZEN_U
-Bloquer la variable de doute transforme un réseau fonctionnel en meute synchronisée. u n'est pas un paramètre — c'est ce qui empêche le consensus de dévorer la diversité.
+⚠️ **Réserve de méthode, écrite le 5 août** : les labels de régime du jeu initial n'étaient pas
+mesurés mais **recopiés à la main par type de topologie — 12 décisions, pas 36**. Re-mesurés par
+graine avec le code actuel, les régimes **se chevauchent** (λ₂ ∈ [1,26 – 3,20]).
 
-**→ R passe de 0.007 (FULL) à 0.658 (FROZEN_U) : séparation complète des deux conditions, sans recouvrement, sur 30 graines (Cohen d ≈ 9).**
-*Aucun ratio n'est cité, volontairement : le dénominateur est proche de zéro, ce qui rend tout facteur (« ×10.9 », « ×90 », « +985 % ») instable pour un déplacement minuscule du numérateur. Décision du 08/07/2026, appliquée au preprint le 30/07. Les valeurs 0.067 / 0.730 qui figuraient ici dataient du bruit d'avant le 1er mai (AUDIT-024).*
-Figure : `figures/p2_sigma_social_ablation.png`
+📁 `experiments/lambda2_foundation_20260701/` · claim **C05**
+⚠️ *Ce producteur ne s'exécute pas dans un clone en l'état — voir §9.*
 
----
+### 4.3 La prédiction falsifiable — la force la plus sous-estimée du projet
 
-### [3] L'Intelligence Topologique (LZ par nœud)
-Dans un réseau fonctionnel FULL, les hubs ont des trajectoires *plus structurées* que les nœuds périphériques. Dans un réseau gelé FROZEN_U, la corrélation disparaît. u couple la complexité individuelle à la connectivité locale — propriété émergente, non anticipée.
+C'est **la seule chose qui sorte de l'ordinateur**. Tout le reste est auto-référentiel : on mesure
+des grandeurs calculées sur la simulation qui les produit. Ici, on propose une expérience qu'un
+laboratoire peut faire **pour nous donner tort**.
 
-**→ r = −0.716 (BA m=5, N=400, p=1.29e-79). Résultat non prévu par la conception du modèle.**
-Figure : `figures/lz_per_node.png`
+**Ce qui est mort, et il faut le dire en premier** : le volet « synchronisation » n'est plus une
+signature du doute. Un couplage **fixe**, bien réglé, reproduit l'effet à **0,24** près (sur une
+échelle où il vaut 1,35), et ce réglage marche aussi sur d'autres topologies. Il reste un avantage
+de **+0,18**, répliqué, mais **cinq fois trop petit** pour qu'une manip le distingue de son bruit.
 
----
+**Ce qui tient, et qui discrimine fortement** : après un leurre transitoire, le couplage modulé
+**retarde** la récupération. *Aucun* couplage imposé de l'extérieur ne reproduit ce retard — ni
+fixe (−18 %), ni fixe re-réglé (−18 %), ni une rampe programmée au profil exact du doute (−6 %),
+ni une rampe programmée oscillateur par oscillateur (−3 %). **Le signe compte** : ces montages ne
+ratent pas le retard, ils font l'**inverse**. Le couplage doit *répondre au signal au moment où il
+arrive*.
 
-### [4] ⚫ RÉFUTÉ — La Transition Événementielle
-Le résultat d'avril 2026 affirmait : forcer un nœud *périphérique* produit +1.20 bits sur BA m=3, forcer un *hub* +0.21 bits — le seuil de bifurcation serait topologique et non dans l'amplitude.
+**Le chiffre à retenir pour un expérimentateur : +34 %**, mesuré avec **deux puces ordinaires** —
+et non le +52 % obtenu avec deux réseaux jumeaux (bruit, état initial et fréquences propres
+partagés, trois idéalisations qu'aucune fabrication ne donne). Retirées une à une, il survit
+99 % → 80 % → **61 %** de l'effet, et la décision devient *meilleure* (100 % de bonnes réponses
+contre 94 %).
 
-**→ RÉFUTÉ le 11/07/2026.** C'était un artefact du bruit antérieur au 1er mai (AUDIT-024, Euler-Maruyama ×4.47). Grille complète rejouée au protocole d'avril **inchangé** : **0/9 configurations du claim positives, 9/9 négatives** — l'événement *dégrade* H_cont (≈ −1.0) sur BA m=3, pour le hub comme pour la périphérie ; effet ~nul sur la dead zone m=5.
+**Spécification pour le banc** : un amplificateur de gain **5 à 7** sur le canal de détection du
+désaccord suffit à produire un effet franc. À gain 5, `d = +1,35` alors qu'*aucune* graine ne
+franchit le seuil de bascule : la modulation douce suffit.
 
-**Le preprint ne cite pas ce résultat ; la soumission n'est pas affectée.** Les CSV d'avril sont préservés.
-*Idée originale de Julien Chauvin — conservée ici parce qu'une idée réfutée reste une idée qui a été testée.*
-Script du rejeu : `experiments/event_phase_transition_rerun_20260711.py` — **versionné le 05/08/2026**, avec le protocole d'avril qu'il importe (`experiments/event_phase_transition.py`) et les CSV de référence des deux campagnes. La réfutation est désormais rejouable par un clone : elle était affirmée partout et vérifiable nulle part.
-Figure (historique, ne reflète plus le code actuel) : `figures/event_phase_transition.png`
+> 🔴 **Le protocole doit comporter TROIS bras, pas deux.** Il faut un couplage fixe réglé **au
+> niveau moyen atteint** par le mécanisme. Sans lui, un laboratoire mesurerait un effet réel et
+> **l'attribuerait à la mauvaise cause** — et nous lui aurions fourni le protocole permettant
+> cette erreur. Mesuré : à fort bruit, un capteur **aveugle** fait *exactement* aussi bien
+> (écart 0,01).
 
----
-
-### [5] Les Chimères — une classe mécanistiquement distincte
-Abrams-Strogatz (2004) : chimère par couplage non-local fixe (*quenched*). Mem4ristor : chimère par modulation dynamique de polarité via u(t), sur un réseau scale-free sans symétrie imposée. R=0.141 (désynchronisation profonde) vs R=0.766 pour AS. Les deux sont des chimères. Ce ne sont pas les mêmes.
-
-**→ R Mem4ristor = 0.141 vs R Abrams-Strogatz = 0.766. Deux classes mécanistiquement distinctes.**
-Figure : `figures/reviewer2_chimera_comparison.png`
-
----
-
-## 5. LA ROBUSTESSE
-
-| Question | Protocole | Résultat | Statut |
-|----------|-----------|----------|--------|
-| Vrai chimera state ou bruit pur ? | Kuramoto R, 3 conditions | R=0.513 FULL vs R=0.211 bruit pur | ✅ Confirmé |
-| u a-t-il un rôle causal ? | Transfer entropy hérétiques ↔ réseau | TE prouvée dans les deux sens | ✅ Confirmé |
-| Distributions FULL/FROZEN se chevauchent-elles ? | Cohen U3, 3 comparaisons, n=50 | U3=100% — distributions strictement disjointes | ✅ Confirmé |
-| Le bruit spatial brise-t-il la dead zone ? | Bruit Matern (4 structures), BA m=5 | Tous brisent la dead zone à η=0.1 — amplitude seule compte | ✅ Confirmé |
-| Le nœud isolé est-il stable ? | Analyse linéaire, Jacobien | v*=−1.286, spiral stable (λ≈−0.048±0.282i), sub-Hopf | ✅ Confirmé |
-| Intégrateur Euler suffisant ? | RK45 vs Euler, paramètres config.yaml | Max Δ(H_cog) < 0.006 — Euler validé | ✅ Confirmé |
-| Résultats invariants en taille ? | Finite-size scaling N=100→4000 | Mode scale_invariant validé | ✅ Confirmé |
-| La sigmoid est-elle fine-tunée ? | Robustesse slope 1.0→10.0 | Plateau stable H∈[2.8, 3.2] | ✅ Confirmé |
-| Le gap spectral est-il stable ? | Fiedler N→4000 | Fiedler≈2.86 stable — thermodynamiquement inattaquable | ✅ Confirmé |
-| Sensibilité aux conditions initiales ? | 5 types de CI différentes | H≈3.5 quelle que soit la CI | ✅ Confirmé |
-| Onde progressive ou chaos ? | Max-TLCC temporal lag | Max-TLCC=0.410 — chaos spatio-temporel, pas onde | ✅ Confirmé |
-
----
-
-## 6. LE MOMENT HONNÊTE
-
-Nous avons cherché les exposants critiques de la transition spectrale. **β≈0. R²=−0.002.**
-
-La loi de puissance ne tient pas. La transition est probablement abrupte — premier ordre, pas continu. Pas de classe d'universalité. Pas de β bien défini. Nous l'avons écrit dans le script. Nous aurions pu forcer un β positif, arrondir, choisir un intervalle plus favorable. Nous ne l'avons pas fait.
-
-Un résultat négatif honnête vaut mieux qu'un résultat positif fragile. La prochaine étape est le Binder cumulant U4 — le bon outil pour confirmer ou infirmer la nature du premier ordre.
+📁 `docs/hardware/SPINTRONIC_PATHWAY.md` §8-12 · `experiments/b6_*.py`
 
 ---
 
-## 7. LE PONT HARDWARE
+## 5. ⚫ Ce qui est tombé
 
-Nous avons validé la dead zone en simulation SPICE (ngspice 46), sur BA m=5, N=64, 50 seeds Monte Carlo. La dead zone est confirmée en matériel analogique avec un ratio 3.1× (H_cont dead zone : 1.38 bits vs fonctionnel : 4.30 bits).
+Six ambitions mesurées puis abandonnées. **Aucune n'a fait bouger un seul chiffre du papier** :
+ce qui est tombé est un argumentaire construit *à côté* du résultat de dynamique.
 
-Calibration bruit : η=0.5 SPICE ↔ σ_equiv=0.0044 Python. La dead zone Python reste immune même à 270× l'amplitude SPICE équivalente — le bruit thermique analogique ne se traduit pas directement en bruit numérique, et la dead zone tient dans les deux régimes.
+| Ce qu'on espérait | Ce qui est mesuré | Source |
+|---|---|---|
+| C'est une **mémoire** | Perd **5,5×** contre un réservoir standard | B5, 08/07/2026 |
+| Ça **prédit** | Sur Lorenz : erreur **7,72** contre **0,17** pour un filtre ordinaire — **44× pire**. 3ᵉ réplication | `p15`, 27/07 |
+| Ça **optimise** | Au Max-Cut, **300 tirages au hasard battent M4R** (91,5 contre 80,9), 10/10 puis 10/10 graines neuves | `p15b`, 27/07 |
+| Ça **explore mieux** | Le réseau ne visite que **~24 configurations** sur 300 lectures : quasi immobile | `p15c`, 28/07 |
+| Le doute bat un **horizon fixe** | Non : réservoir à budget fixe **1,00** contre doute **0,90** | B5b, 27/07 |
+| **Lire la topologie** apporte quelque chose | **Mort** — n'a pas répliqué (0 fois sur 2) | B7, 26/07 |
 
-Limitation documentée : la dynamique de u est tronquée dans les netlists SPICE actuelles. C'est une limitation explicite du modèle hardware, pas un angle mort.
+### ⚫ RÉFUTÉ — la transition événementielle
+
+Le résultat d'avril 2026 affirmait : forcer un nœud *périphérique* produit **+1,20 bits** sur
+BA m=3, forcer un *hub* +0,21 — le seuil de bifurcation serait topologique et non dans l'amplitude.
+
+**Réfuté le 11 juillet 2026.** C'était un artefact du modèle de bruit antérieur au 1er mai. Grille
+complète rejouée **au protocole d'avril inchangé** : **0/9 configurations positives, 9/9
+négatives** — l'événement *dégrade* H_cont (≈ −1,0), pour le hub comme pour la périphérie.
+
+*Idée originale de Julien Chauvin, conservée ici parce qu'une idée réfutée reste une idée qui a
+été testée.* La réfutation est rejouable par un clone depuis le 5 août
+(`experiments/event_phase_transition_rerun_20260711.py`) — elle était auparavant affirmée partout
+et vérifiable nulle part.
+
+### Ce qui reste en face, et c'est étroit mais réel
+
+Le doute sait **quand trancher** quand converger tôt mène à la mauvaise réponse : **0,83** contre
+**0,25** pour une règle de convergence classique. **Gain : 4,4× moins de pas** pour décider.
+
+⚠️ La niche exige **trois conditions simultanées** — un piège où converger tôt est faux, un horizon
+**inconnu**, et un coût d'attente. Retirez-en une, l'avantage disparaît.
+
+📁 `experiments/deceptive_task_poc.py` · `docs/FUTURE_WORK.md` §B1d
 
 ---
 
-## 8. REPRODUIRE EN 5 MINUTES
+## 6. La réponse directe à l'ambition initiale
+
+> *« Le prochain dipôle incontournable : des économies d'énergie énormes, et donner une direction
+> aux processeurs en évitant les calculs inutiles. »*
+
+Deux ambitions distinctes, deux réponses opposées.
+
+### ⛔ L'énergie : non, et c'est structurel
+
+L'adversaire qui égale M4R sur sa niche est un **filtre à oubli** — c'est-à-dire un circuit RC,
+une résistance et un condensateur. Passer M4R en analogique fait passer l'adversaire aussi, **où
+il est passif**.
+
+**À substrat égal, M4R coûte environ 15× plus d'énergie, et ce rapport ne dépend pas du composant
+choisi** : changer de technologie divise les deux côtés par le même facteur. M4R entretient
+200 oscillateurs actifs pendant 309 pas ; le filtre, **un seul circuit passif** pendant 1348.
+
+⚠️ **Le chiffre flatteur existe, et il faut savoir pourquoi nous ne l'utilisons pas.** Comparé
+autrement, on trouve **2 500× à 8 700×** en faveur de M4R — et les budgets d'émulation physique
+(spintronique, photonique) donnent des rapports de 10⁹ à 10¹⁴ contre un CPU. **Ces chiffres
+comparent deux *technologies*, pas deux *méthodes*.** N'importe quel circuit analogique en
+profiterait identiquement. Les versions antérieures de ce document les affichaient sans cette
+réserve ; c'était trompeur.
+
+📁 `experiments/expB3_substrate_crossover_poc.py` · `docs/hardware/B3_ENERGY_COMPARISON.md`
+
+### ✅ Éviter les calculs inutiles : oui, mais étroitement
+
+Là, il y a quelque chose de réel, et c'est la **latence**. Ce que le doute apporte n'est pas de
+**mieux** lire — à un instant donné il plafonne à 0,40, c'est médiocre. C'est de savoir **quand**
+lire : le bon moment d'arrêt vaut **+0,49 à +0,61** de précision, et bat nettement des instants
+tirés au hasard dans la même distribution.
+
+⚠️ **Réserve lourde** : sur cette même tâche, un simple filtre à oubli exponentiel atteint **1,00**
+contre **0,90** pour le doute. Même sur son terrain, **il existe plus simple qui fait mieux**.
+
+📁 `experiments/expB_annealing_faceoff_poc.py` · `docs/FUTURE_WORK.md` §E2
+
+---
+
+## 7. Comment nous nous empêchons de nous mentir
+
+C'est, à notre avis, ce que ce projet a de plus transmissible.
+
+**Le Preprint Guardian** recalcule les **22 valeurs publiées** depuis leurs CSV à chaque commit, et
+refuse le commit si l'une d'elles a bougé. **Le Tex Guardian** compare le *texte publié* à ses
+*sources* : ancrages, valeurs remplacées qui traîneraient encore, scripts cités non versionnés.
+Les deux tournent aussi en **intégration continue publique**.
+
+**Le contrôle positif, parce qu'un feu vert ne prouve rien.** `--self-test` rejoue deux claims
+contre un **témoin figé** et **exige qu'ils échouent** dessus. Sans cette exigence, on
+démontrerait que le garde-fou fonctionne, pas qu'il était nécessaire.
+
+**Les limites connues, écrites parce qu'elles ont été payées :**
+
+- **Un garde-fou peut mesurer à côté.** Jusqu'au 6 août, une spec ne savait désigner qu'une
+  *cellule* de tableau : quand la phrase publiée portait sur un *ratio*, le contrôle s'ancrait sur
+  la cellule voisine et **restait vert pendant que la phrase devenait fausse**.
+- **`N4` vérifie qu'un producteur existe et est versionné, pas qu'il peut s'exécuter.** Une
+  dépendance absente lui est invisible — qu'elle soit externe (ngspice) ou **interne au dépôt**
+  (§9, claim C05).
+- **`N2` (couverture) n'est concluant dans aucun des deux sens** et n'est jamais bloquant.
+
+📁 [`tools/`](../../tools/README.md) — *dans le dépôt depuis le 3 septembre 2026 seulement. Avant
+cette date, ces outils vivaient sur la machine de l'auteur : le projet se réclamait d'un appareil
+que personne d'autre ne pouvait lancer ni même lire.*
+
+---
+
+## 8. La robustesse
+
+| Question | Protocole | Résultat |
+|---|---|---|
+| Vrai état de chimère ou bruit pur ? | Kuramoto R, 3 conditions | R = 0,513 FULL contre 0,211 bruit pur ✅ |
+| `u` a-t-il un rôle causal ? | Entropie de transfert, hérétiques ↔ réseau | prouvée dans les deux sens ✅ |
+| FULL/FROZEN se chevauchent-elles ? | Cohen U3, n = 50 | U3 = 100 % — strictement disjointes ✅ |
+| Le bruit spatial brise-t-il la zone morte ? | Bruit de Matérn, 4 structures, BA m=5 | oui ; seuil σ ≥ 0,3 avec le modèle de bruit actuel ✅ |
+| Le nœud isolé est-il stable ? | Analyse linéaire, jacobien | v* = −1,286, sub-Hopf ✅ |
+| L'intégrateur d'Euler suffit-il ? | RK45 contre Euler | max Δ(H_cog) < 0,006 ✅ |
+| Invariance à la taille ? | N = 100 → 4000 | mode invariant d'échelle validé ✅ |
+| La sigmoïde est-elle sur-ajustée ? | pente 1,0 → 10,0 | plateau stable H ∈ [2,8 – 3,2] ✅ |
+| Onde progressive ou chaos ? | décalage temporel Max-TLCC | 0,410 — chaos spatiotemporel ✅ |
+
+*Les affirmations reposant sur λ₂ ont été retirées de ce tableau : la stabilité du gap spectral
+n'étaye plus rien depuis §4.2.*
+
+---
+
+## 9. Ce qu'un tiers peut réellement rejouer
+
+Campagne du **4 septembre 2026**, menée depuis un **clone GitHub neuf**, dans un environnement
+installé de zéro, avec des bibliothèques **plus récentes** que celles d'origine (numpy 2.5.2,
+pandas 3.0.5 — changement de version majeure) :
+
+> **20 des 22 claims se rejouent, avec un écart relatif de `0.000e+00`** — identiques, pas
+> « proches ».
+
+**Ce qui ne se rejoue pas, nommément :**
+
+- 🔴 **`C05`** (la frontière λ₂ = 2,31, citée dans l'abstract) : son producteur s'arrête sur un
+  `FileNotFoundError` — il lit un CSV non versionné dont le producteur, lui, l'est. Il faut lancer
+  un autre script d'abord, et rien ne le dit.
+- ⚠️ **`C12`** (cumulant de Binder) : le script tourne (26 min) mais rend une grille différente du
+  CSV publié. Reste à établir si les valeurs coïncident sur les bins communs.
+- ⚠️ **`C19`/`C22`** : reproduits **exactement**, mais seulement avec `--nseeds 5` — un paramètre
+  d'exécution qui n'est documenté nulle part.
+- ⚠️ **Deux runs héroïques** (`run_heroic_800/1600`) calculent 40 minutes puis **perdent tout** à
+  l'écriture : ils écrivent dans `'../figures'`, relatif au répertoire courant, alors qu'ils
+  utilisent correctement `__file__` pour leurs imports.
+
+---
+
+## 10. Deux figures que nous ne pouvons pas encore prouver
+
+Ces deux résultats sont présentés dans les versions antérieures de ce document comme des
+découvertes. Ils ne sont couverts par **aucun** garde-fou et **ne sont pas rejouables par un
+clone** : leur script et leurs données vivent hors du dépôt. Ils sont conservés ici avec leur
+statut exact, et leur reconstruction est un chantier ouvert.
+
+**[A] Intelligence topologique — LZ par nœud.** Dans un réseau fonctionnel, les hubs ont des
+trajectoires *plus structurées* que les nœuds périphériques ; en FROZEN_U, la corrélation
+disparaît (r ≈ 0,015). L'affirmation qualitative tient sur les données d'origine.
+⚠️ **Mais sa description publiée est fausse** : re-calculée depuis le CSV de mai, la corrélation
+vaut **r = −0,7156** pour **N = 100 nœuds et 5 graines** — et non « N = 400 » comme annoncé — et
+uniquement **sous stimulus `I_stim = 0,3`** ; à `I_stim = 0`, elle vaut −0,63.
+⚠️ Son CSV a été écrit **2 min 16 s après** le commit qui a changé le modèle de bruit : impossible
+de savoir, sans relancer, de quel côté il tombe.
+
+**[B] Chimères — une classe mécanistiquement distincte.** Abrams-Strogatz (2004) : chimère par
+couplage non-local fixe. Mem4ristor : chimère par modulation dynamique de polarité, sur un réseau
+sans symétrie imposée. **R = 0,141** contre **R = 0,766**. Chiffres retrouvés dans leur CSV
+d'origine (2 mai 2026), postérieur au changement de bruit.
+
+*Figures : `figures/lz_per_node.png`, `figures/reviewer2_chimera_comparison.png` — seuls éléments
+versionnés de ces deux résultats.*
+
+---
+
+## 11. Ce qui n'a jamais été testé
+
+- Un **vrai transformer** — le pont vers les grands modèles s'arrête avant la dernière marche
+- Un **backtest sur données réelles** — celui de juillet est synthétique
+- Le **circuit électrique réel** de couplage (le canal de Romera)
+- Le **micromagnétisme complet** (mumax3, nécessite CUDA)
+- La **théorie analytique** du seuil de degré ≈ 6
+- La **calibration absolue de la complexité LZ** : les comparaisons à durée constante tiennent,
+  les seuils absolus publiés sont en cours de révision
+
+---
+
+## 12. Le solde, en une phrase
+
+> **Il y a un mécanisme dynamique bien caractérisé, honnêtement mesuré, et une prédiction qu'un
+> laboratoire peut aller réfuter. Il n'y a pas de composant qui économise de l'énergie, et pas de
+> calculateur.**
+
+Ce n'est pas le « dipôle incontournable » visé au départ. C'est un **résultat de physique des
+systèmes couplés avec une porte ouverte vers l'expérience**. C'est plus petit que l'ambition — et
+c'est **vrai**, ce qui est la métrique que ce projet s'est fixée.
+
+---
+
+## 13. Reproduire
 
 ```bash
-git clone https://github.com/cafe-virtuel/mem4ristor.git
-cd mem4ristor
-pip install -e .
-python experiments/demo_chimera.py
-# → demo_chimera_output.png : time dynamics · phase space · topology
+git clone https://github.com/cafe-virtuel/Mem4ristor.git
+cd Mem4ristor
+pip install -r requirements.txt && pip install -e .
+
+python tools/preprint_guardian.py     # les 22 valeurs publiées, recalculées
+python experiments/demo_chimera.py    # la démonstration visuelle
 ```
 
-Trois figures : dynamique temporelle (frustration hérétiques vs majorité), espace de phase (Kuramoto R≈0.14), topologie BA m=3. Le résultat central est visible en une image.
-
-**→** [REPRODUCE_IN_5_MINUTES.md](../../REPRODUCE_IN_5_MINUTES.md)  
-**→** DOI : [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596)
-
----
-
-## 9. CALL TO ACTION
-
-Ce travail cherche deux choses.
-
-Une **étoile GitHub** — pour la visibilité, pour montrer que ce type de projet (non-institutionnel, transparent, humain+IA) peut exister et produire des résultats sérieux.
-
-Un **endorsement arXiv** (nlin.AO ou cs.NE) — pour publier le preprint sur arXiv et atteindre les chercheurs qui ne sont pas sur Zenodo. Si le modèle vous intrigue, si la méthode vous interpelle, si vous voulez discuter des résultats : contactez-nous.
+**→** [REPRODUCE_IN_5_MINUTES.md](../../REPRODUCE_IN_5_MINUTES.md) ·
+[`docs/CLAIMS_REGISTER.md`](../CLAIMS_REGISTER.md) ·
+[`docs/BILAN_FORCES_FAIBLESSES.md`](../BILAN_FORCES_FAIBLESSES.md)
 
 ---
 
-🐙 **GitHub** : [github.com/cafe-virtuel/Mem4ristor](https://github.com/cafe-virtuel/Mem4ristor)  
-📄 **Zenodo** : [10.5281/zenodo.18620596](https://doi.org/10.5281/zenodo.18620596)  
-📧 **Contact** : contact@cafevirtuel.org  
-🐦 **X** : [@Jusyl80](https://x.com/Jusyl80)
+## 14. Ce que nous cherchons
+
+Un **endorsement arXiv** (`nlin.AO` ou `cs.NE`), et surtout des **interlocuteurs qui essaient de
+nous donner tort** — en particulier sur la prédiction du §4.3, qui est faite pour ça.
+
+Si le mécanisme, la méthode, ou la manière dont ce projet tue ses propres idées vous intéressent,
+écrivez.
+
+🐙 [github.com/cafe-virtuel/Mem4ristor](https://github.com/cafe-virtuel/Mem4ristor) ·
+📧 contact@cafevirtuel.org ·
+🐦 [@Jusyl80](https://x.com/Jusyl80)
 
 ---
 
-*Ce document a été rédigé en collaboration avec Claude Sonnet 4.6 (Anthropic) dans le cadre du Café Virtuel.*  
-*Tous les chiffres sont tirés directement des scripts d'expérience. Aucun arrondi, aucune omission.*
+*Rédigé au Café Virtuel par Julien Chauvin et Claude (Anthropic). Chaque affirmation porte un
+chiffre et sa source ; les valeurs sous garde-fou sont recalculées à chaque commit. Ce document
+énumère ses propres échecs parce qu'ils sont le meilleur indice de ce que valent ses succès.*

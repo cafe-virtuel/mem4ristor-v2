@@ -83,7 +83,7 @@ Mem4ristor simule des réseaux de neurones FitzHugh-Nagumo (FHN) où chaque nœu
 - **DOI** : 10.5281/zenodo.18620596 — *concept DOI*, résout toujours vers la dernière version déposée
 - **GitHub** : https://github.com/cafe-virtuel/Mem4ristor
 - **Papiers** : preprint **non soumis et non publié sur Zenodo**
-  (`docs/papers/preprint/preprint.tex` → 27 p) · paper_2 en préparation · paper_B (hardware) en préparation
+  (`docs/papers/preprint/preprint.tex` → 28 p) · paper_2 en préparation · paper_B (hardware) en préparation
 - **Prochain jalon** : voir `PROJECT_STATUS.md` §0
 
 ---

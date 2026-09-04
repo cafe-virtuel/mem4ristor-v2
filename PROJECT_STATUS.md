@@ -83,7 +83,7 @@ Le projet est né au sein du **Café Virtuel**, un laboratoire de collaboration 
 Publication : DOI 10.5281/zenodo.19986042 (V4.0.0 — dernière release Zenodo ; le code a
 évolué depuis, la prochaine release Zenodo portera les valeurs V6.0.0 reformulées).
 Preprint actuel (non soumis, non publié sur Zenodo) : `docs/papers/preprint/preprint.tex`
-→ `preprint.pdf` (27 pages, Guardian **22/22**, Tex Guardian 15/15 ancres · 0 valeur morte · 14/14 sources).
+→ `preprint.pdf` (28 pages, Guardian **22/22**, Tex Guardian 15/15 ancres · 0 valeur morte · 14/14 sources).
 
 ---
 
@@ -440,7 +440,7 @@ mem4ristor-v2-main/
 ├── experiments/               # SCRIPTS D'EXPÉRIENCE (b1_*, b2_*, b4_*, b5_*, p2_*, ...)
 │
 ├── docs/
-│   ├── papers/preprint/preprint.tex   # Preprint actuel (reformulé, 27 pages, Guardian 22/22)
+│   ├── papers/preprint/preprint.tex   # Preprint actuel (reformulé, 28 pages, Guardian 22/22)
 │   ├── papers/preprint/preprint.pdf
 │   ├── CLAIMS_REGISTER.md              # Registre narratif des claims (voir §3)
 │   └── hardware/                        # Dossiers de correspondance physique (voir §2)
